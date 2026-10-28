@@ -5,223 +5,412 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#087443">
+  <meta name="description" content="ZUNE Account - Simamia akaunti na taarifa zako.">
   <title>ZUNE Account</title>
+
   <style>
     :root {
       --green: #087443;
+      --green-dark: #075b35;
       --dark: #123b2a;
-      --bg: #f5f7f6;
+      --bg: #f4f7f5;
+      --white: #ffffff;
       --muted: #69756e;
       --border: #e3e9e5;
+      --light-green: #e7f4ec;
+      --shadow: 0 5px 20px rgba(18, 59, 42, 0.06);
     }
 
     * {
       box-sizing: border-box;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: #18241d;
+    html {
+      scroll-behavior: smooth;
     }
 
-    header {
-      background: white;
-      border-bottom: 1px solid var(--border);
-      padding: 16px 6%;
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: #18241d;
+      line-height: 1.5;
+    }
+
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
+      padding: 13px 6%;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
+      text-decoration: none;
       color: var(--green);
-      font-size: 23px;
+      font-size: 22px;
       font-weight: 800;
     }
 
     .logo {
-      width: 40px;
-      height: 40px;
-      background: var(--green);
-      color: white;
-      border-radius: 50%;
       display: grid;
       place-items: center;
-      font-size: 25px;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--green);
+      color: white;
+      font-size: 26px;
       font-weight: 800;
     }
 
-    .tag {
-      color: var(--muted);
-      font-size: 13px;
+    .header-link {
+      color: var(--green);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
     }
 
     main {
-      width: min(100% - 32px, 960px);
-      margin: 42px auto;
+      width: min(100% - 30px, 960px);
+      margin: 28px auto 40px;
     }
 
     .welcome {
-      background: var(--dark);
-      color: white;
+      padding: 30px 25px;
+      margin-bottom: 22px;
       border-radius: 20px;
-      padding: 30px 24px;
-      margin-bottom: 24px;
+      color: white;
+      background: linear-gradient(135deg, var(--dark), var(--green));
+      box-shadow: var(--shadow);
+    }
+
+    .welcome-label {
+      display: inline-block;
+      padding: 6px 10px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 20px;
+      color: #e5f6eb;
+      font-size: 12px;
     }
 
     .welcome h1 {
-      margin: 0 0 12px;
+      margin: 0 0 10px;
       font-size: clamp(27px, 5vw, 38px);
+      line-height: 1.2;
     }
 
     .welcome p {
-      line-height: 1.7;
       max-width: 600px;
+      margin: 0;
       color: #e1eee6;
+      line-height: 1.8;
+    }
+
+    .primary-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 19px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      background: white;
+      color: var(--green-dark);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .section-heading {
+      margin: 28px 0 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0 0 5px;
+      font-size: 21px;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .panel {
-      background: white;
+      padding: 21px;
+      margin-bottom: 18px;
+      background: var(--white);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 23px;
-      margin-bottom: 18px;
+      box-shadow: var(--shadow);
     }
 
-    .panel h2 {
-      margin-top: 0;
-      font-size: 19px;
+    .panel-title {
+      margin: 0 0 8px;
+      font-size: 18px;
     }
 
     .item {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 15px 0;
+      gap: 13px;
+      min-width: 0;
+      padding: 16px 0;
+      color: inherit;
+      text-decoration: none;
       border-top: 1px solid var(--border);
+      border-radius: 2px;
+    }
+
+    .item:first-of-type {
+      border-top: none;
+    }
+
+    .item:hover,
+    .item:focus-visible {
+      background: #f8fbf9;
+      outline-color: var(--green);
     }
 
     .item-icon {
-      width: 42px;
-      height: 42px;
       display: grid;
       place-items: center;
-      background: #e7f4ec;
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+      border-radius: 13px;
+      background: var(--light-green);
       color: var(--green);
-      border-radius: 12px;
-      font-size: 21px;
+      font-size: 22px;
     }
 
-    .item p {
-      margin: 5px 0 0;
+    .item-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-content strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .item-content p {
+      margin: 4px 0 0;
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
-    .button {
-      display: inline-block;
-      background: var(--green);
-      color: white;
-      padding: 13px 19px;
-      border-radius: 10px;
+    .arrow {
+      flex-shrink: 0;
+      color: var(--green);
+      font-size: 22px;
+    }
+
+    .marketplace {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 19px;
+      border-radius: 16px;
+      background: var(--light-green);
+      border: 1px solid #d5eadc;
+      color: var(--dark);
       text-decoration: none;
-      font-weight: 700;
-      margin-top: 8px;
+    }
+
+    .marketplace .item-icon {
+      background: white;
+    }
+
+    .marketplace .item-content p {
+      color: #4c6355;
+    }
+
+    .marketplace .arrow {
+      margin-left: auto;
+    }
+
+    .help-text {
+      margin: 18px 0;
+      padding: 15px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     footer {
+      padding: 24px 16px;
       text-align: center;
-      padding: 25px 16px;
       color: var(--muted);
       font-size: 13px;
     }
 
+    footer a {
+      color: var(--green);
+      text-decoration: none;
+    }
+
     @media (max-width: 480px) {
-      header {
-        padding: 13px 16px;
+      .topbar {
+        padding: 11px 15px;
       }
 
-      .tag {
-        display: none;
+      .brand {
+        font-size: 19px;
+      }
+
+      .logo {
+        width: 38px;
+        height: 38px;
+        font-size: 23px;
+      }
+
+      .header-link {
+        padding: 9px 10px;
+        font-size: 12px;
       }
 
       main {
-        margin-top: 22px;
+        width: calc(100% - 24px);
+        margin-top: 18px;
       }
 
       .welcome {
-        padding: 25px 20px;
+        padding: 24px 19px;
+        border-radius: 16px;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      .item {
+        gap: 10px;
+      }
+
+      .item-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
       }
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <div class="brand">
-      <div class="logo">Z</div>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="ZUNE Account mwanzo">
+      <span class="logo" aria-hidden="true">Z</span>
       <span>ZUNE Account</span>
-    </div>
-    <span class="tag">Akaunti yako. Huduma zako.</span>
+    </a>
+
+    <a class="header-link"
+       href="https://mrnehemiah.github.io/">
+      Soko la ZUNE ↗
+    </a>
   </header>
 
   <main>
     <section class="welcome">
-      <h1>Akaunti yako ya ZUNE</h1>
+      <span class="welcome-label">AKAUNTI YAKO YA ZUNE</span>
+      <h1>Karibu ZUNE Account</h1>
       <p>
-        Simamia taarifa zako, linda akaunti yako na
-        dhibiti mapendeleo yako yote ya ZUNE sehemu moja.
+        Simamia taarifa zako binafsi, angalia mipangilio ya akaunti
+        na upate huduma za ZUNE sehemu moja.
       </p>
-      <a class="button" href="#account-services">
-        Gundua huduma
+
+      <a class="primary-button" href="#account-services">
+        Angalia huduma <span aria-hidden="true">↓</span>
       </a>
     </section>
 
-    <section class="panel" id="account-services">
+    <div class="section-heading" id="account-services">
       <h2>Usimamizi wa akaunti</h2>
+      <p>Chagua huduma unayotaka kufungua.</p>
+    </div>
 
-      <div class="item">
-        <div class="item-icon">👤</div>
-        <div>
+    <section class="panel">
+      <h3 class="panel-title">Taarifa na mipangilio</h3>
+
+      <a class="item" href="personal-info.html">
+        <span class="item-icon" aria-hidden="true">👤</span>
+        <span class="item-content">
           <strong>Taarifa binafsi</strong>
-          <p>Jina, email, namba ya simu na wasifu wako.</p>
-        </div>
-      </div>
+          <p>Angalia na urekebishe jina lako na namba ya simu.</p>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
 
-      <div class="item">
-        <div class="item-icon">🔐</div>
-        <div>
-          <strong>Usalama</strong>
-          <p>Password na ulinzi wa akaunti yako.</p>
-        </div>
-      </div>
+      <a class="item" href="security.html">
+        <span class="item-icon" aria-hidden="true">🔐</span>
+        <span class="item-content">
+          <strong>Usalama wa akaunti</strong>
+          <p>Mipangilio ya nenosiri na ulinzi wa akaunti.</p>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
 
-      <div class="item">
-        <div class="item-icon">🛡️</div>
-        <div>
+      <a class="item" href="privacy.html">
+        <span class="item-icon" aria-hidden="true">🛡️</span>
+        <span class="item-content">
           <strong>Faragha na uthibitishaji</strong>
-          <p>Simamia taarifa na mipangilio ya akaunti.</p>
-        </div>
-      </div>
+          <p>Maelezo ya faragha na hali ya uthibitishaji.</p>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
 
-      <div class="item">
-        <div class="item-icon">🛍️</div>
-        <div>
-          <strong>ZUNE Marketplace</strong>
-          <p>Akaunti yako itakuunganisha na huduma za soko la ZUNE.</p>
-        </div>
-      </div>
+      <a class="item" href="account.html">
+        <span class="item-icon" aria-hidden="true">⚙️</span>
+        <span class="item-content">
+          <strong>Dashibodi ya akaunti</strong>
+          <p>Fungua ukurasa wa akaunti yako.</p>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
     </section>
+
+    <a class="marketplace"
+       href="https://mrnehemiah.github.io/">
+      <span class="item-icon" aria-hidden="true">🛍️</span>
+      <span class="item-content">
+        <strong>Fungua ZUNE Marketplace</strong>
+        <p>Endelea kwenye soko la ZUNE.</p>
+      </span>
+      <span class="arrow" aria-hidden="true">↗</span>
+    </a>
+
+    <p class="help-text">
+      <strong>Unahitaji msaada?</strong><br>
+      Ikiwa huduma haifunguki, hakikisha ukurasa wake upo kwenye
+      repository ya GitHub na jina la faili linafanana na link yake.
+    </p>
   </main>
 
   <footer>
-    © 2026 ZUNE Account. Haki zote zimehifadhiwa.
+    <p>© 2026 ZUNE Account. Haki zote zimehifadhiwa.</p>
+    <p>
+      <a href="https://mrnehemiah.github.io/">ZUNE Marketplace</a>
+    </p>
   </footer>
 </body>
 </html>
