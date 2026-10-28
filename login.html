@@ -3,172 +3,269 @@
 <html lang="sw">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#087443">
-  <title>Ingia | ZUNE Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#075c40">
+
+  <title>Log In | ZUNE Account</title>
+
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --green: #087c50;
+      --dark-green: #064b36;
+      --light-green: #edf8f1;
+      --text: #172b22;
+      --muted: #6b7c72;
+      --border: #e1eae4;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
-      display: grid;
-      place-items: center;
       padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #f3f7f4;
-      color: #183027;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f8f5;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
     }
 
     .card {
-      width: 100%;
-      max-width: 420px;
-      background: #fff;
-      border: 1px solid #e0e9e3;
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 12px 35px #153d2610;
+      padding: 30px 24px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--white);
+      box-shadow: 0 12px 38px rgba(6, 75, 54, 0.07);
     }
 
     .brand {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
-      color: #087443;
-      font-size: 23px;
+      margin-bottom: 24px;
+      color: var(--dark-green);
+      font-size: 26px;
       font-weight: 800;
+      letter-spacing: 1px;
     }
 
     .logo {
-      width: 42px;
-      height: 42px;
+      width: 45px;
+      height: 45px;
       display: grid;
       place-items: center;
-      background: #087443;
-      color: white;
+      position: relative;
       border-radius: 50%;
-      font-size: 25px;
-    }
-
-    h1 { margin: 28px 0 8px; font-size: 27px; }
-
-    .sub {
-      color: #68766d;
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    label {
-      display: block;
-      margin: 18px 0 8px;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #d4dfd7;
-      border-radius: 10px;
-      font-size: 16px;
-      outline-color: #087443;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 22px;
-      border: 0;
-      border-radius: 10px;
-      background: #087443;
+      background: var(--dark-green);
       color: white;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
+      font-size: 27px;
     }
 
-    button:disabled { opacity: .6; }
+    .logo::after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      right: 4px;
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+      background: #f49a38;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      text-align: center;
+      color: var(--dark-green);
+      font-size: 27px;
+    }
+
+    .description {
+      margin: 0 0 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
 
     .message {
       display: none;
-      margin-top: 16px;
+      margin-bottom: 18px;
       padding: 12px;
-      border-radius: 9px;
+      border-radius: 10px;
+      background: var(--light-green);
+      color: var(--dark-green);
       font-size: 14px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
+      line-height: 1.6;
     }
 
-    .links {
-      margin-top: 22px;
-      text-align: center;
-      font-size: 14px;
-      line-height: 2;
-    }
-
-    a { color: #087443; }
-
-    .back {
+    .message.visible {
       display: block;
-      margin-top: 22px;
+    }
+
+    .actions {
+      display: grid;
+      gap: 13px;
+    }
+
+    .action-button {
+      width: 100%;
+      min-height: 54px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--green);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
       text-align: center;
-      color: #68766d;
-      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .action-button:hover {
+      background: var(--dark-green);
+    }
+
+    .action-button.secondary {
+      border: 1px solid var(--green);
+      background: white;
+      color: var(--green);
+    }
+
+    .action-button.secondary:hover {
+      background: var(--light-green);
+    }
+
+    .icon {
+      font-size: 21px;
+    }
+
+    .security {
+      margin-top: 22px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 380px) {
+      .card {
+        padding: 25px 18px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
+
 <body>
-  <main class="card">
-    <div class="brand">
-      <div class="logo">Z</div>
-      ZUNE Account
-    </div>
+  <main class="container">
+    <section class="card">
 
-    <h1>Karibu tena</h1>
-    <p class="sub">
-      Ingia kwa akaunti yako ya ZUNE Marketplace
-      ili kuendelea kutumia huduma zako.
+      <div class="brand">
+        <span class="logo" aria-hidden="true">Z</span>
+        <span>ZUNE ACCOUNT</span>
+      </div>
+
+      <!-- Hali ya kuingia -->
+      <section id="loginSection">
+        <h1>Karibu ZUNE Account</h1>
+
+        <p class="description">
+          Ingia kwenye akaunti yako ili kufikia taarifa zako
+          na kuendelea kutumia huduma za ZUNE.
+        </p>
+
+        <div
+          id="loginMessage"
+          class="message"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+        <!--
+          Weka hapa form halisi ya kuingia inayotumiwa na
+          login.js yako ya sasa. Usiondoe input IDs zake.
+        -->
+
+        <div id="loginFormPlaceholder" hidden></div>
+      </section>
+
+      <!-- Vitufe vya baada ya kuingia -->
+      <section id="accountActions" hidden>
+        <h1>Umeingia kwa Mafanikio!</h1>
+
+        <p class="description">
+          Chagua unachotaka kufanya.
+        </p>
+
+        <div class="actions">
+          <a
+            id="myAccountButton"
+            class="action-button"
+            href="account.html"
+          >
+            <span class="icon" aria-hidden="true">👤</span>
+            <span>Taarifa Zangu</span>
+          </a>
+
+          <a
+            id="marketplaceButton"
+            class="action-button secondary"
+            href="https://mrnehemiah.github.io/"
+          >
+            <span class="icon" aria-hidden="true">🛍️</span>
+            <span>Ingia ZUNE Marketplace</span>
+          </a>
+        </div>
+
+        <p class="security">
+          Taarifa zako binafsi zinaonekana ndani ya akaunti yako.
+        </p>
+      </section>
+
+    </section>
+
+    <p class="footer">
+      © <span id="currentYear"></span> ZUNE Account
     </p>
-
-    <form id="loginForm">
-      <label for="email">Email</label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        autocomplete="email"
-        placeholder="jina@example.com"
-        required
-      >
-
-      <label for="password">Password</label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        autocomplete="current-password"
-        placeholder="Weka password yako"
-        required
-      >
-
-      <button id="loginButton" type="submit">
-        Ingia kwenye akaunti
-      </button>
-    </form>
-
-    <div id="message" class="message" role="status"></div>
-
-    <div class="links">
-      <a href="signup.html">Tengeneza akaunti</a>
-      <br>
-      <a href="forgot-password.html">Umesahau password?</a>
-    </div>
-
-    <a class="back" href="index.html">
-      ← Rudi ZUNE Account
-    </a>
   </main>
 
-  <script type="module" src="login.js"></script>
+  <script>
+    document.getElementById("currentYear").textContent =
+      new Date().getFullYear();
+  </script>
+
+  <!-- Mfumo wa Supabase Auth utaunganishwa kupitia login.js iliyopo. -->
+  <script src="login.js" defer></script>
 </body>
 </html>
