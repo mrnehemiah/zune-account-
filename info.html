@@ -1,0 +1,710 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#087f45">
+  <meta name="description" content="Simamia taarifa zako binafsi kwenye akaunti yako ya ZUNE.">
+
+  <title>Taarifa Binafsi | ZUNE</title>
+
+  <style>
+    :root {
+      --green: #087f45;
+      --green-dark: #056536;
+      --green-light: #e9f7ef;
+      --orange: #ff8a00;
+      --background: #f5f7f6;
+      --white: #ffffff;
+      --text: #17231c;
+      --muted: #6c7971;
+      --border: #e1e8e3;
+      --danger: #c62828;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      max-width: 850px;
+      margin: 0 auto;
+      min-height: 66px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .back-button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      color: var(--green);
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      background: var(--green-dark);
+      color: white;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      font-weight: 800;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      right: 5px;
+      top: 7px;
+      background: var(--orange);
+      border-radius: 2px;
+      transform: rotate(25deg);
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green-dark);
+      letter-spacing: 1px;
+    }
+
+    .topbar-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .page-container {
+      width: 100%;
+      max-width: 850px;
+      padding: 24px 16px 45px;
+      margin: 0 auto;
+    }
+
+    .page-heading {
+      margin-bottom: 22px;
+    }
+
+    .page-heading h1 {
+      font-size: clamp(24px, 5vw, 31px);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .page-heading p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a
+        class="back-button"
+        href="account.html"
+        aria-label="Rudi kwenye akaunti"
+      >‹</a>
+
+      <div class="brand-mark" aria-label="ZUNE">Z</div>
+
+      <div>
+        <div class="brand-name">ZUNE</div>
+        <div class="topbar-subtitle">Akaunti yako</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <section class="page-heading">
+      <h1>Taarifa Binafsi</h1>
+      <p>
+        Angalia na usimamie taarifa zinazohusishwa na
+        akaunti yako ya ZUNE.
+      </p>
+    </section>
+
+    <!-- Kadi ya muhtasari wa wasifu -->
+    <section class="profile-card">
+      <div class="profile-avatar" id="profileAvatar">Z</div>
+
+      <div class="profile-summary">
+        <h2 id="profileDisplayName">Inapakia taarifa...</h2>
+        <p id="profileDisplayEmail">Taarifa za akaunti yako</p>
+
+        <div class="profile-badges">
+          <span class="status-badge" id="accountStatus">
+            <span class="status-dot"></span>
+            Akaunti ya ZUNE
+          </span>
+
+          <span class="zune-id-badge" id="zuneIdBadge">
+            ZUNE ID: Inapakia...
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ujumbe wa mfumo -->
+    <div
+      class="message-box"
+      id="pageMessage"
+      role="status"
+      aria-live="polite"
+      hidden
+    ></div>
+
+    <!-- Kichwa cha taarifa -->
+    <section class="section-heading">
+      <div>
+        <h2>Taarifa za akaunti</h2>
+        <p>Hakikisha taarifa zako ni sahihi.</p>
+      </div>
+
+      <span class="section-icon" aria-hidden="true">✎</span>
+    </section>
+
+    <!-- Fomu ya taarifa binafsi -->
+    <section class="form-card">
+      <form id="personalInfoForm" novalidate>
+        <div class="form-group">
+          <label for="fullName">Jina kamili</label>
+
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="Andika jina lako kamili"
+            autocomplete="name"
+            maxlength="100"
+            required
+          />
+
+          <small class="field-hint">
+            Tumia jina unalotaka lionekane kwenye akaunti yako.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Barua pepe</label>
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="mfano@email.com"
+            autocomplete="email"
+            readonly
+            aria-describedby="emailHint"
+          />
+
+          <small class="field-hint" id="emailHint">
+            Barua pepe huonyeshwa kutoka kwenye akaunti yako
+            iliyounganishwa.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Namba ya simu</label>
+
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            placeholder="Mfano: +255..."
+            autocomplete="tel"
+            inputmode="tel"
+            maxlength="20"
+          />
+
+          <small class="field-hint">
+            Tumia namba ya simu unayoweza kupatikana nayo.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="zuneId">ZUNE ID</label>
+
+          <input
+            type="text"
+            id="zuneId"
+            name="zuneId"
+            placeholder="ZUNE ID yako"
+            readonly
+          />
+
+          <small class="field-hint">
+            Kitambulisho hiki kinasomwa kutoka kwenye taarifa
+            za akaunti; hakiwezi kuhaririwa hapa.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="accountRole">Aina ya akaunti</label>
+
+          <input
+            type="text"
+            id="accountRole"
+            name="accountRole"
+            value="Mtumiaji"
+            readonly
+          />
+
+          <small class="field-hint">
+            Aina ya akaunti huamuliwa na mfumo wa ZUNE.
+          </small>
+        </div>
+
+        <!-- Vitufe vya fomu -->
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn-primary"
+            id="saveInfoBtn"
+          >
+            <span aria-hidden="true">✓</span>
+            <span id="saveBtnText">Hifadhi Mabadiliko</span>
+          </button>
+
+          <button
+            type="reset"
+            class="btn-secondary"
+            id="resetInfoBtn"
+          >
+            Rejesha Taarifa
+          </button>
+        </div>
+
+        <p class="save-note">
+          <span aria-hidden="true">🔒</span>
+          Taarifa zako zinasimamiwa kupitia akaunti yako ya ZUNE.
+        </p>
+      </form>
+    </section>
+
+    <!-- Taarifa za ziada -->
+    <section class="help-card">
+      <div class="help-icon" aria-hidden="true">ⓘ</div>
+
+      <div>
+        <h3>Unahitaji msaada?</h3>
+        <p>
+          Ikiwa taarifa zako hazionekani au huwezi kuhifadhi
+          mabadiliko, hakikisha umeingia kwenye akaunti yako
+          ya ZUNE.
+        </p>
+
+        <a href="account.html" class="help-link">
+          Rudi kwenye akaunti
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <div class="footer-brand">ZUNE</div>
+      <p>Simamia akaunti yako kwa urahisi.</p>
+      <p class="footer-copy">© 2026 ZUNE. Haki zote zimehifadhiwa.</p>
+    </footer>
+  </main>
+
+  <style>
+    /* Kadi ya wasifu */
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px;
+      margin-bottom: 28px;
+      background: linear-gradient(135deg, #087f45, #056536);
+      color: white;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 22px rgba(8, 127, 69, 0.12);
+      overflow-wrap: anywhere;
+    }
+
+    .profile-avatar {
+      width: 70px;
+      height: 70px;
+      min-width: 70px;
+      border-radius: 50%;
+      background: white;
+      color: var(--green-dark);
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-weight: 800;
+      border: 3px solid rgba(255, 255, 255, 0.55);
+    }
+
+    .profile-summary {
+      min-width: 0;
+    }
+
+    .profile-summary h2 {
+      font-size: 19px;
+      margin-bottom: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-summary > p {
+      color: #e1f4e8;
+      font-size: 13px;
+      margin-bottom: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-badges {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .status-badge,
+    .zune-id-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 30px;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background: #9ef0b6;
+      border-radius: 50%;
+    }
+
+    /* Vichwa vya sehemu */
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      font-size: 19px;
+      margin-bottom: 5px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .section-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: var(--green-light);
+      color: var(--green);
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      flex-shrink: 0;
+    }
+
+    /* Fomu */
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 3px 12px rgba(20, 50, 30, 0.025);
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 9px;
+    }
+
+    .form-group input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid #d7e1da;
+      border-radius: 11px;
+      outline: none;
+      background: #fff;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(8, 127, 69, 0.1);
+    }
+
+    .form-group input[readonly] {
+      background: #f1f4f2;
+      color: #5e6b62;
+      cursor: default;
+    }
+
+    .field-hint {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 7px;
+    }
+
+    /* Vitufe */
+    .form-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 11px;
+      margin-top: 8px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      min-height: 49px;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary {
+      border: 1px solid var(--green);
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #f1f5f2;
+    }
+
+    .save-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 17px;
+    }
+
+    /* Ujumbe */
+    .message-box {
+      padding: 13px 15px;
+      margin-bottom: 20px;
+      border-radius: 11px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .message-box[hidden] {
+      display: none;
+    }
+
+    .message-box.success {
+      background: #e8f7ed;
+      color: #126c37;
+      border: 1px solid #bce5ca;
+    }
+
+    .message-box.error {
+      background: #fff0f0;
+      color: var(--danger);
+      border: 1px solid #f0caca;
+    }
+
+    .message-box.info {
+      background: #edf4ff;
+      color: #2056a5;
+      border: 1px solid #cbdcf8;
+    }
+
+    /* Msaada na footer */
+    .help-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      margin-top: 24px;
+      padding: 19px;
+      background: var(--green-light);
+      border: 1px solid #d2eadb;
+      border-radius: var(--radius);
+    }
+
+    .help-icon {
+      width: 35px;
+      height: 35px;
+      min-width: 35px;
+      border-radius: 11px;
+      background: white;
+      color: var(--green);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .help-card h3 {
+      font-size: 15px;
+      margin-bottom: 7px;
+    }
+
+    .help-card p {
+      color: #4f6657;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .help-link {
+      display: inline-flex;
+      gap: 7px;
+      align-items: center;
+      margin-top: 12px;
+      color: var(--green-dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .page-footer {
+      text-align: center;
+      padding: 30px 10px 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.9;
+    }
+
+    .footer-brand {
+      color: var(--green);
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .footer-copy {
+      margin-top: 7px;
+    }
+
+    @media (min-width: 600px) {
+      .page-container {
+        padding-top: 32px;
+      }
+
+      .form-card {
+        padding: 28px;
+      }
+
+      .form-actions {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .profile-card {
+        padding: 16px;
+        gap: 12px;
+      }
+
+      .profile-avatar {
+        width: 55px;
+        height: 55px;
+        min-width: 55px;
+        font-size: 24px;
+      }
+
+      .profile-summary h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
+
+  <!-- JavaScript ya taarifa binafsi -->
+  <script type="module" src="info.js"></script>
+</body>
+</html>
