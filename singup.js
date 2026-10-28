@@ -1,16 +1,27 @@
 
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-const SUPABASE_URL = "https://rpkogiieegqgxqbzwxwo.supabase.co";
+
+/* =====================================
+   1. SUPABASE CONFIGURATION
+===================================== */
+
+const SUPABASE_URL =
+  "https://rpkogiieegqgxqbzwxwo.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_2TEqZv-NBM9n5knU46ngqA_wqO3V1uf";
+
+const MARKETPLACE_URL =
+  "https://mrnehemiah.github.io/";
 
 const supabase = createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
 
-/* VITU VYA HTML */
+/* =====================================
+   2. HTML ELEMENTS
+===================================== */
 
 const signupForm = document.getElementById("signupForm");
 const signupMessage = document.getElementById("signupMessage");
@@ -23,30 +34,25 @@ const passwordInput = document.getElementById("password");
 const confirmPasswordInput =
   document.getElementById("confirmPassword");
 
-const acceptTermsInput = document.getElementById("acceptTerms");
+const acceptTermsInput =
+  document.getElementById("acceptTerms");
 
-const emailGroup = document.getElementById("emailGroup");
-const phoneGroup = document.getElementById("phoneGroup");
+const signupButton =
+  document.getElementById("signupButton");
 
-const emailMethodBtn = document.getElementById("emailMethodBtn");
-const phoneMethodBtn = document.getElementById("phoneMethodBtn");
-
-const togglePasswordBtn =
-  document.getElementById("togglePassword");
-
-const toggleConfirmPasswordBtn =
-  document.getElementById("toggleConfirmPassword");
-
-const signupButton = document.getElementById("signupButton");
 const signupButtonText =
   document.getElementById("signupButtonText");
 
-/* HALI YA FOMU */
+/* =====================================
+   3. HALI YA USAJILI
+===================================== */
 
-let signupMethod = "email";
 let isSubmitting = false;
+let redirecting = false;
 
-/* UJUMBE KWA MTUMIAJI */
+/* =====================================
+   4. UJUMBE KWA MTEJA
+===================================== */
 
 function showMessage(message, type = "info") {
   if (!signupMessage) return;
@@ -69,227 +75,93 @@ function hideMessage() {
   signupMessage.className = "message-box";
 }
 
-/* KUBADILISHA HALI YA KITufe */
+/* =====================================
+   5. HALI YA KITufe
+===================================== */
 
 function setLoading(loading) {
   isSubmitting = loading;
 
   if (signupButton) {
-    signupButton.disabled = loading;
+    signupButton.disabled = loading || redirecting;
     signupButton.setAttribute(
       "aria-busy",
-      String(loading)
+      String(loading || redirecting)
     );
   }
 
   if (signupButtonText) {
-    signupButtonText.textContent = loading
-      ? "Inatengeneza akaunti..."
-      : "Fungua Akaunti";
-  }
-
-  if (emailMethodBtn) {
-    emailMethodBtn.disabled = loading;
-  }
-
-  if (phoneMethodBtn) {
-    phoneMethodBtn.disabled = loading;
+    if (redirecting) {
+      signupButtonText.textContent = "Unaelekezwa sokoni...";
+    } else {
+      signupButtonText.textContent = loading
+        ? "Inatengeneza akaunti..."
+        : "Fungua Akaunti";
+    }
   }
 }
 
-/* KUHAKIKI KUWA HTML IPO */
-
-function checkRequiredElements() {
-  const requiredElements = [
-    signupForm,
-    signupMessage,
-    fullNameInput,
-    emailInput,
-    phoneInput,
-    passwordInput,
-    confirmPasswordInput,
-    acceptTermsInput,
-    emailGroup,
-    phoneGroup,
-    emailMethodBtn,
-    phoneMethodBtn,
-    togglePasswordBtn,
-    toggleConfirmPasswordBtn,
-    signupButton,
-    signupButtonText
-  ];
-
-  return requiredElements.every(Boolean);
-}
-
-if (!checkRequiredElements()) {
-  console.error(
-    "ZUNE Signup: Kuna HTML element inayokosekana. " +
-    "Hakikisha IDs za signup.html zinafanana na signup.js."
-  );
-}
-
-/* KUCHAGUA EMAIL AU SIMU */
-
-function setSignupMethod(method) {
-  if (isSubmitting) return;
-
-  signupMethod = method === "phone" ? "phone" : "email";
-
-  const useEmail = signupMethod === "email";
-
-  emailGroup.hidden = !useEmail;
-  phoneGroup.hidden = useEmail;
-
-  emailInput.required = useEmail;
-  phoneInput.required = !useEmail;
-
-  emailMethodBtn.classList.toggle("active", useEmail);
-  phoneMethodBtn.classList.toggle("active", !useEmail);
-
-  emailMethodBtn.setAttribute(
-    "aria-pressed",
-    String(useEmail)
-  );
-
-  phoneMethodBtn.setAttribute(
-    "aria-pressed",
-    String(!useEmail)
-  );
-
-  emailInput.disabled = !useEmail;
-  phoneInput.disabled = useEmail;
-
-  hideMessage();
-}
-
-emailMethodBtn.addEventListener("click", () => {
-  setSignupMethod("email");
-});
-
-phoneMethodBtn.addEventListener("click", () => {
-  setSignupMethod("phone");
-});
-
-/* KUONYESHA AU KUFICHA PASSWORD */
-
-function togglePasswordVisibility(input, button) {
-  if (!input || !button) return;
-
-  const shouldShow = input.type === "password";
-
-  input.type = shouldShow ? "text" : "password";
-  button.textContent = shouldShow ? "Ficha" : "Onyesha";
-
-  button.setAttribute(
-    "aria-pressed",
-    String(shouldShow)
-  );
-
-  button.setAttribute(
-    "aria-label",
-    shouldShow ? "Ficha password" : "Onyesha password"
-  );
-}
-
-togglePasswordBtn.addEventListener("click", () => {
-  togglePasswordVisibility(
-    passwordInput,
-    togglePasswordBtn
-  );
-});
-
-toggleConfirmPasswordBtn.addEventListener("click", () => {
-  togglePasswordVisibility(
-    confirmPasswordInput,
-    toggleConfirmPasswordBtn
-  );
-});
-
-/* KUSAFISHA TAARIFA */
+/* =====================================
+   6. KUSAFISHA TAARIFA
+===================================== */
 
 function getFullName() {
-  return fullNameInput.value.trim().replace(/\s+/g, " ");
+  return (fullNameInput?.value || "")
+    .trim()
+    .replace(/\s+/g, " ");
 }
 
 function getEmail() {
-  return emailInput.value.trim().toLowerCase();
+  return (emailInput?.value || "")
+    .trim()
+    .toLowerCase();
 }
 
 function getPhone() {
-  return phoneInput.value.trim().replace(/[\s()-]/g, "");
+  return (phoneInput?.value || "")
+    .trim()
+    .replace(/[\s()-]/g, "");
 }
 
-/* KUHAKIKI JINA */
+/* =====================================
+   7. KUHAKIKI FOMU
+===================================== */
 
-function validateFullName() {
-  const name = getFullName();
+function validateForm() {
+  const fullName = getFullName();
+  const email = getEmail();
+  const phone = getPhone();
+  const password = passwordInput?.value || "";
+  const confirmation = confirmPasswordInput?.value || "";
 
-  if (name.length < 2) {
+  if (fullName.length < 2 || fullName.length > 100) {
     return "Tafadhali andika jina lako kamili.";
   }
 
-  if (name.length > 100) {
-    return "Jina lako ni refu sana.";
-  }
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  return "";
-}
-
-/* KUHAKIKI EMAIL */
-
-function validateEmail() {
-  const email = getEmail();
-
-  if (!email) {
-    return "Tafadhali andika barua pepe yako.";
-  }
-
-  const emailPattern =
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!emailPattern.test(email)) {
+  if (!emailPattern.test(email) || email.length > 254) {
     return "Tafadhali andika barua pepe iliyo sahihi.";
   }
 
-  if (email.length > 254) {
-    return "Barua pepe ni ndefu sana.";
-  }
-
-  return "";
-}
-
-/* KUHAKIKI NAMBA YA SIMU */
-
-function validatePhone() {
-  const phone = getPhone();
-
-  if (!phone) {
-    return "Tafadhali andika namba yako ya simu.";
-  }
+  /*
+    Namba ihifadhiwe katika muundo wa kimataifa.
+    Mfano: +255712345678
+  */
 
   if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
     return (
-      "Weka namba yenye msimbo wa nchi, " +
-      "kwa mfano +255712345678."
+      "Andika namba ya simu yenye msimbo wa nchi. " +
+      "Mfano: +255712345678."
     );
   }
-
-  return "";
-}
-
-/* KUHAKIKI PASSWORD */
-
-function validatePassword() {
-  const password = passwordInput.value;
-  const confirmation = confirmPasswordInput.value;
 
   if (password.length < 8) {
     return "Password lazima iwe na angalau herufi 8.";
   }
 
   if (password.length > 72) {
-    return "Password imezidi urefu unaoruhusiwa.";
+    return "Password ni ndefu sana.";
   }
 
   if (/\s/.test(password)) {
@@ -300,193 +172,21 @@ function validatePassword() {
     return "Password ulizoweka hazifanani.";
   }
 
-  return "";
-}
-
-/* KUHAKIKI MASHARTI */
-
-function validateTerms() {
-  if (!acceptTermsInput.checked) {
-    return "Tafadhali kubali Masharti ya Matumizi na Sera ya Faragha.";
-  }
-
-  return "";
-}
-
-/* KUHAKIKI FOMU YOTE */
-
-function validateSignupForm() {
-  const nameError = validateFullName();
-
-  if (nameError) return nameError;
-
-  const contactError =
-    signupMethod === "email"
-      ? validateEmail()
-      : validatePhone();
-
-  if (contactError) return contactError;
-
-  const passwordError = validatePassword();
-
-  if (passwordError) return passwordError;
-
-  const termsError = validateTerms();
-
-  if (termsError) return termsError;
-
-  return "";
-}
-
-/* KUONDOA UJUMBE WA ZAMANI */
-
-[
-  fullNameInput,
-  emailInput,
-  phoneInput,
-  passwordInput,
-  confirmPasswordInput
-].forEach((input) => {
-  input.addEventListener("input", hideMessage);
-});
-
-acceptTermsInput.addEventListener("change", hideMessage);
-
-/* KUANZA KWA NJIA YA EMAIL */
-
-setSignupMethod("email");
-
-/* KUUNDA AKAUNTI KUPITIA SUPABASE */
-
-async function createZuneAccount() {
-  if (isSubmitting) return;
-
-  hideMessage();
-
-  const validationError = validateSignupForm();
-
-  if (validationError) {
-    showMessage(validationError, "error");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const fullName = getFullName();
-    const password = passwordInput.value;
-
-    let signupResult;
-
-    if (signupMethod === "email") {
-      const email = getEmail();
-
-      signupResult = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-            signup_method: "email"
-          }
-        }
-      });
-    } else {
-      const phone = getPhone();
-
-      signupResult = await supabase.auth.signUp({
-        phone,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-            phone_number: phone,
-            signup_method: "phone"
-          }
-        }
-      });
-    }
-
-    const { data, error } = signupResult;
-
-    if (error) {
-      console.error("ZUNE signup error:", error);
-
-      showMessage(
-        getSignupErrorMessage(error),
-        "error"
-      );
-
-      return;
-    }
-
-    if (!data || !data.user) {
-      showMessage(
-        "Hatukuweza kuthibitisha akaunti iliyoundwa. Tafadhali jaribu tena.",
-        "error"
-      );
-
-      return;
-    }
-
-    /*
-      Supabase inaweza kuunda akaunti bila kuanzisha
-      session ikiwa uthibitishaji wa mawasiliano
-      bado unahitajika kwenye mipangilio ya mradi.
-    */
-
-    if (!data.session) {
-      showMessage(
-        "Akaunti imepokelewa, lakini bado hujaingia. " +
-        "Angalia mipangilio ya uthibitishaji wa Supabase " +
-        "au tumia ukurasa wa kuingia kuendelea.",
-        "info"
-      );
-
-      return;
-    }
-
-    /*
-      Trigger ya Supabase inaweza kuwa imeunda profile
-      yenyewe. Hatutengenezi profile ya pili hapa.
-    */
-
-    showMessage(
-      "Akaunti yako ya ZUNE imefunguliwa kikamilifu!",
-      "success"
+  if (!acceptTermsInput?.checked) {
+    return (
+      "Tafadhali kubali Masharti ya Matumizi " +
+      "na Sera ya Faragha."
     );
-
-    signupForm.reset();
-
-    setSignupMethod("email");
-
-    /*
-      Kuelekeza mtumiaji kwenye login baada ya
-      kuonyesha ujumbe wa mafanikio.
-      Sehemu ya 4 itaunganisha utaratibu huu.
-    */
-
-    window.setTimeout(() => {
-      window.location.assign("login.html");
-    }, 1500);
-
-  } catch (error) {
-    console.error("ZUNE signup unexpected error:", error);
-
-    showMessage(
-      "Tatizo la muunganisho limetokea. " +
-      "Kagua intaneti yako kisha ujaribu tena.",
-      "error"
-    );
-
-  } finally {
-    setLoading(false);
   }
+
+  return "";
 }
 
-/* KUTAFSIRI MAKOSA YA SUPABASE */
+/* =====================================
+   8. KUTAFSIRI MAKOSA YA SUPABASE
+===================================== */
 
-function getSignupErrorMessage(error) {
+function getErrorMessage(error) {
   const message = String(error?.message || "").toLowerCase();
   const code = String(error?.code || "").toLowerCase();
 
@@ -496,8 +196,8 @@ function getSignupErrorMessage(error) {
     message.includes("user already exists")
   ) {
     return (
-      "Akaunti yenye taarifa hizi huenda tayari ipo. " +
-      "Jaribu kuingia kupitia ukurasa wa login."
+      "Akaunti yenye email hii huenda tayari ipo. " +
+      "Jaribu kuingia kupitia ukurasa wa Login."
     );
   }
 
@@ -510,125 +210,229 @@ function getSignupErrorMessage(error) {
     )
   ) {
     return (
-      "Password haikidhi masharti ya usalama ya Supabase. " +
-      "Tengeneza password imara zaidi."
+      "Password haikidhi masharti ya usalama. " +
+      "Tafadhali tumia password imara zaidi."
     );
   }
 
   if (
     message.includes("phone") &&
     (
-      message.includes("disabled") ||
-      message.includes("not enabled")
+      message.includes("invalid") ||
+      message.includes("format")
     )
   ) {
-    return (
-      "Usajili kwa simu haujawashwa kwenye mipangilio ya " +
-      "Supabase Auth. Kagua mipangilio ya Phone provider."
-    );
+    return "Kagua muundo wa namba yako ya simu.";
   }
 
   if (
-    message.includes("email") &&
-    (
-      message.includes("disabled") ||
-      message.includes("not enabled")
-    )
+    message.includes("rate limit") ||
+    code === "429"
   ) {
-    return (
-      "Usajili kwa barua pepe haujawashwa kwenye " +
-      "mipangilio ya Supabase Auth."
-    );
-  }
-
-  if (
-    message.includes("phone") &&
-    (
-      message.includes("otp") ||
-      message.includes("sms")
-    )
-  ) {
-    return (
-      "Supabase inahitaji mipangilio ya uthibitishaji wa simu. " +
-      "Kagua Phone provider na chaguo la uthibitishaji."
-    );
-  }
-
-  if (
-    message.includes("email") &&
-    (
-      message.includes("confirm") ||
-      message.includes("confirmation")
-    )
-  ) {
-    return (
-      "Supabase inaonekana kuhitaji uthibitishaji wa email. " +
-      "Kagua mipangilio ya uthibitishaji wa email kwenye mradi wako."
-    );
-  }
-
-  if (code === "429" || message.includes("rate limit")) {
     return (
       "Umejaribu mara nyingi kwa muda mfupi. " +
-      "Subiri kidogo kabla ya kujaribu tena."
+      "Subiri kidogo kisha ujaribu tena."
     );
   }
+
+  if (
+    message.includes("network") ||
+    message.includes("fetch")
+  ) {
+    return (
+      "Tatizo la intaneti limetokea. " +
+      "Kagua muunganisho wako."
+    );
+  }
+
+  console.error("ZUNE signup error:", error);
 
   return (
     "Usajili haukufanikiwa. Tafadhali kagua taarifa zako " +
-    "na mipangilio ya Supabase, kisha ujaribu tena."
+    "na mipangilio ya Supabase kisha ujaribu tena."
   );
 }
 
-/* KUTUMA FOMU YA USAJILI */
+/* =====================================
+   9. KUELEKEZA ZUNE MARKETPLACE
+===================================== */
 
-if (signupForm) {
-  signupForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+function redirectToMarketplace() {
+  redirecting = true;
+  setLoading(false);
 
-    await createZuneAccount();
-  });
+  showMessage(
+    "Akaunti yako imefunguliwa! " +
+    "Unaelekezwa ZUNE Marketplace...",
+    "success"
+  );
+
+  setLoading(false);
+
+  window.setTimeout(() => {
+    window.location.replace(MARKETPLACE_URL);
+  }, 1200);
 }
 
-/* KUZUIA KUTUMA FOMU KWA ENTER MARA NYINGI */
+/* =====================================
+   10. KUTENGENEZA AKAUNTI
+===================================== */
 
-if (signupForm) {
-  signupForm.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Enter" &&
-      event.target.tagName !== "TEXTAREA" &&
-      isSubmitting
-    ) {
-      event.preventDefault();
-    }
-  });
-}
+async function createAccount(event) {
+  event.preventDefault();
 
-/* KUFICHA UJUMBE WAKATI MTUMIAJI ANABADILISHA NJIA */
+  if (isSubmitting || redirecting) return;
 
-[emailInput, phoneInput].forEach((input) => {
-  if (input) {
-    input.addEventListener("change", hideMessage);
-  }
-});
+  hideMessage();
 
-/* KUHAKIKI HALI YA MWANZO */
+  const validationError = validateForm();
 
-function initializeSignupPage() {
-  if (!signupForm) {
-    console.error(
-      "ZUNE Signup: Fomu yenye ID signupForm haijapatikana."
-    );
+  if (validationError) {
+    showMessage(validationError, "error");
     return;
   }
 
-  setSignupMethod("email");
+  setLoading(true);
 
-  if (signupButton) {
-    signupButton.disabled = false;
+  try {
+    const fullName = getFullName();
+    const email = getEmail();
+    const phone = getPhone();
+    const password = passwordInput.value;
+
+    /*
+      Email ndiyo kitambulisho cha msingi cha Supabase Auth.
+      Namba ya simu inahifadhiwa kwenye user metadata.
+      Hatutumii OTP kwenye code hii.
+    */
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          phone_number: phone
+        }
+      }
+    });
+
+    if (error) {
+      showMessage(getErrorMessage(error), "error");
+      return;
+    }
+
+    if (!data?.user) {
+      showMessage(
+        "Akaunti haikuweza kuthibitishwa. Tafadhali jaribu tena.",
+        "error"
+      );
+      return;
+    }
+
+    /*
+      Session ikiwa ipo, mteja tayari ameingia.
+    */
+
+    if (data.session) {
+      redirectToMarketplace();
+      return;
+    }
+
+    /*
+      Hakuna session: huenda Supabase inahitaji email
+      ithibitishwe au haijaanzisha login ya moja kwa moja.
+    */
+
+    showMessage(
+      "Akaunti imeundwa, lakini Supabase haijakuingiza moja kwa moja. " +
+      "Ili kuendelea bila uthibitishaji, kagua mipangilio ya " +
+      "Email Confirmations kwenye Supabase Auth. " +
+      "Unaweza pia kuingia kupitia ukurasa wa Login.",
+      "info"
+    );
+
+  } catch (error) {
+    console.error("ZUNE signup unexpected error:", error);
+
+    showMessage(
+      "Tatizo limetokea wakati wa kutengeneza akaunti. " +
+      "Kagua intaneti yako kisha ujaribu tena.",
+      "error"
+    );
+
+  } finally {
+    setLoading(false);
+  }
+}
+
+/* =====================================
+   11. KUSIKILIZA FOMU
+===================================== */
+
+if (signupForm) {
+  signupForm.addEventListener("submit", createAccount);
+} else {
+  console.error(
+    "ZUNE Signup: signupForm haijapatikana kwenye HTML."
+  );
+}
+
+/* =====================================
+   12. KUFUTA UJUMBE WA ZAMANI
+===================================== */
+
+[
+  fullNameInput,
+  emailInput,
+  phoneInput,
+  passwordInput,
+  confirmPasswordInput
+].forEach((input) => {
+  input?.addEventListener("input", hideMessage);
+});
+
+acceptTermsInput?.addEventListener("change", hideMessage);
+
+/* =====================================
+   13. KUHAKIKI HTML
+===================================== */
+
+function initializeSignup() {
+  const requiredElements = [
+    signupForm,
+    signupMessage,
+    fullNameInput,
+    emailInput,
+    phoneInput,
+    passwordInput,
+    confirmPasswordInput,
+    acceptTermsInput,
+    signupButton,
+    signupButtonText
+  ];
+
+  if (requiredElements.some((element) => !element)) {
+    console.error(
+      "ZUNE Signup: Kuna HTML element inayokosekana. " +
+      "Hakikisha IDs za signup.html zinafanana na signup.js."
+    );
+
+    if (signupButton) {
+      signupButton.disabled = true;
+    }
+
+    if (signupMessage) {
+      showMessage(
+        "Fomu ya usajili haijakamilika. Tafadhali kagua signup.html.",
+        "error"
+      );
+    }
+
+    return;
   }
 
   console.info("ZUNE Signup imeanzishwa.");
 }
 
-initializeSignupPage();
+initializeSignup();
