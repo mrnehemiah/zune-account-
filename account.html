@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087443">
+  <title>Akaunti Yangu | ZUNE Account</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #f4f7f5;
+      color: #17251c;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background: white;
+      padding: 16px 5%;
+      border-bottom: 1px solid #e0e8e2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #087443;
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #087443;
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+    }
+
+    button, .button {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .logout {
+      background: #fff0ed;
+      color: #a52b20;
+    }
+
+    main {
+      width: min(100% - 32px, 900px);
+      margin: 30px auto;
+    }
+
+    .hero {
+      background: #123b2a;
+      color: white;
+      padding: 28px 23px;
+      border-radius: 18px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: #d9f0e1;
+      color: #087443;
+      display: grid;
+      place-items: center;
+      font-size: 29px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    h1 { margin: 0 0 8px; font-size: 25px; }
+    .hero p { margin: 5px 0; color: #dcebe1; overflow-wrap: anywhere; }
+
+    .status {
+      display: inline-block;
+      margin-top: 14px;
+      background: #e0f5e7;
+      color: #176b40;
+      padding: 7px 11px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e1e8e3;
+      border-radius: 15px;
+      padding: 22px;
+      margin-top: 20px;
+    }
+
+    .panel h2 { margin-top: 0; font-size: 19px; }
+
+    .detail {
+      padding: 14px 0;
+      border-bottom: 1px solid #edf0ee;
+    }
+
+    .detail:last-child { border-bottom: 0; }
+
+    .label {
+      display: block;
+      color: #68766d;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .value {
+      font-size: 15px;
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .link-card {
+      border: 1px solid #e0e8e2;
+      padding: 17px;
+      border-radius: 12px;
+      color: #183b29;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .link-card span {
+      display: block;
+      font-size: 13px;
+      font-weight: 400;
+      color: #68766d;
+      margin-top: 7px;
+      line-height: 1.5;
+    }
+
+    #pageMessage {
+      color: #68766d;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: #68766d;
+      font-size: 12px;
+    }
+
+    @media (max-width: 520px) {
+      header { padding: 13px 16px; }
+      .brand { font-size: 17px; }
+      .links { grid-template-columns: 1fr; }
+      .hero { padding: 23px 18px; }
+      h1 { font-size: 21px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">Z</div>
+      ZUNE Account
+    </div>
+
+    <button id="logoutButton" class="logout" type="button">
+      Toka
+    </button>
+  </header>
+
+  <main>
+    <div id="pageMessage" role="status">
+      Inapakia taarifa za akaunti yako...
+    </div>
+
+    <section class="hero">
+      <div class="profile">
+        <div class="avatar" id="avatar">Z</div>
+
+        <div>
+          <h1 id="profileName">Mtumiaji wa ZUNE</h1>
+          <p id="profileEmail">Inapakia email...</p>
+          <span class="status" id="accountStatus">
+            Akaunti ya ZUNE
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Taarifa za akaunti</h2>
+
+      <div class="detail">
+        <span class="label">Jina kamili</span>
+        <span class="value" id="fullName">Inapakia...</span>
+      </div>
+
+      <div class="detail">
+        <span class="label">Email</span>
+        <span class="value" id="emailValue">Inapakia...</span>
+      </div>
+
+      <div class="detail">
+        <span class="label">Namba ya simu</span>
+        <span class="value" id="phoneValue">Haijawekwa</span>
+      </div>
+
+      <div class="detail">
+        <span class="label">ZUNE ID</span>
+        <span class="value" id="zuneId">Inapakia...</span>
+      </div>
+
+      <div class="detail">
+        <span class="label">Aina ya akaunti</span>
+        <span class="value" id="roleValue">Mtumiaji</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Mipangilio</h2>
+
+      <div class="links">
+        <a class="link-card" href="personal-info.html">
+          👤 Taarifa binafsi
+          <span>Angalia na simamia wasifu wako.</span>
+        </a>
+
+        <a class="link-card" href="security.html">
+          🔐 Usalama
+          <span>Password na ulinzi wa akaunti.</span>
+        </a>
+
+        <a class="link-card" href="privacy.html">
+          🛡️ Faragha
+          <span>Mipangilio ya faragha ya akaunti.</span>
+        </a>
+
+        <a class="link-card"
+           href="https://mrnehemiah.github.io/">
+          🛍️ ZUNE Marketplace
+          <span>Rudi kwenye soko la ZUNE.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 ZUNE Account
+  </footer>
+
+  <script type="module" src="account.js"></script>
+</body>
+</html>
