@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#087443">
+  <title>ZUNE Account</title>
+  <style>
+    :root {
+      --green: #087443;
+      --dark: #123b2a;
+      --bg: #f5f7f6;
+      --muted: #69756e;
+      --border: #e3e9e5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #18241d;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--green);
+      font-size: 23px;
+      font-weight: 800;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      background: var(--green);
+      color: white;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    main {
+      width: min(100% - 32px, 960px);
+      margin: 42px auto;
+    }
+
+    .welcome {
+      background: var(--dark);
+      color: white;
+      border-radius: 20px;
+      padding: 30px 24px;
+      margin-bottom: 24px;
+    }
+
+    .welcome h1 {
+      margin: 0 0 12px;
+      font-size: clamp(27px, 5vw, 38px);
+    }
+
+    .welcome p {
+      line-height: 1.7;
+      max-width: 600px;
+      color: #e1eee6;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 23px;
+      margin-bottom: 18px;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 19px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .item-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      background: #e7f4ec;
+      color: var(--green);
+      border-radius: 12px;
+      font-size: 21px;
+    }
+
+    .item p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .button {
+      display: inline-block;
+      background: var(--green);
+      color: white;
+      padding: 13px 19px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 13px 16px;
+      }
+
+      .tag {
+        display: none;
+      }
+
+      main {
+        margin-top: 22px;
+      }
+
+      .welcome {
+        padding: 25px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">Z</div>
+      <span>ZUNE Account</span>
+    </div>
+    <span class="tag">Akaunti yako. Huduma zako.</span>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <h1>Akaunti yako ya ZUNE</h1>
+      <p>
+        Simamia taarifa zako, linda akaunti yako na
+        dhibiti mapendeleo yako yote ya ZUNE sehemu moja.
+      </p>
+      <a class="button" href="#account-services">
+        Gundua huduma
+      </a>
+    </section>
+
+    <section class="panel" id="account-services">
+      <h2>Usimamizi wa akaunti</h2>
+
+      <div class="item">
+        <div class="item-icon">👤</div>
+        <div>
+          <strong>Taarifa binafsi</strong>
+          <p>Jina, email, namba ya simu na wasifu wako.</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-icon">🔐</div>
+        <div>
+          <strong>Usalama</strong>
+          <p>Password na ulinzi wa akaunti yako.</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-icon">🛡️</div>
+        <div>
+          <strong>Faragha na uthibitishaji</strong>
+          <p>Simamia taarifa na mipangilio ya akaunti.</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-icon">🛍️</div>
+        <div>
+          <strong>ZUNE Marketplace</strong>
+          <p>Akaunti yako itakuunganisha na huduma za soko la ZUNE.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 ZUNE Account. Haki zote zimehifadhiwa.
+  </footer>
+</body>
+</html>
