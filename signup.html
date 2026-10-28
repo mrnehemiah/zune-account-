@@ -1,0 +1,774 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#087f45">
+  <meta name="description" content="Fungua akaunti yako ya ZUNE na uanze kutumia huduma za ZUNE.">
+
+  <title>Fungua Akaunti | ZUNE</title>
+
+  <style>
+    :root {
+      --green: #087f45;
+      --green-dark: #056536;
+      --green-light: #eaf7ef;
+      --orange: #ff8a00;
+      --background: #f5f8f6;
+      --white: #ffffff;
+      --text: #17231c;
+      --muted: #6c7971;
+      --border: #dfe8e2;
+      --danger: #c62828;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    input,
+    button,
+    select {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-inner {
+      width: 100%;
+      max-width: 1100px;
+      min-height: 72px;
+      padding: 12px 20px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .brand-logo {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: var(--green-dark);
+      color: var(--white);
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .brand-logo::after {
+      content: "";
+      position: absolute;
+      top: 8px;
+      right: 6px;
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: var(--orange);
+      transform: rotate(25deg);
+    }
+
+    .brand-name {
+      color: var(--green-dark);
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .brand-caption {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .top-login {
+      color: var(--green-dark);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    .top-login:hover {
+      background: var(--green-light);
+    }
+
+    .signup-layout {
+      width: 100%;
+      max-width: 1100px;
+      padding: 32px 20px 45px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 35px;
+      align-items: start;
+    }
+
+    .intro-panel {
+      padding: 25px 5px;
+    }
+
+    .intro-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      border-radius: 30px;
+      background: var(--green-light);
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .intro-panel h1 {
+      font-size: clamp(30px, 4vw, 43px);
+      line-height: 1.18;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .intro-panel h1 span {
+      color: var(--green);
+    }
+
+    .intro-description {
+      max-width: 430px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="index.html" class="brand" aria-label="ZUNE Mwanzo">
+        <span class="brand-logo">Z</span>
+        <span>
+          <span class="brand-name">ZUNE</span>
+          <span class="brand-caption" style="display:block">
+            Akaunti yako, huduma zako
+          </span>
+        </span>
+      </a>
+
+      <a href="login.html" class="top-login">
+        Ingia
+      </a>
+    </div>
+  </header>
+
+  <main class="signup-layout">
+    <section class="intro-panel">
+      <div class="intro-label">
+        <span aria-hidden="true">✦</span>
+        Karibu kwenye ZUNE
+      </div>
+
+      <h1>
+        Anza safari yako
+        <span>na ZUNE.</span>
+      </h1>
+
+      <p class="intro-description">
+        Fungua akaunti moja ya ZUNE ili uweze kutumia
+        ZUNE Marketplace na huduma nyingine zinazohusiana
+        na akaunti yako.
+      </p>
+    </section>
+
+    <!-- Fomu ya usajili -->
+    <section class="signup-card">
+      <div class="card-heading">
+        <h2>Fungua akaunti</h2>
+        <p>Jaza taarifa zako ili kuanza kutumia ZUNE.</p>
+      </div>
+
+      <!-- Njia ya usajili -->
+      <div class="method-label">Chagua njia ya usajili</div>
+
+      <div class="method-switch" role="group" aria-label="Njia ya usajili">
+        <button
+          type="button"
+          class="method-button active"
+          id="emailMethodBtn"
+          aria-pressed="true"
+        >
+          <span aria-hidden="true">✉</span>
+          Email
+        </button>
+
+        <button
+          type="button"
+          class="method-button"
+          id="phoneMethodBtn"
+          aria-pressed="false"
+        >
+          <span aria-hidden="true">☎</span>
+          Simu
+        </button>
+      </div>
+
+      <!-- Ujumbe wa mfumo -->
+      <div
+        id="signupMessage"
+        class="message-box"
+        role="status"
+        aria-live="polite"
+        hidden
+      ></div>
+
+      <form id="signupForm" novalidate>
+        <!-- Jina kamili -->
+        <div class="form-group">
+          <label for="fullName">Jina kamili</label>
+
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="Andika jina lako kamili"
+            autocomplete="name"
+            minlength="2"
+            maxlength="100"
+            required
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group" id="emailGroup">
+          <label for="email">Barua pepe</label>
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="mfano@email.com"
+            autocomplete="email"
+            maxlength="254"
+          />
+
+          <small class="field-hint">
+            Tumia barua pepe unayoweza kuipata.
+          </small>
+        </div>
+
+        <!-- Simu -->
+        <div class="form-group" id="phoneGroup" hidden>
+          <label for="phone">Namba ya simu</label>
+
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="+255 7XX XXX XXX"
+            autocomplete="tel"
+            inputmode="tel"
+            maxlength="20"
+          />
+
+          <small class="field-hint">
+            Weka namba yenye msimbo wa nchi, kwa mfano +255.
+          </small>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Tengeneza password"
+              autocomplete="new-password"
+              minlength="8"
+              maxlength="72"
+              required
+            />
+
+            <button
+              type="button"
+              class="password-toggle"
+              id="togglePassword"
+              aria-label="Onyesha password"
+              aria-pressed="false"
+            >
+              Onyesha
+            </button>
+          </div>
+
+          <small class="field-hint">
+            Tumia angalau herufi 8. Chagua password ambayo
+            wengine hawawezi kuikisia kwa urahisi.
+          </small>
+        </div>
+
+        <!-- Rudia password -->
+        <div class="form-group">
+          <label for="confirmPassword">Thibitisha password</label>
+
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Rudia password yako"
+              autocomplete="new-password"
+              minlength="8"
+              maxlength="72"
+              required
+            />
+
+            <button
+              type="button"
+              class="password-toggle"
+              id="toggleConfirmPassword"
+              aria-label="Onyesha password uliyoweka tena"
+              aria-pressed="false"
+            >
+              Onyesha
+            </button>
+          </div>
+        </div>
+
+        <!-- Sehemu ya vitufe inaendelea katika sehemu inayofuata -->
+
+        <!-- Kukubali masharti -->
+        <div class="terms-group">
+          <label class="terms-label" for="acceptTerms">
+            <input
+              type="checkbox"
+              id="acceptTerms"
+              name="acceptTerms"
+              required
+            />
+
+            <span>
+              Nimekubali
+              <a href="terms.html" target="_blank" rel="noopener">
+                Masharti ya Matumizi
+              </a>
+              na
+              <a href="privacy.html" target="_blank" rel="noopener">
+                Sera ya Faragha
+              </a>
+              za ZUNE.
+            </span>
+          </label>
+        </div>
+
+        <!-- Kitufe cha usajili -->
+        <button
+          type="submit"
+          class="signup-button"
+          id="signupButton"
+        >
+          <span id="signupButtonText">Fungua Akaunti</span>
+          <span aria-hidden="true">→</span>
+        </button>
+
+        <p class="security-note">
+          <span aria-hidden="true">🔒</span>
+          Taarifa zako zitalindwa kwa kutumia mfumo wa akaunti wa ZUNE.
+        </p>
+      </form>
+
+      <!-- Kuingia kwa mwenye akaunti -->
+      <div class="login-prompt">
+        Tayari una akaunti?
+        <a href="login.html">Ingia hapa</a>
+      </div>
+    </section>
+
+    <!-- Maelezo ya huduma -->
+    <section class="benefits">
+      <div class="benefit-item">
+        <span class="benefit-icon" aria-hidden="true">✓</span>
+        <div>
+          <strong>Akaunti moja</strong>
+          <p>Tumia akaunti yako kwenye huduma za ZUNE.</p>
+        </div>
+      </div>
+
+      <div class="benefit-item">
+        <span class="benefit-icon" aria-hidden="true">🔐</span>
+        <div>
+          <strong>Ulinzi wa akaunti</strong>
+          <p>Ingia kwa taarifa zako za siri.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <strong>ZUNE</strong>
+      <p>© 2026 ZUNE. Haki zote zimehifadhiwa.</p>
+    </footer>
+  </main>
+</body>
+</html>
+
+<style>
+  .signup-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px;
+    box-shadow: 0 12px 35px rgba(20, 50, 30, 0.06);
+  }
+
+  .card-heading {
+    margin-bottom: 23px;
+  }
+
+  .card-heading h2 {
+    font-size: 25px;
+    margin-bottom: 7px;
+  }
+
+  .card-heading p,
+  .field-hint {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .method-label {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .method-switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-bottom: 22px;
+  }
+
+  .method-button {
+    min-height: 46px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: #fff;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .method-button.active {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: var(--green-dark);
+  }
+
+  .form-group {
+    margin-bottom: 19px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .form-group input {
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 13px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    outline: none;
+    color: var(--text);
+    background: #fff;
+  }
+
+  .form-group input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(8, 127, 69, 0.1);
+  }
+
+  .form-group input[aria-invalid="true"] {
+    border-color: var(--danger);
+  }
+
+  .field-hint {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+  }
+
+  .password-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .password-wrapper:focus-within {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(8, 127, 69, 0.1);
+  }
+
+  .password-wrapper input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .password-wrapper input:focus {
+    box-shadow: none;
+  }
+
+  .password-toggle {
+    border: 0;
+    background: transparent;
+    color: var(--green-dark);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px;
+  }
+
+  .terms-group {
+    margin: 23px 0;
+  }
+
+  .terms-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  .terms-label input {
+    width: 17px;
+    height: 17px;
+    margin-top: 3px;
+    flex-shrink: 0;
+    accent-color: var(--green);
+  }
+
+  .terms-label a,
+  .login-prompt a {
+    color: var(--green-dark);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .signup-button {
+    width: 100%;
+    min-height: 51px;
+    padding: 13px 17px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--green);
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .signup-button:hover {
+    background: var(--green-dark);
+  }
+
+  .signup-button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .security-note {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 15px;
+  }
+
+  .login-prompt {
+    border-top: 1px solid var(--border);
+    padding-top: 19px;
+    margin-top: 23px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .message-box {
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+  }
+
+  .message-box[hidden],
+  [hidden] {
+    display: none !important;
+  }
+
+  .message-box.error {
+    background: #fff0f0;
+    border: 1px solid #f1caca;
+    color: var(--danger);
+  }
+
+  .message-box.success {
+    background: #eaf7ef;
+    border: 1px solid #c8e8d3;
+    color: var(--green-dark);
+  }
+
+  .message-box.info {
+    background: #edf4ff;
+    border: 1px solid #ccdcf7;
+    color: #2056a5;
+  }
+
+  .benefits {
+    display: grid;
+    gap: 17px;
+    padding: 25px 5px;
+  }
+
+  .benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .benefit-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    background: var(--green-light);
+    color: var(--green);
+    border-radius: 10px;
+    font-weight: 800;
+  }
+
+  .benefit-item strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+
+  .benefit-item p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .page-footer {
+    grid-column: 1 / -1;
+    padding-top: 12px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .page-footer strong {
+    display: block;
+    color: var(--green);
+    font-size: 19px;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+  }
+
+  @media (max-width: 760px) {
+    .signup-layout {
+      grid-template-columns: 1fr;
+      gap: 15px;
+      padding: 22px 15px 35px;
+      max-width: 520px;
+    }
+
+    .intro-panel {
+      padding: 8px 2px 15px;
+    }
+
+    .intro-panel h1 {
+      font-size: 32px;
+    }
+
+    .signup-card {
+      padding: 21px 17px;
+    }
+
+    .benefits {
+      padding: 23px 3px;
+    }
+
+    .page-footer {
+      grid-column: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<!-- JavaScript ya usajili -->
+<script type="module" src="signup.js"></script>
+</html>
