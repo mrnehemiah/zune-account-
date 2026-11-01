@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#087b42">
+  <title>My Account | ZUNE</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --green: #087b42;
+      --dark: #065f32;
+      --light: #eaf7ef;
+      --gold: #d9a928;
+      --text: #18352a;
+      --muted: #718078;
+      --border: #e5eee8;
+      --white: #fff;
+      --background: #f5f9f6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .topbar {
+      height: 72px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6%;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--green);
+      letter-spacing: 1px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      background: var(--green);
+      color: white;
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 35px auto;
+      padding: 0 20px 50px;
+    }
+
+    .welcome {
+      margin-bottom: 24px;
+    }
+
+    .welcome h1 {
+      font-size: 29px;
+      color: var(--dark);
+      margin-bottom: 7px;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .profile-card {
+      background: linear-gradient(120deg, #087b42, #075c34);
+      border-radius: 22px;
+      padding: 28px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(8,123,66,.15);
+    }
+
+    .profile-card::after {
+      content: "";
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      border: 35px solid rgba(255,255,255,.06);
+      border-radius: 50%;
+      right: -75px;
+      top: -100px;
+    }
+
+    .avatar {
+      width: 82px;
+      height: 82px;
+      flex-shrink: 0;
+      background: rgba(255,255,255,.17);
+      border: 3px solid rgba(255,255,255,.65);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      font-weight: bold;
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-info h2 {
+      font-size: 22px;
+      margin-bottom: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-info p {
+      font-size: 13px;
+      color: #d8f1e1;
+      margin-bottom: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .verified {
+      display: none;
+      color: #d9f99d;
+    }
+
+    .account-details {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-top: 22px;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      color: var(--dark);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: var(--muted);
+    }
+
+    .detail-value {
+      font-weight: 700;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .menu-section {
+      margin-top: 30px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .menu-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 19px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 90px;
+      transition: .2s;
+    }
+
+    .menu-item:hover {
+      border-color: var(--green);
+      transform: translateY(-2px);
+      box-shadow: 0 7px 20px rgba(0,70,35,.06);
+    }
+
+    .menu-icon {
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+      background: var(--light);
+      color: var(--green);
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+    }
+
+    .menu-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .menu-text h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .menu-text p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .arrow {
+      color: #9aa9a0;
+      font-size: 20px;
+    }
+
+    .marketplace {
+      margin-top: 28px;
+      background: linear-gradient(120deg, #087b42, #064e2c);
+      border-radius: 19px;
+      padding: 25px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .marketplace h2 {
+      font-size: 20px;
+      margin-bottom: 7px;
+    }
+
+    .marketplace p {
+      color: #d5eddd;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .market-btn {
+      background: white;
+      color: var(--green);
+      border: none;
+      padding: 13px 17px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .logout-btn {
+      width: 100%;
+      margin-top: 25px;
+      padding: 16px;
+      background: #fff;
+      color: #c62828;
+      border: 1px solid #f2d5d5;
+      border-radius: 13px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background: #fff5f5;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 70px 15px;
+      color: var(--muted);
+    }
+
+    .loading-spinner {
+      width: 35px;
+      height: 35px;
+      border: 4px solid #dcebe1;
+      border-top-color: var(--green);
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-box {
+      background: #fff0f0;
+      color: #b42318;
+      border: 1px solid #f3cccc;
+      padding: 17px;
+      border-radius: 12px;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media(max-width: 650px) {
+      .topbar {
+        height: 65px;
+        padding: 0 17px;
+      }
+
+      .brand {
+        font-size: 21px;
+      }
+
+      .page {
+        margin-top: 25px;
+        padding: 0 15px 35px;
+      }
+
+      .welcome h1 {
+        font-size: 25px;
+      }
+
+      .profile-card {
+        padding: 21px 17px;
+        gap: 14px;
+      }
+
+      .avatar {
+        width: 68px;
+        height: 68px;
+        font-size: 28px;
+      }
+
+      .profile-info h2 {
+        font-size: 18px;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .menu-item {
+        min-height: 78px;
+        padding: 14px;
+      }
+
+      .marketplace {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .market-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="account.html" class="brand">
+      <div class="logo">Z</div>
+      ZUNE
+    </a>
+
+    <div class="top-actions">
+      <button class="icon-btn" onclick="location.href='settings.html'" title="Settings">⚙</button>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <div class="welcome">
+      <h1>My Account</h1>
+      <p>Manage your ZUNE identity and account information.</p>
+    </div>
+
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+      Loading your account...
+    </div>
+
+    <div id="accountContent" style="display:none;">
+
+      <section class="profile-card">
+
+        <div class="avatar" id="avatar">Z</div>
+
+        <div class="profile-info">
+          <h2 id="fullName">ZUNE User</h2>
+          <p id="email">Loading...</p>
+
+          <div class="status">
+            <span>●</span>
+            <span id="accountStatus">Active Account</span>
+          </div>
+
+          <div class="verified" id="verifiedBadge">
+            ✓ Verified Account
+          </div>
+        </div>
+
+      </section>
+
+      <section class="account-details">
+
+        <h3 class="section-title">Account Overview</h3>
+
+        <div class="detail-row">
+          <span class="detail-label">Full Name</span>
+          <span class="detail-value" id="detailName">—</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Email Address</span>
+          <span class="detail-value" id="detailEmail">—</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Phone Number</span>
+          <span class="detail-value" id="detailPhone">Not added</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Account Role</span>
+          <span class="detail-value" id="detailRole">User</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Verification</span>
+          <span class="detail-value" id="detailVerification">Not verified</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Member Since</span>
+          <span class="detail-value" id="detailDate">—</span>
+        </div>
+
+      </section>
+
+      <section class="menu-section">
+
+        <h3 class="section-title">Manage Your Account</h3>
+
+        <div class="menu-grid">
+
+          <a href="personal-info.html" class="menu-item">
+            <div class="menu-icon">👤</div>
+            <div class="menu-text">
+              <h3>Personal Information</h3>
+              <p>Manage your personal details</p>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+
+          <a href="security.html" class="menu-item">
+            <div class="menu-icon">🛡️</div>
+            <div class="menu-text">
+              <h3>Security</h3>
+              <p>Password and account security</p>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+
+          <a href="verification.html" class="menu-item">
+            <div class="menu-icon">✓</div>
+            <div class="menu-text">
+              <h3>Verification</h3>
+              <p>Verify your ZUNE identity</p>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+
+          <a href="privacy.html" class="menu-item">
+            <div class="menu-icon">🔒</div>
+            <div class="menu-text">
+              <h3>Privacy</h3>
+              <p>Manage your privacy settings</p>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+
+          <a href="settings.html" class="menu-item">
+            <div class="menu-icon">⚙️</div>
+            <div class="menu-text">
+              <h3>Settings</h3>
+              <p>Customize your account</p>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+
+          <a href="login.html" class="menu-item">
+            <div class="menu-icon">🔑</div>
+            <div class="menu-text">
+              <h3>Login</h3>
+              <p>Account access information</p>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+
+        </div>
+
+      </section>
+
+      <section class="marketplace">
+        <div>
+          <h2>Explore ZUNE Marketplace</h2>
+          <p>Shop, sell and discover products with your ZUNE Account.</p>
+        </div>
+
+        <button class="market-btn"
+          onclick="location.href='https://mrnehemiah.github.io/ZUNE/'">
+          ENTER MARKETPLACE →
+        </button>
+      </section>
+
+      <button class="logout-btn" id="logoutBtn">
+        Sign Out of ZUNE Account
+      </button>
+
+    </div>
+
+    <div id="errorBox" style="display:none;" class="error-box"></div>
+
+  </main>
+
+  <footer>
+    © <span id="year"></span> ZUNE Account. All rights reserved.
+  </footer>
+
+  <script>
+    // SUPABASE CONFIGURATION
+
+    const SUPABASE_URL =
+      "https://rpkogiieegqgxqbzwxwo.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_2TEqZv-NBM9n5knU46ngqA_wqO3V1uf";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    // LOAD ACCOUNT INFORMATION
+
+    async function loadAccount() {
+
+      const loading = document.getElementById("loading");
+      const content = document.getElementById("accountContent");
+      const errorBox = document.getElementById("errorBox");
+
+      try {
+
+        const { data: authData, error: authError } =
+          await supabaseClient.auth.getUser();
+
+        if (authError || !authData.user) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        const user = authData.user;
+
+        const { data: profile, error: profileError } =
+          await supabaseClient
+            .from("profiles")
+            .select("id, full_name, email, phone_number, role, is_verified, created_at")
+            .eq("id", user.id)
+            .maybeSingle();
+
+        if (profileError) {
+          throw profileError;
+        }
+
+        const name =
+          profile?.full_name ||
+          user.user_metadata?.full_name ||
+          "ZUNE User";
+
+        const email =
+          profile?.email ||
+          user.email ||
+          "No email available";
+
+        const phone =
+          profile?.phone_number ||
+          user.user_metadata?.phone_number ||
+          "Not added";
+
+        const role =
+          profile?.role ||
+          "user";
+
+        const isVerified =
+          profile?.is_verified === true;
+
+        // PROFILE CARD
+
+        document.getElementById("fullName").textContent = name;
+        document.getElementById("email").textContent = email;
+
+        document.getElementById("avatar").textContent =
+          name.trim().charAt(0).toUpperCase() || "Z";
+
+        // ACCOUNT DETAILS
+
+        document.getElementById("detailName").textContent = name;
+        document.getElementById("detailEmail").textContent = email;
+        document.getElementById("detailPhone").textContent = phone;
+
+        document.getElementById("detailRole").textContent =
+          role.charAt(0).toUpperCase() + role.slice(1);
+
+        document.getElementById("detailVerification").textContent =
+          isVerified ? "Verified" : "Not verified";
+
+        if (profile?.created_at) {
+          document.getElementById("detailDate").textContent =
+            new Date(profile.created_at).toLocaleDateString();
+        } else {
+          document.getElementById("detailDate").textContent =
+            new Date(user.created_at).toLocaleDateString();
+        }
+
+        // VERIFIED BADGE
+
+        if (isVerified) {
+          document.getElementById("verifiedBadge").style.display =
+            "inline-block";
+        }
+
+        loading.style.display = "none";
+        content.style.display = "block";
+
+      } catch (error) {
+
+        loading.style.display = "none";
+        errorBox.style.display = "block";
+
+        errorBox.textContent =
+          "Unable to load your account information. " +
+          (error.message || "Please try again.");
+
+      }
+    }
+
+    // SIGN OUT
+
+    document.getElementById("logoutBtn").addEventListener(
+      "click",
+      async function() {
+
+        const confirmed = confirm(
+          "Are you sure you want to sign out of your ZUNE Account?"
+        );
+
+        if (!confirmed) return;
+
+        const button = document.getElementById("logoutBtn");
+
+        button.disabled = true;
+        button.textContent = "Signing out...";
+
+        const { error } = await supabaseClient.auth.signOut();
+
+        if (error) {
+          button.disabled = false;
+          button.textContent = "Sign Out of ZUNE Account";
+          alert(error.message);
+          return;
+        }
+
+        window.location.replace("login.html");
+      }
+    );
+
+    // START
+
+    loadAccount();
+  </script>
+
+</body>
+</html>
