@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#087b42">
-  <title>My Account | ZUNE</title>
+  <title>My Account | ZUNE Account</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
       --green: #087b42;
-      --dark: #065f32;
-      --light: #eaf7ef;
+      --dark-green: #065f32;
+      --light-green: #eaf7ef;
       --gold: #d9a928;
       --text: #18352a;
       --muted: #718078;
       --border: #e5eee8;
-      --white: #fff;
       --background: #f5f9f6;
+      --white: #ffffff;
     }
 
     * {
@@ -34,17 +34,20 @@
       min-height: 100vh;
     }
 
-    button, a {
-      -webkit-tap-highlight-color: transparent;
-    }
-
     a {
       text-decoration: none;
       color: inherit;
     }
 
+    button {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* HEADER */
+
     .topbar {
-      height: 72px;
+      height: 70px;
       background: white;
       display: flex;
       align-items: center;
@@ -78,24 +81,19 @@
       font-size: 23px;
     }
 
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .icon-btn {
-      width: 40px;
-      height: 40px;
+    .settings-btn {
+      width: 42px;
+      height: 42px;
       border: 1px solid var(--border);
       background: white;
       border-radius: 12px;
-      cursor: pointer;
-      font-size: 18px;
+      font-size: 20px;
     }
 
+    /* MAIN */
+
     .page {
-      max-width: 1100px;
+      max-width: 1050px;
       margin: 35px auto;
       padding: 0 20px 50px;
     }
@@ -106,14 +104,17 @@
 
     .welcome h1 {
       font-size: 29px;
-      color: var(--dark);
+      color: var(--dark-green);
       margin-bottom: 7px;
     }
 
     .welcome p {
       color: var(--muted);
       font-size: 14px;
+      line-height: 1.6;
     }
+
+    /* PROFILE CARD */
 
     .profile-card {
       background: linear-gradient(120deg, #087b42, #075c34);
@@ -163,14 +164,13 @@
 
     .profile-info h2 {
       font-size: 22px;
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       overflow-wrap: anywhere;
     }
 
     .profile-info p {
       font-size: 13px;
       color: #d8f1e1;
-      margin-bottom: 10px;
       overflow-wrap: anywhere;
     }
 
@@ -184,12 +184,42 @@
       border-radius: 20px;
       font-size: 11px;
       font-weight: bold;
+      margin-top: 11px;
     }
+
+    /* OFFICIAL VERIFIED BADGE */
 
     .verified {
       display: none;
-      color: #d9f99d;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 6px 11px 6px 6px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 30px;
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+      transition: .2s;
     }
+
+    .verified:hover {
+      background: rgba(255,255,255,.23);
+      transform: translateY(-1px);
+    }
+
+    .verified svg {
+      width: 31px;
+      height: 31px;
+      flex-shrink: 0;
+      background: #eaf7ef;
+      border-radius: 9px;
+      padding: 3px;
+    }
+
+    /* ACCOUNT DETAILS */
 
     .account-details {
       background: white;
@@ -203,7 +233,7 @@
       font-size: 17px;
       font-weight: 800;
       margin-bottom: 18px;
-      color: var(--dark);
+      color: var(--dark-green);
     }
 
     .detail-row {
@@ -229,6 +259,8 @@
       text-align: right;
       overflow-wrap: anywhere;
     }
+
+    /* MENU */
 
     .menu-section {
       margin-top: 30px;
@@ -262,7 +294,7 @@
       width: 46px;
       height: 46px;
       flex-shrink: 0;
-      background: var(--light);
+      background: var(--light-green);
       color: var(--green);
       border-radius: 13px;
       display: grid;
@@ -290,6 +322,8 @@
       color: #9aa9a0;
       font-size: 20px;
     }
+
+    /* MARKETPLACE */
 
     .marketplace {
       margin-top: 28px;
@@ -323,25 +357,27 @@
       font-size: 12px;
       font-weight: 800;
       white-space: nowrap;
-      cursor: pointer;
     }
+
+    /* SIGN OUT */
 
     .logout-btn {
       width: 100%;
       margin-top: 25px;
       padding: 16px;
-      background: #fff;
+      background: white;
       color: #c62828;
       border: 1px solid #f2d5d5;
       border-radius: 13px;
       font-weight: 800;
       font-size: 13px;
-      cursor: pointer;
     }
 
     .logout-btn:hover {
       background: #fff5f5;
     }
+
+    /* LOADING AND ERROR */
 
     .loading {
       text-align: center;
@@ -349,7 +385,7 @@
       color: var(--muted);
     }
 
-    .loading-spinner {
+    .spinner {
       width: 35px;
       height: 35px;
       border: 4px solid #dcebe1;
@@ -360,10 +396,13 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .error-box {
+      display: none;
       background: #fff0f0;
       color: #b42318;
       border: 1px solid #f3cccc;
@@ -379,6 +418,8 @@
       color: var(--muted);
       font-size: 12px;
     }
+
+    /* MOBILE */
 
     @media(max-width: 650px) {
       .topbar {
@@ -432,22 +473,35 @@
       .market-btn {
         width: 100%;
       }
+
+      .detail-row {
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
 
 <body>
 
+  <!-- HEADER -->
+
   <header class="topbar">
+
     <a href="account.html" class="brand">
       <div class="logo">Z</div>
       ZUNE
     </a>
 
-    <div class="top-actions">
-      <button class="icon-btn" onclick="location.href='settings.html'" title="Settings">⚙</button>
-    </div>
+    <button
+      class="settings-btn"
+      onclick="location.href='settings.html'"
+      aria-label="Settings">
+      ⚙
+    </button>
+
   </header>
+
+  <!-- MAIN CONTENT -->
 
   <main class="page">
 
@@ -457,31 +511,75 @@
     </div>
 
     <div id="loading" class="loading">
-      <div class="loading-spinner"></div>
+      <div class="spinner"></div>
       Loading your account...
     </div>
 
     <div id="accountContent" style="display:none;">
+
+      <!-- PROFILE CARD -->
 
       <section class="profile-card">
 
         <div class="avatar" id="avatar">Z</div>
 
         <div class="profile-info">
+
           <h2 id="fullName">ZUNE User</h2>
+
           <p id="email">Loading...</p>
 
           <div class="status">
             <span>●</span>
-            <span id="accountStatus">Active Account</span>
+            <span>Active Account</span>
           </div>
 
-          <div class="verified" id="verifiedBadge">
-            ✓ Verified Account
-          </div>
+          <!-- OFFICIAL VERIFIED BADGE -->
+
+          <a
+            href="verification.html"
+            class="verified"
+            id="verifiedBadge"
+            aria-label="Verified account. Open verification details">
+
+            <svg viewBox="0 0 100 100" role="img" aria-label="Verified">
+
+              <path
+                d="M50 5
+                L59 12 L70 10 L76 20
+                L87 25 L85 37 L94 46
+                L89 57 L91 69 L79 75
+                L74 87 L62 86 L50 95
+                L40 86 L28 88 L22 77
+                L11 72 L14 60 L5 50
+                L14 40 L11 28 L23 23
+                L28 12 L40 14 Z"
+                fill="#ffffff"
+                stroke="#15803d"
+                stroke-width="4"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M31 51 L44 64 L70 36"
+                fill="none"
+                stroke="#15803d"
+                stroke-width="8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+            </svg>
+
+            <span>Verified Account</span>
+
+          </a>
+
         </div>
 
       </section>
+
+      <!-- ACCOUNT OVERVIEW -->
 
       <section class="account-details">
 
@@ -519,6 +617,8 @@
 
       </section>
 
+      <!-- ACCOUNT MENU -->
+
       <section class="menu-section">
 
         <h3 class="section-title">Manage Your Account</h3>
@@ -547,7 +647,7 @@
             <div class="menu-icon">✓</div>
             <div class="menu-text">
               <h3>Verification</h3>
-              <p>Verify your ZUNE identity</p>
+              <p>Manage your verification status</p>
             </div>
             <span class="arrow">›</span>
           </a>
@@ -570,30 +670,28 @@
             <span class="arrow">›</span>
           </a>
 
-          <a href="login.html" class="menu-item">
-            <div class="menu-icon">🔑</div>
-            <div class="menu-text">
-              <h3>Login</h3>
-              <p>Account access information</p>
-            </div>
-            <span class="arrow">›</span>
-          </a>
-
         </div>
 
       </section>
 
+      <!-- MARKETPLACE -->
+
       <section class="marketplace">
+
         <div>
-          <h2>Explore ZUNE Marketplace</h2>
+          <h2>ZUNE Marketplace</h2>
           <p>Shop, sell and discover products with your ZUNE Account.</p>
         </div>
 
-        <button class="market-btn"
+        <button
+          class="market-btn"
           onclick="location.href='https://mrnehemiah.github.io/ZUNE/'">
           ENTER MARKETPLACE →
         </button>
+
       </section>
+
+      <!-- LOGOUT -->
 
       <button class="logout-btn" id="logoutBtn">
         Sign Out of ZUNE Account
@@ -601,7 +699,7 @@
 
     </div>
 
-    <div id="errorBox" style="display:none;" class="error-box"></div>
+    <div id="errorBox" class="error-box"></div>
 
   </main>
 
@@ -610,6 +708,7 @@
   </footer>
 
   <script>
+
     // SUPABASE CONFIGURATION
 
     const SUPABASE_URL =
@@ -620,13 +719,21 @@
 
     const supabaseClient = window.supabase.createClient(
       SUPABASE_URL,
-      SUPABASE_KEY
+      SUPABASE_KEY,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
+      }
     );
 
     document.getElementById("year").textContent =
       new Date().getFullYear();
 
-    // LOAD ACCOUNT INFORMATION
+
+    // LOAD ACCOUNT
 
     async function loadAccount() {
 
@@ -636,8 +743,12 @@
 
       try {
 
-        const { data: authData, error: authError } =
-          await supabaseClient.auth.getUser();
+        // GET AUTHENTICATED USER
+
+        const {
+          data: authData,
+          error: authError
+        } = await supabaseClient.auth.getUser();
 
         if (authError || !authData.user) {
           window.location.replace("login.html");
@@ -646,16 +757,30 @@
 
         const user = authData.user;
 
-        const { data: profile, error: profileError } =
-          await supabaseClient
-            .from("profiles")
-            .select("id, full_name, email, phone_number, role, is_verified, created_at")
-            .eq("id", user.id)
-            .maybeSingle();
+        // GET USER PROFILE
+
+        const {
+          data: profile,
+          error: profileError
+        } = await supabaseClient
+          .from("profiles")
+          .select(`
+            id,
+            full_name,
+            email,
+            phone_number,
+            role,
+            is_verified,
+            created_at
+          `)
+          .eq("id", user.id)
+          .maybeSingle();
 
         if (profileError) {
           throw profileError;
         }
+
+        // USER INFORMATION
 
         const name =
           profile?.full_name ||
@@ -679,9 +804,10 @@
         const isVerified =
           profile?.is_verified === true;
 
-        // PROFILE CARD
+        // PROFILE DISPLAY
 
         document.getElementById("fullName").textContent = name;
+
         document.getElementById("email").textContent = email;
 
         document.getElementById("avatar").textContent =
@@ -690,7 +816,9 @@
         // ACCOUNT DETAILS
 
         document.getElementById("detailName").textContent = name;
+
         document.getElementById("detailEmail").textContent = email;
+
         document.getElementById("detailPhone").textContent = phone;
 
         document.getElementById("detailRole").textContent =
@@ -699,20 +827,30 @@
         document.getElementById("detailVerification").textContent =
           isVerified ? "Verified" : "Not verified";
 
-        if (profile?.created_at) {
+        const memberDate =
+          profile?.created_at || user.created_at;
+
+        if (memberDate) {
           document.getElementById("detailDate").textContent =
-            new Date(profile.created_at).toLocaleDateString();
-        } else {
-          document.getElementById("detailDate").textContent =
-            new Date(user.created_at).toLocaleDateString();
+            new Date(memberDate).toLocaleDateString();
         }
 
-        // VERIFIED BADGE
+        // OFFICIAL VERIFIED BADGE
+
+        const verifiedBadge =
+          document.getElementById("verifiedBadge");
 
         if (isVerified) {
-          document.getElementById("verifiedBadge").style.display =
-            "inline-block";
+
+          verifiedBadge.style.display = "inline-flex";
+
+        } else {
+
+          verifiedBadge.style.display = "none";
+
         }
+
+        // SHOW DASHBOARD
 
         loading.style.display = "none";
         content.style.display = "block";
@@ -727,7 +865,9 @@
           (error.message || "Please try again.");
 
       }
+
     }
+
 
     // SIGN OUT
 
@@ -746,22 +886,34 @@
         button.disabled = true;
         button.textContent = "Signing out...";
 
-        const { error } = await supabaseClient.auth.signOut();
+        try {
 
-        if (error) {
+          const { error } =
+            await supabaseClient.auth.signOut();
+
+          if (error) {
+            throw error;
+          }
+
+          window.location.replace("login.html");
+
+        } catch (error) {
+
           button.disabled = false;
           button.textContent = "Sign Out of ZUNE Account";
-          alert(error.message);
-          return;
+
+          alert(error.message || "Unable to sign out.");
+
         }
 
-        window.location.replace("login.html");
       }
     );
+
 
     // START
 
     loadAccount();
+
   </script>
 
 </body>
