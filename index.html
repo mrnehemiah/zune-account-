@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#087b42">
+
+<title>ZUNE Account | One Identity. All ZUNE.</title>
+<meta name="description" content="Your official ZUNE Account. One secure identity for ZUNE Marketplace and all ZUNE services.">
+
+<style>
+:root{
+  --green:#087b42;
+  --green-dark:#075b32;
+  --green-light:#eaf7ef;
+  --gold:#e9b949;
+  --text:#14251b;
+  --muted:#738178;
+  --white:#fff;
+  --border:#e6eee8;
+  --shadow:0 15px 45px rgba(15,70,38,.09);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#f7faf8;
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+button,a,select{
+  font:inherit;
+}
+
+a{
+  text-decoration:none;
+}
+
+button{
+  cursor:pointer;
+}
+
+/* HEADER */
+
+.header{
+  width:100%;
+  height:78px;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 6%;
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  color:var(--green);
+  font-size:25px;
+  font-weight:950;
+  letter-spacing:2px;
+}
+
+.brand-symbol{
+  width:42px;
+  height:42px;
+  background:linear-gradient(145deg,#159653,#075b32);
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  color:white;
+  font-size:25px;
+  font-weight:900;
+  box-shadow:0 5px 15px #087b4230;
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  gap:30px;
+}
+
+.nav a{
+  color:#536158;
+  font-size:13px;
+  font-weight:650;
+  transition:.2s;
+}
+
+.nav a:hover{
+  color:var(--green);
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.language{
+  padding:11px 12px;
+  border:1px solid var(--border);
+  background:white;
+  border-radius:11px;
+  color:#34483a;
+  outline:none;
+  font-size:12px;
+  max-width:140px;
+}
+
+.btn{
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:9px;
+  padding:14px 23px;
+  border-radius:12px;
+  font-weight:750;
+  font-size:13px;
+  border:1px solid transparent;
+  transition:all .25s ease;
+  cursor:pointer;
+}
+
+.btn:hover{
+  transform:translateY(-3px);
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,#159653,#087b42);
+  color:white;
+  box-shadow:0 7px 20px #087b4230;
+}
+
+.btn-primary:hover{
+  background:linear-gradient(135deg,#087b42,#075b32);
+  box-shadow:0 12px 25px #087b4240;
+}
+
+.btn-outline{
+  color:var(--green);
+  border-color:#b8d8c3;
+  background:white;
+}
+
+.btn-outline:hover{
+  background:var(--green-light);
+  border-color:var(--green);
+}
+
+/* HERO */
+
+.hero{
+  max-width:1350px;
+  margin:auto;
+  padding:105px 7% 95px;
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:65px;
+  align-items:center;
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  background:#e6f5eb;
+  border:1px solid #d5ecdc;
+  color:var(--green);
+  padding:10px 15px;
+  border-radius:30px;
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:1px;
+  margin-bottom:27px;
+}
+
+.live-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#16a34a;
+  box-shadow:0 0 0 4px #16a34a20;
+}
+
+.hero h1{
+  font-size:clamp(45px,5.5vw,72px);
+  font-weight:900;
+  line-height:1.07;
+  letter-spacing:-3px;
+  margin-bottom:25px;
+}
+
+.hero h1 .highlight{
+  background:linear-gradient(110deg,#159653,#075b32);
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero-description{
+  color:var(--muted);
+  font-size:16px;
+  line-height:1.9;
+  max-width:530px;
+  margin-bottom:32px;
+}
+
+.hero-actions{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.hero-actions .btn{
+  min-height:51px;
+}
+
+.trust{
+  margin-top:33px;
+  display:flex;
+  gap:19px;
+  flex-wrap:wrap;
+}
+
+.trust-item{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  color:#69776e;
+  font-weight:650;
+}
+
+.trust-icon{
+  color:var(--green);
+  font-weight:900;
+  font-size:15px;
+}/* HERO VISUAL */
+
+.hero-visual{
+  position:relative;
+  min-height:480px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.visual-glow{
+  position:absolute;
+  width:390px;
+  height:390px;
+  border-radius:50%;
+  background:radial-gradient(circle,#d8f3e1 0%,#edf8f0 55%,transparent 72%);
+}
+
+.account-card{
+  position:relative;
+  z-index:2;
+  width:min(100%,410px);
+  padding:29px;
+  background:rgba(255,255,255,.96);
+  border:1px solid #e6eee8;
+  border-radius:25px;
+  box-shadow:0 25px 75px rgba(20,75,42,.15);
+  transform:rotate(-2deg);
+}
+
+.card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:28px;
+}
+
+.card-brand{
+  color:var(--green);
+  font-weight:950;
+  font-size:18px;
+  letter-spacing:2px;
+}
+
+.card-status{
+  color:#087b42;
+  background:#e7f6ec;
+  padding:7px 11px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:800;
+}
+
+.profile-row{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.avatar{
+  width:65px;
+  height:65px;
+  border-radius:20px;
+  background:linear-gradient(145deg,#159653,#075b32);
+  display:grid;
+  place-items:center;
+  color:white;
+  font-size:25px;
+  font-weight:900;
+}
+
+.profile-name{
+  font-size:17px;
+  font-weight:850;
+  margin-bottom:5px;
+}
+
+.profile-subtitle{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.id-label{
+  font-size:10px;
+  color:#89958d;
+  font-weight:750;
+  letter-spacing:1px;
+  margin-bottom:7px;
+}
+
+.id-number{
+  font-size:24px;
+  color:var(--green-dark);
+  font-weight:900;
+  letter-spacing:3px;
+  margin-bottom:24px;
+}
+
+.card-divider{
+  height:1px;
+  background:var(--border);
+  margin-bottom:19px;
+}
+
+.card-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.card-bottom span{
+  font-size:10px;
+  color:#77847b;
+}
+
+.card-bottom strong{
+  color:var(--green);
+  font-size:11px;
+}
+
+.floating-box{
+  position:absolute;
+  z-index:3;
+  background:white;
+  padding:15px 18px;
+  border-radius:16px;
+  box-shadow:0 12px 35px rgba(20,75,42,.12);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.floating-box.one{
+  top:65px;
+  right:-5px;
+}
+
+.floating-box.two{
+  bottom:65px;
+  left:-15px;
+}
+
+.float-icon{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  background:#eaf7ef;
+  color:var(--green);
+  border-radius:12px;
+  font-size:18px;
+}
+
+.float-title{
+  font-size:11px;
+  font-weight:850;
+  margin-bottom:4px;
+}
+
+.float-subtitle{
+  font-size:9px;
+  color:var(--muted);
+}
+
+/* RESPONSIVE HEADER AND HERO */
+
+@media(max-width:900px){
+  .header{
+    padding:0 4%;
+  }
+
+  .nav{
+    gap:15px;
+  }
+
+  .hero{
+    gap:25px;
+    padding:80px 5%;
+  }
+
+  .hero h1{
+    font-size:55px;
+  }
+
+  .floating-box.one{
+    right:0;
+  }
+}
+
+@media(max-width:680px){
+  .header{
+    height:68px;
+    padding:0 5%;
+  }
+
+  .brand{
+    font-size:21px;
+  }
+
+  .brand-symbol{
+    width:37px;
+    height:37px;
+  }
+
+  .nav{
+    display:none;
+  }
+
+  .header-right{
+    gap:7px;
+  }
+
+  .language{
+    max-width:105px;
+    padding:9px 7px;
+    font-size:10px;
+  }
+
+  .header-right .btn{
+    padding:11px 13px;
+    font-size:11px;
+  }
+
+  .hero{
+    grid-template-columns:1fr;
+    padding:65px 6% 55px;
+    gap:35px;
+  }
+
+  .hero h1{
+    font-size:47px;
+    letter-spacing:-2px;
+  }
+
+  .hero-description{
+    font-size:14px;
+  }
+
+  .hero-visual{
+    min-height:390px;
+  }
+
+  .account-card{
+    width:88%;
+    padding:23px;
+  }
+
+  .visual-glow{
+    width:310px;
+    height:310px;
+  }
+
+  .floating-box.one{
+    top:25px;
+    right:-3px;
+  }
+
+  .floating-box.two{
+    bottom:25px;
+    left:-3px;
+  }
+}
+
+@media(max-width:380px){
+  .hero h1{
+    font-size:40px;
+  }
+
+  .floating-box{
+    padding:11px;
+  }
+
+  .float-subtitle{
+    font-size:8px;
+  }
+}/* MAIN CONTENT */
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+  <a href="index.html" class="brand">
+    <span class="brand-symbol">Z</span>
+    <span>ZUNE</span>
+  </a>
+
+  <nav class="nav">
+    <a href="#home" data-i18n="navHome">Home</a>
+    <a href="#services" data-i18n="navServices">Services</a>
+    <a href="#marketplace" data-i18n="navMarketplace">Marketplace</a>
+    <a href="#security" data-i18n="navSecurity">Security</a>
+  </nav>
+
+  <div class="header-right">
+    <select class="language" id="languageSelector" aria-label="Choose language">
+      <option value="en">English</option>
+      <option value="sw">Kiswahili</option>
+      <option value="zh">中文</option>
+      <option value="hi">हिन्दी</option>
+      <option value="es">Español</option>
+      <option value="ar">العربية</option>
+      <option value="fr">Français</option>
+      <option value="pt">Português</option>
+      <option value="bn">বাংলা</option>
+      <option value="ru">Русский</option>
+    </select>
+
+    <a href="login.html" class="btn btn-primary" data-i18n="signIn">
+      Sign In
+    </a>
+  </div>
+
+</header>
+
+<main>
+
+<section class="hero" id="home">
+
+  <div class="hero-content">
+
+    <div class="eyebrow">
+      <span class="live-dot"></span>
+      <span data-i18n="eyebrow">YOUR OFFICIAL ZUNE IDENTITY</span>
+    </div>
+
+    <h1 data-i18n="heroTitle">
+      One Identity.<br>
+      <span class="highlight">All ZUNE.</span>
+    </h1>
+
+    <p class="hero-description" data-i18n="heroDescription">
+      Your ZUNE Account connects you to the ZUNE ecosystem.
+      Manage your identity, protect your account and access
+      ZUNE Marketplace through one secure account.
+    </p>
+
+    <div class="hero-actions">
+      <a href="signup.html" class="btn btn-primary" data-i18n="createAccount">
+        Create Your Account →
+      </a>
+
+      <a href="login.html" class="btn btn-outline" data-i18n="alreadyAccount">
+        Sign In
+      </a>
+    </div>
+
+    <div class="trust">
+      <div class="trust-item">
+        <span class="trust-icon">✓</span>
+        <span data-i18n="secureIdentity">Secure Identity</span>
+      </div>
+
+      <div class="trust-item">
+        <span class="trust-icon">✓</span>
+        <span data-i18n="oneAccount">One Account</span>
+      </div>
+
+      <div class="trust-item">
+        <span class="trust-icon">✓</span>
+        <span data-i18n="connectedServices">Connected Services</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-visual">
+
+    <div class="visual-glow"></div>
+
+    <div class="account-card">
+
+      <div class="card-top">
+        <div class="card-brand">ZUNE ACCOUNT</div>
+        <div class="card-status" data-i18n="accountActive">ACCOUNT</div>
+      </div>
+
+      <div class="profile-row">
+        <div class="avatar">Z</div>
+
+        <div>
+          <div class="profile-name" data-i18n="yourName">Your Name</div>
+          <div class="profile-subtitle" data-i18n="zuneMember">ZUNE Member</div>
+        </div>
+      </div>
+
+      <div class="id-label">ZUNE ID</div>
+      <div class="id-number">XXXXXXXX</div>
+
+      <div class="card-divider"></div>
+
+      <div class="card-bottom">
+        <span data-i18n="digitalIdentity">Your digital identity</span>
+        <strong>ZUNE ECOSYSTEM</strong>
+      </div>
+
+    </div>
+
+    <div class="floating-box one">
+      <div class="float-icon">♧</div>
+      <div>
+        <div class="float-title" data-i18n="accountSecurity">Account Security</div>
+        <div class="float-subtitle" data-i18n="protectedAccount">Protected account access</div>
+      </div>
+    </div>
+
+    <div class="floating-box two">
+      <div class="float-icon">✓</div>
+      <div>
+        <div class="float-title" data-i18n="oneIdentity">One Identity</div>
+        <div class="float-subtitle" data-i18n="allServices">Access ZUNE services</div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="services" id="services">
+
+  <div class="section-heading">
+    <span class="section-label" data-i18n="ecosystem">THE ZUNE ECOSYSTEM</span>
+
+    <h2 data-i18n="servicesTitle">
+      Everything starts with your ZUNE Account.
+    </h2>
+
+    <p data-i18n="servicesDescription">
+      One account designed to connect your identity with ZUNE services.
+    </p>
+  </div>
+
+  <div class="service-grid">
+
+    <article class="service-card">
+      <div class="service-icon">◎</div>
+      <h3 data-i18n="identityTitle">Your Identity</h3>
+      <p data-i18n="identityDescription">
+        Manage your profile, personal information and ZUNE ID.
+      </p>
+      <a href="login.html" data-i18n="learnMore">Learn more →</a>
+    </article>
+
+    <article class="service-card">
+      <div class="service-icon">◇</div>
+      <h3 data-i18n="securityTitle">Account Security</h3>
+      <p data-i18n="securityDescription">
+        Manage passwords, sessions and available security settings.
+      </p>
+      <a href="login.html" data-i18n="manageSecurity">Manage security →</a>
+    </article>
+
+    <article class="service-card">
+      <div class="service-icon">✦</div>
+      <h3 data-i18n="verificationTitle">Verification</h3>
+      <p data-i18n="verificationDescription">
+        Apply for account verification and follow your application status.
+      </p>
+      <a href="login.html" data-i18n="getVerified">Get verified →</a>
+    </article>
+
+  </div>
+
+</section>
+
+<section class="marketplace" id="marketplace">
+
+  <div class="marketplace-content">
+    <span class="section-label" data-i18n="marketplaceLabel">
+      CONNECTED TO ZUNE MARKETPLACE
+    </span>
+
+    <h2 data-i18n="marketplaceTitle">
+      Your account. Your marketplace.
+    </h2>
+
+    <p data-i18n="marketplaceDescription">
+      Sign in with your ZUNE Account and access ZUNE Marketplace
+      without creating another account.
+    </p>
+
+    <a href="login.html" class="btn btn-primary" data-i18n="enterMarketplace">
+      Continue to ZUNE Marketplace →
+    </a>
+  </div>
+
+  <div class="marketplace-art">
+    <div class="market-circle">
+      <span> ZUNE </span>
+      <small data-i18n="marketplaceAccess">MARKETPLACE ACCESS</small>
+    </div>
+  </div>
+
+</section>
+
+<section class="security-section" id="security">
+
+  <div class="security-icon">♧</div>
+
+  <div>
+    <span class="section-label" data-i18n="securityLabel">
+      YOUR SECURITY MATTERS
+    </span>
+
+    <h2 data-i18n="securityHeading">
+      Your account deserves protection.
+    </h2>
+
+    <p data-i18n="securityText">
+      ZUNE Account is designed to help you manage your identity
+      and account security from one central place.
+    </p>
+  </div>
+
+</section>
+
+</main>
+
+<footer class="footer">
+
+  <div class="footer-brand">
+    <strong>ZUNE</strong>
+    <p data-i18n="footerDescription">
+      One Identity. All ZUNE.
+    </p>
+  </div>
+
+  <div class="footer-links">
+    <a href="login.html" data-i18n="signIn">Sign In</a>
+    <a href="signup.html" data-i18n="createAccount">Create Account</a>
+    <a href="privacy.html" data-i18n="privacy">Privacy</a>
+    <a href="terms.html" data-i18n="terms">Terms</a>
+  </div>
+
+  <p class="copyright">
+    © <span id="year"></span> ZUNE. All rights reserved.
+  </p>
+
+</footer><style>
+/* SERVICES */
+
+.services{
+  padding:85px 7%;
+  background:white;
+}
+
+.section-heading{
+  text-align:center;
+  max-width:650px;
+  margin:0 auto 45px;
+}
+
+.section-label{
+  color:var(--green);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1.8px;
+}
+
+.section-heading h2,
+.marketplace h2,
+.security-section h2{
+  font-size:clamp(27px,4vw,42px);
+  font-weight:900;
+  letter-spacing:-1.3px;
+  margin:15px 0;
+}
+
+.section-heading p,
+.marketplace p,
+.security-section p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.8;
+}
+
+.service-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+  max-width:1100px;
+  margin:auto;
+}
+
+.service-card{
+  padding:30px;
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:#fff;
+  transition:.25s;
+}
+
+.service-card:hover{
+  transform:translateY(-7px);
+  box-shadow:var(--shadow);
+  border-color:#c7e5d0;
+}
+
+.service-icon{
+  width:53px;
+  height:53px;
+  display:grid;
+  place-items:center;
+  background:var(--green-light);
+  color:var(--green);
+  border-radius:16px;
+  font-size:25px;
+  margin-bottom:22px;
+}
+
+.service-card h3{
+  font-size:18px;
+  margin-bottom:12px;
+}
+
+.service-card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.8;
+  min-height:70px;
+  margin-bottom:20px;
+}
+
+.service-card a{
+  color:var(--green);
+  font-size:12px;
+  font-weight:850;
+}
+
+/* MARKETPLACE */
+
+.marketplace{
+  padding:85px 8%;
+  background:linear-gradient(120deg,#eff9f2,#e4f4e9);
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:45px;
+  align-items:center;
+}
+
+.marketplace-content{
+  max-width:590px;
+}
+
+.marketplace h2{
+  margin-top:17px;
+}
+
+.marketplace p{
+  margin-bottom:25px;
+}
+
+.marketplace-art{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.market-circle{
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#159653,#075b32);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 25px 55px #087b4230;
+  border:12px solid #ffffff80;
+}
+
+.market-circle span{
+  font-size:36px;
+  font-weight:950;
+  letter-spacing:4px;
+}
+
+.market-circle small{
+  font-size:9px;
+  letter-spacing:2px;
+  margin-top:10px;
+}/* SECURITY */
+
+.security-section{
+  max-width:1100px;
+  margin:75px auto;
+  padding:35px;
+  display:flex;
+  align-items:center;
+  gap:25px;
+  border:1px solid var(--border);
+  border-radius:22px;
+  background:white;
+}
+
+.security-icon{
+  min-width:75px;
+  height:75px;
+  border-radius:20px;
+  background:var(--green-light);
+  color:var(--green);
+  display:grid;
+  place-items:center;
+  font-size:34px;
+}
+
+.security-section h2{
+  font-size:26px;
+  margin:8px 0;
+}
+
+/* FOOTER */
+
+.footer{
+  background:#092e1c;
+  color:white;
+  padding:45px 7% 25px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+}
+
+.footer-brand strong{
+  font-size:25px;
+  letter-spacing:3px;
+}
+
+.footer-brand p{
+  color:#b8cdbf;
+  font-size:12px;
+  margin-top:9px;
+}
+
+.footer-links{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
+
+.footer-links a{
+  color:#d9e9df;
+  font-size:12px;
+}
+
+.footer-links a:hover{
+  color:#f1c75b;
+}
+
+.copyright{
+  grid-column:1/-1;
+  border-top:1px solid #ffffff20;
+  padding-top:20px;
+  color:#a8c1b1;
+  font-size:11px;
+}/* RESPONSIVE DESIGN */
+
+@media(max-width:750px){
+
+  .service-grid{
+    grid-template-columns:1fr;
+  }
+
+  .services{
+    padding:65px 6%;
+  }
+
+  .marketplace{
+    grid-template-columns:1fr;
+    padding:65px 7%;
+    text-align:center;
+  }
+
+  .marketplace-art{
+    margin-top:15px;
+  }
+
+  .security-section{
+    margin:45px 5%;
+    padding:25px;
+    align-items:flex-start;
+  }
+
+  .security-section h2{
+    font-size:22px;
+  }
+
+  .footer{
+    grid-template-columns:1fr;
+  }
+
+  .footer-links{
+    justify-content:flex-start;
+  }
+}
+
+@media(max-width:430px){
+
+  .security-section{
+    flex-direction:column;
+  }
+
+  .market-circle{
+    width:200px;
+    height:200px;
+  }
+
+  .market-circle span{
+    font-size:30px;
+  }
+}
+</style>
+
+<script>
+const translations = {
+
+  en:{
+    navHome:"Home",
+    navServices:"Services",
+    navMarketplace:"Marketplace",
+    navSecurity:"Security",
+    signIn:"Sign In",
+    eyebrow:"YOUR OFFICIAL ZUNE IDENTITY",
+    heroTitle:'One Identity.<br><span class="highlight">All ZUNE.</span>',
+    heroDescription:"Your ZUNE Account connects you to the ZUNE ecosystem. Manage your identity, protect your account and access ZUNE Marketplace through one secure account.",
+    createAccount:"Create Your Account →",
+    alreadyAccount:"Sign In",
+    secureIdentity:"Secure Identity",
+    oneAccount:"One Account",
+    connectedServices:"Connected Services",
+    accountActive:"ACCOUNT",
+    yourName:"Your Name",
+    zuneMember:"ZUNE Member",
+    digitalIdentity:"Your digital identity",
+    accountSecurity:"Account Security",
+    protectedAccount:"Protected account access",
+    oneIdentity:"One Identity",
+    allServices:"Access ZUNE services",
+    ecosystem:"THE ZUNE ECOSYSTEM",
+    servicesTitle:"Everything starts with your ZUNE Account.",
+    servicesDescription:"One account designed to connect your identity with ZUNE services.",
+    identityTitle:"Your Identity",
+    identityDescription:"Manage your profile, personal information and ZUNE ID.",
+    securityTitle:"Account Security",
+    securityDescription:"Manage passwords, sessions and available security settings.",
+    verificationTitle:"Verification",
+    verificationDescription:"Apply for account verification and follow your application status.",
+    learnMore:"Learn more →",
+    manageSecurity:"Manage security →",
+    getVerified:"Get verified →",
+    marketplaceLabel:"CONNECTED TO ZUNE MARKETPLACE",
+    marketplaceTitle:"Your account. Your marketplace.",
+    marketplaceDescription:"Sign in with your ZUNE Account and access ZUNE Marketplace without creating another account.",
+    enterMarketplace:"Continue to ZUNE Marketplace →",
+    marketplaceAccess:"MARKETPLACE ACCESS",
+    securityLabel:"YOUR SECURITY MATTERS",
+    securityHeading:"Your account deserves protection.",
+    securityText:"ZUNE Account is designed to help you manage your identity and account security from one central place.",
+    footerDescription:"One Identity. All ZUNE.",
+    privacy:"Privacy",
+    terms:"Terms"
+  },
+
+  sw:{
+    navHome:"Mwanzo",
+    navServices:"Huduma",
+    navMarketplace:"Soko",
+    navSecurity:"Usalama",
+    signIn:"Ingia",
+    eyebrow:"UTAMBULISHO RASMI WA ZUNE",
+    heroTitle:'Utambulisho Mmoja.<br><span class="highlight">ZUNE Yote.</span>',
+    heroDescription:"Akaunti yako ya ZUNE inakuunganisha na huduma zote za ZUNE. Simamia utambulisho wako, linda akaunti yako na ufikie ZUNE Marketplace kupitia akaunti moja salama.",
+    createAccount:"Fungua Akaunti →",
+    alreadyAccount:"Ingia",
+    secureIdentity:"Utambulisho Salama",
+    oneAccount:"Akaunti Moja",
+    connectedServices:"Huduma Zilizounganishwa",
+    accountActive:"AKAUNTI",
+    yourName:"Jina Lako",
+    zuneMember:"Mwanachama wa ZUNE",
+    digitalIdentity:"Utambulisho wako wa kidijitali",
+    accountSecurity:"Usalama wa Akaunti",
+    protectedAccount:"Ufikiaji salama wa akaunti",
+    oneIdentity:"Utambulisho Mmoja",
+    allServices:"Fikia huduma za ZUNE",
+    ecosystem:"MFUMO WA ZUNE",
+    servicesTitle:"Kila kitu kinaanzia kwenye Akaunti yako ya ZUNE.",
+    servicesDescription:"Akaunti moja inayounganisha utambulisho wako na huduma za ZUNE.",
+    identityTitle:"Utambulisho Wako",
+    identityDescription:"Simamia wasifu wako, taarifa binafsi na ZUNE ID.",
+    securityTitle:"Usalama wa Akaunti",
+    securityDescription:"Simamia nywila, vipindi vya kuingia na mipangilio ya usalama.",
+    verificationTitle:"Uthibitishaji",
+    verificationDescription:"Omba kuthibitishwa na fuatilia hali ya ombi lako.",
+    learnMore:"Jifunze zaidi →",
+    manageSecurity:"Simamia usalama →",
+    getVerified:"Thibitisha akaunti →",
+    marketplaceLabel:"IMEUNGANISHWA NA ZUNE MARKETPLACE",
+    marketplaceTitle:"Akaunti yako. Soko lako.",
+    marketplaceDescription:"Ingia kwa kutumia Akaunti yako ya ZUNE na ufikie ZUNE Marketplace bila kufungua akaunti nyingine.",
+    enterMarketplace:"Endelea kwenda ZUNE Marketplace →",
+    marketplaceAccess:"UFIKIAJI WA SOKO",
+    securityLabel:"USALAMA WAKO NI MUHIMU",
+    securityHeading:"Akaunti yako inastahili kulindwa.",
+    securityText:"ZUNE Account imeundwa kukusaidia kusimamia utambulisho na usalama wa akaunti yako sehemu moja.",
+    footerDescription:"Utambulisho Mmoja. ZUNE Yote.",
+    privacy:"Faragha",
+    terms:"Masharti"
+  },
+
+  zh:{
+    navHome:"首页",
+    navServices:"服务",
+    navMarketplace:"商城",
+    navSecurity:"安全",
+    signIn:"登录",
+    eyebrow:"您的 ZUNE 官方身份",
+    heroTitle:'一个身份。<br><span class="highlight">连接所有 ZUNE。</span>',
+    heroDescription:"您的 ZUNE 账户连接整个 ZUNE 生态系统。通过一个安全账户管理身份、保护账户并访问 ZUNE Marketplace。",
+    createAccount:"创建账户 →",
+    alreadyAccount:"登录",
+    secureIdentity:"安全身份",
+    oneAccount:"一个账户",
+    connectedServices:"连接服务",
+    accountActive:"账户",
+    yourName:"您的姓名",
+    zuneMember:"ZUNE 会员",
+    digitalIdentity:"您的数字身份",
+    accountSecurity:"账户安全",
+    protectedAccount:"安全访问账户",
+    oneIdentity:"一个身份",
+    allServices:"访问 ZUNE 服务",
+    ecosystem:"ZUNE 生态系统",
+    servicesTitle:"一切从您的 ZUNE 账户开始。",
+    servicesDescription:"一个账户连接您的身份与 ZUNE 服务。",
+    identityTitle:"您的身份",
+    identityDescription:"管理个人资料、个人信息和 ZUNE ID。",
+    securityTitle:"账户安全",
+    securityDescription:"管理密码、登录会话和安全设置。",
+    verificationTitle:"身份验证",
+    verificationDescription:"申请账户验证并查看申请状态。",
+    learnMore:"了解更多 →",
+    manageSecurity:"管理安全 →",
+    getVerified:"申请验证 →",
+    marketplaceLabel:"连接 ZUNE MARKETPLACE",
+    marketplaceTitle:"您的账户，您的商城。",
+    marketplaceDescription:"使用 ZUNE 账户登录，无需创建另一个账户即可访问 ZUNE Marketplace。",
+    enterMarketplace:"进入 ZUNE Marketplace →",
+    marketplaceAccess:"商城访问",
+    securityLabel:"您的安全很重要",
+    securityHeading:"您的账户值得受到保护。",
+    securityText:"ZUNE Account 帮助您在一个地方管理身份和账户安全。",
+    footerDescription:"一个身份。连接所有 ZUNE。",
+    privacy:"隐私",
+    terms:"条款"
+  },
+
+  hi:{
+    navHome:"होम",
+    navServices:"सेवाएँ",
+    navMarketplace:"मार्केटप्लेस",
+    navSecurity:"सुरक्षा",
+    signIn:"साइन इन",
+    eyebrow:"आपकी आधिकारिक ZUNE पहचान",
+    heroTitle:'एक पहचान।<br><span class="highlight">पूरा ZUNE।</span>',
+    heroDescription:"आपका ZUNE अकाउंट आपको ZUNE इकोसिस्टम से जोड़ता है। अपनी पहचान और सुरक्षा एक ही अकाउंट से प्रबंधित करें।",
+    createAccount:"अकाउंट बनाएँ →",
+    alreadyAccount:"साइन इन",
+    secureIdentity:"सुरक्षित पहचान",
+    oneAccount:"एक अकाउंट",
+    connectedServices:"जुड़ी हुई सेवाएँ",
+    accountActive:"अकाउंट",
+    yourName:"आपका नाम",
+    zuneMember:"ZUNE सदस्य",
+    digitalIdentity:"आपकी डिजिटल पहचान",
+    accountSecurity:"अकाउंट सुरक्षा",
+    protectedAccount:"सुरक्षित अकाउंट पहुँच",
+    oneIdentity:"एक पहचान",
+    allServices:"ZUNE सेवाओं तक पहुँचें",
+    ecosystem:"ZUNE इकोसिस्टम",
+    servicesTitle:"सब कुछ आपके ZUNE अकाउंट से शुरू होता है।",
+    servicesDescription:"एक अकाउंट जो आपकी पहचान को ZUNE सेवाओं से जोड़ता है।",
+    identityTitle:"आपकी पहचान",
+    identityDescription:"अपनी प्रोफ़ाइल, व्यक्तिगत जानकारी और ZUNE ID प्रबंधित करें।",
+    securityTitle:"अकाउंट सुरक्षा",
+    securityDescription:"पासवर्ड और सुरक्षा सेटिंग्स प्रबंधित करें।",
+    verificationTitle:"सत्यापन",
+    verificationDescription:"सत्यापन के लिए आवेदन करें और स्थिति देखें।",
+    learnMore:"और जानें →",
+    manageSecurity:"सुरक्षा प्रबंधित करें →",
+    getVerified:"सत्यापन करें →",
+    marketplaceLabel:"ZUNE MARKETPLACE से जुड़ा",
+    marketplaceTitle:"आपका अकाउंट। आपका मार्केटप्लेस।",
+    marketplaceDescription:"एक ही ZUNE अकाउंट से लॉग इन करके Marketplace तक पहुँचें।",
+    enterMarketplace:"ZUNE Marketplace पर जाएँ →",
+    marketplaceAccess:"मार्केटप्लेस एक्सेस",
+    securityLabel:"आपकी सुरक्षा महत्वपूर्ण है",
+    securityHeading:"आपका अकाउंट सुरक्षा का हकदार है।",
+    securityText:"ZUNE Account आपकी पहचान और अकाउंट सुरक्षा को एक जगह प्रबंधित करने में मदद करता है।",
+    footerDescription:"एक पहचान। पूरा ZUNE।",
+    privacy:"गोपनीयता",
+    terms:"नियम"
+  }
+};  es:{
+    navHome:"Inicio",
+    navServices:"Servicios",
+    navMarketplace:"Mercado",
+    navSecurity:"Seguridad",
+    signIn:"Iniciar sesión",
+    eyebrow:"TU IDENTIDAD OFICIAL ZUNE",
+    heroTitle:'Una identidad.<br><span class="highlight">Todo ZUNE.</span>',
+    heroDescription:"Tu cuenta ZUNE te conecta con el ecosistema ZUNE. Administra tu identidad y protege tu cuenta desde un solo lugar.",
+    createAccount:"Crear cuenta →",
+    alreadyAccount:"Iniciar sesión",
+    secureIdentity:"Identidad segura",
+    oneAccount:"Una cuenta",
+    connectedServices:"Servicios conectados",
+    accountActive:"CUENTA",
+    yourName:"Tu nombre",
+    zuneMember:"Miembro ZUNE",
+    digitalIdentity:"Tu identidad digital",
+    accountSecurity:"Seguridad de cuenta",
+    protectedAccount:"Acceso protegido",
+    oneIdentity:"Una identidad",
+    allServices:"Accede a servicios ZUNE",
+    ecosystem:"ECOSISTEMA ZUNE",
+    servicesTitle:"Todo comienza con tu cuenta ZUNE.",
+    servicesDescription:"Una cuenta que conecta tu identidad con los servicios ZUNE.",
+    identityTitle:"Tu identidad",
+    identityDescription:"Administra tu perfil, información personal y ZUNE ID.",
+    securityTitle:"Seguridad de cuenta",
+    securityDescription:"Administra contraseñas y configuraciones de seguridad.",
+    verificationTitle:"Verificación",
+    verificationDescription:"Solicita la verificación y consulta su estado.",
+    learnMore:"Más información →",
+    manageSecurity:"Administrar seguridad →",
+    getVerified:"Verificar →",
+    marketplaceLabel:"CONECTADO A ZUNE MARKETPLACE",
+    marketplaceTitle:"Tu cuenta. Tu mercado.",
+    marketplaceDescription:"Inicia sesión con tu cuenta ZUNE sin crear otra cuenta.",
+    enterMarketplace:"Continuar a ZUNE Marketplace →",
+    marketplaceAccess:"ACCESO AL MERCADO",
+    securityLabel:"TU SEGURIDAD IMPORTA",
+    securityHeading:"Tu cuenta merece protección.",
+    securityText:"ZUNE Account te ayuda a administrar tu identidad y seguridad desde un solo lugar.",
+    footerDescription:"Una identidad. Todo ZUNE.",
+    privacy:"Privacidad",
+    terms:"Términos"
+  },
+
+  ar:{
+    navHome:"الرئيسية",
+    navServices:"الخدمات",
+    navMarketplace:"السوق",
+    navSecurity:"الأمان",
+    signIn:"تسجيل الدخول",
+    eyebrow:"هويتك الرسمية في ZUNE",
+    heroTitle:'هوية واحدة.<br><span class="highlight">كل ZUNE.</span>',
+    heroDescription:"يربطك حساب ZUNE بمنظومة ZUNE. أدر هويتك واحمِ حسابك من خلال حساب آمن واحد.",
+    createAccount:"إنشاء حساب →",
+    alreadyAccount:"تسجيل الدخول",
+    secureIdentity:"هوية آمنة",
+    oneAccount:"حساب واحد",
+    connectedServices:"خدمات مترابطة",
+    accountActive:"الحساب",
+    yourName:"اسمك",
+    zuneMember:"عضو ZUNE",
+    digitalIdentity:"هويتك الرقمية",
+    accountSecurity:"أمان الحساب",
+    protectedAccount:"وصول آمن للحساب",
+    oneIdentity:"هوية واحدة",
+    allServices:"الوصول إلى خدمات ZUNE",
+    ecosystem:"منظومة ZUNE",
+    servicesTitle:"كل شيء يبدأ بحساب ZUNE الخاص بك.",
+    servicesDescription:"حساب واحد يربط هويتك بخدمات ZUNE.",
+    identityTitle:"هويتك",
+    identityDescription:"أدر ملفك الشخصي ومعلوماتك ورقم ZUNE ID.",
+    securityTitle:"أمان الحساب",
+    securityDescription:"أدر كلمات المرور وإعدادات الأمان.",
+    verificationTitle:"التحقق",
+    verificationDescription:"قدّم طلب التحقق وتابع حالته.",
+    learnMore:"اعرف المزيد →",
+    manageSecurity:"إدارة الأمان →",
+    getVerified:"التحقق من الحساب →",
+    marketplaceLabel:"متصل بسوق ZUNE",
+    marketplaceTitle:"حسابك. سوقك.",
+    marketplaceDescription:"سجّل الدخول باستخدام حساب ZUNE دون إنشاء حساب آخر.",
+    enterMarketplace:"المتابعة إلى ZUNE Marketplace →",
+    marketplaceAccess:"الوصول إلى السوق",
+    securityLabel:"أمانك مهم",
+    securityHeading:"حسابك يستحق الحماية.",
+    securityText:"يساعدك ZUNE Account على إدارة هويتك وأمان حسابك من مكان واحد.",
+    footerDescription:"هوية واحدة. كل ZUNE.",
+    privacy:"الخصوصية",
+    terms:"الشروط"
+  },
+
+  fr:{
+    navHome:"Accueil",
+    navServices:"Services",
+    navMarketplace:"Marché",
+    navSecurity:"Sécurité",
+    signIn:"Connexion",
+    eyebrow:"VOTRE IDENTITÉ OFFICIELLE ZUNE",
+    heroTitle:'Une identité.<br><span class="highlight">Tout ZUNE.</span>',
+    heroDescription:"Votre compte ZUNE vous connecte à l'écosystème ZUNE. Gérez votre identité et protégez votre compte en un seul endroit.",
+    createAccount:"Créer un compte →",
+    alreadyAccount:"Connexion",
+    secureIdentity:"Identité sécurisée",
+    oneAccount:"Un compte",
+    connectedServices:"Services connectés",
+    accountActive:"COMPTE",
+    yourName:"Votre nom",
+    zuneMember:"Membre ZUNE",
+    digitalIdentity:"Votre identité numérique",
+    accountSecurity:"Sécurité du compte",
+    protectedAccount:"Accès protégé",
+    oneIdentity:"Une identité",
+    allServices:"Accéder aux services ZUNE",
+    ecosystem:"ÉCOSYSTÈME ZUNE",
+    servicesTitle:"Tout commence avec votre compte ZUNE.",
+    servicesDescription:"Un compte qui relie votre identité aux services ZUNE.",
+    identityTitle:"Votre identité",
+    identityDescription:"Gérez votre profil, vos informations et votre ZUNE ID.",
+    securityTitle:"Sécurité du compte",
+    securityDescription:"Gérez vos mots de passe et paramètres de sécurité.",
+    verificationTitle:"Vérification",
+    verificationDescription:"Demandez la vérification et suivez son statut.",
+    learnMore:"En savoir plus →",
+    manageSecurity:"Gérer la sécurité →",
+    getVerified:"Être vérifié →",
+    marketplaceLabel:"CONNECTÉ À ZUNE MARKETPLACE",
+    marketplaceTitle:"Votre compte. Votre marché.",
+    marketplaceDescription:"Connectez-vous avec votre compte ZUNE sans créer un autre compte.",
+    enterMarketplace:"Continuer vers ZUNE Marketplace →",
+    marketplaceAccess:"ACCÈS AU MARCHÉ",
+    securityLabel:"VOTRE SÉCURITÉ COMPTE",
+    securityHeading:"Votre compte mérite d'être protégé.",
+    securityText:"ZUNE Account vous aide à gérer votre identité et la sécurité de votre compte.",
+    footerDescription:"Une identité. Tout ZUNE.",
+    privacy:"Confidentialité",
+    terms:"Conditions"
+  },
+
+  pt:{
+    navHome:"Início",
+    navServices:"Serviços",
+    navMarketplace:"Mercado",
+    navSecurity:"Segurança",
+    signIn:"Entrar",
+    eyebrow:"SUA IDENTIDADE OFICIAL ZUNE",
+    heroTitle:'Uma identidade.<br><span class="highlight">Todo ZUNE.</span>',
+    heroDescription:"Sua conta ZUNE conecta você ao ecossistema ZUNE. Gerencie sua identidade e proteja sua conta em um só lugar.",
+    createAccount:"Criar conta →",
+    alreadyAccount:"Entrar",
+    secureIdentity:"Identidade segura",
+    oneAccount:"Uma conta",
+    connectedServices:"Serviços conectados",
+    accountActive:"CONTA",
+    yourName:"Seu nome",
+    zuneMember:"Membro ZUNE",
+    digitalIdentity:"Sua identidade digital",
+    accountSecurity:"Segurança da conta",
+    protectedAccount:"Acesso protegido",
+    oneIdentity:"Uma identidade",
+    allServices:"Acesse os serviços ZUNE",
+    ecosystem:"ECOSSISTEMA ZUNE",
+    servicesTitle:"Tudo começa com sua conta ZUNE.",
+    servicesDescription:"Uma conta que conecta sua identidade aos serviços ZUNE.",
+    identityTitle:"Sua identidade",
+    identityDescription:"Gerencie seu perfil, informações pessoais e ZUNE ID.",
+    securityTitle:"Segurança da conta",
+    securityDescription:"Gerencie senhas e configurações de segurança.",
+    verificationTitle:"Verificação",
+    verificationDescription:"Solicite a verificação e acompanhe seu status.",
+    learnMore:"Saiba mais →",
+    manageSecurity:"Gerenciar segurança →",
+    getVerified:"Verificar →",
+    marketplaceLabel:"CONECTADO AO ZUNE MARKETPLACE",
+    marketplaceTitle:"Sua conta. Seu mercado.",
+    marketplaceDescription:"Entre com sua conta ZUNE sem criar outra conta.",
+    enterMarketplace:"Continuar para ZUNE Marketplace →",
+    marketplaceAccess:"ACESSO AO MERCADO",
+    securityLabel:"SUA SEGURANÇA IMPORTA",
+    securityHeading:"Sua conta merece proteção.",
+    securityText:"ZUNE Account ajuda você a gerenciar sua identidade e segurança em um só lugar.",
+    footerDescription:"Uma identidade. Todo ZUNE.",
+    privacy:"Privacidade",
+    terms:"Termos"
+  },
+
+  bn:{
+    navHome:"হোম",
+    navServices:"সেবা",
+    navMarketplace:"মার্কেটপ্লেস",
+    navSecurity:"নিরাপত্তা",
+    signIn:"সাইন ইন",
+    eyebrow:"আপনার অফিসিয়াল ZUNE পরিচয়",
+    heroTitle:'একটি পরিচয়।<br><span class="highlight">সম্পূর্ণ ZUNE।</span>',
+    heroDescription:"আপনার ZUNE অ্যাকাউন্ট আপনাকে ZUNE ইকোসিস্টেমের সঙ্গে যুক্ত করে। এক নিরাপদ অ্যাকাউন্ট থেকে আপনার পরিচয় ও নিরাপত্তা পরিচালনা করুন।",
+    createAccount:"অ্যাকাউন্ট তৈরি করুন →",
+    alreadyAccount:"সাইন ইন",
+    secureIdentity:"নিরাপদ পরিচয়",
+    oneAccount:"একটি অ্যাকাউন্ট",
+    connectedServices:"সংযুক্ত সেবা",
+    accountActive:"অ্যাকাউন্ট",
+    yourName:"আপনার নাম",
+    zuneMember:"ZUNE সদস্য",
+    digitalIdentity:"আপনার ডিজিটাল পরিচয়",
+    accountSecurity:"অ্যাকাউন্ট নিরাপত্তা",
+    protectedAccount:"সুরক্ষিত অ্যাকাউন্ট প্রবেশ",
+    oneIdentity:"একটি পরিচয়",
+    allServices:"ZUNE সেবা ব্যবহার করুন",
+    ecosystem:"ZUNE ইকোসিস্টেম",
+    servicesTitle:"সবকিছু আপনার ZUNE অ্যাকাউন্ট দিয়ে শুরু হয়।",
+    servicesDescription:"একটি অ্যাকাউন্ট আপনার পরিচয়কে ZUNE সেবার সঙ্গে যুক্ত করে।",
+    identityTitle:"আপনার পরিচয়",
+    identityDescription:"আপনার প্রোফাইল, ব্যক্তিগত তথ্য এবং ZUNE ID পরিচালনা করুন।",
+    securityTitle:"অ্যাকাউন্ট নিরাপত্তা",
+    securityDescription:"পাসওয়ার্ড এবং নিরাপত্তা সেটিংস পরিচালনা করুন।",
+    verificationTitle:"যাচাইকরণ",
+    verificationDescription:"যাচাইকরণের আবেদন করুন এবং অবস্থা দেখুন।",
+    learnMore:"আরও জানুন →",
+    manageSecurity:"নিরাপত্তা পরিচালনা →",
+    getVerified:"যাচাই করুন →",
+    marketplaceLabel:"ZUNE MARKETPLACE-এর সঙ্গে সংযুক্ত",
+    marketplaceTitle:"আপনার অ্যাকাউন্ট। আপনার মার্কেটপ্লেস।",
+    marketplaceDescription:"নতুন অ্যাকাউন্ট তৈরি না করে ZUNE অ্যাকাউন্ট দিয়ে প্রবেশ করুন।",
+    enterMarketplace:"ZUNE Marketplace-এ যান →",
+    marketplaceAccess:"মার্কেটপ্লেস প্রবেশ",
+    securityLabel:"আপনার নিরাপত্তা গুরুত্বপূর্ণ",
+    securityHeading:"আপনার অ্যাকাউন্ট সুরক্ষার যোগ্য।",
+    securityText:"ZUNE Account আপনাকে এক জায়গা থেকে পরিচয় ও নিরাপত্তা পরিচালনা করতে সাহায্য করে।",
+    footerDescription:"একটি পরিচয়। সম্পূর্ণ ZUNE।",
+    privacy:"গোপনীয়তা",
+    terms:"শর্তাবলি"
+  },
+
+  ru:{
+    navHome:"Главная",
+    navServices:"Сервисы",
+    navMarketplace:"Маркетплейс",
+    navSecurity:"Безопасность",
+    signIn:"Войти",
+    eyebrow:"ВАША ОФИЦИАЛЬНАЯ ЛИЧНОСТЬ ZUNE",
+    heroTitle:'Одна личность.<br><span class="highlight">Весь ZUNE.</span>',
+    heroDescription:"Ваш аккаунт ZUNE объединяет вас с экосистемой ZUNE. Управляйте своей личностью и защищайте аккаунт в одном месте.",
+    createAccount:"Создать аккаунт →",
+    alreadyAccount:"Войти",
+    secureIdentity:"Защищённая личность",
+    oneAccount:"Один аккаунт",
+    connectedServices:"Связанные сервисы",
+    accountActive:"АККАУНТ",
+    yourName:"Ваше имя",
+    zuneMember:"Участник ZUNE",
+    digitalIdentity:"Ваша цифровая личность",
+    accountSecurity:"Безопасность аккаунта",
+    protectedAccount:"Защищённый доступ",
+    oneIdentity:"Одна личность",
+    allServices:"Доступ к сервисам ZUNE",
+    ecosystem:"ЭКОСИСТЕМА ZUNE",
+    servicesTitle:"Всё начинается с вашего аккаунта ZUNE.",
+    servicesDescription:"Один аккаунт объединяет вашу личность и сервисы ZUNE.",
+    identityTitle:"Ваша личность",
+    identityDescription:"Управляйте профилем, личной информацией и ZUNE ID.",
+    securityTitle:"Безопасность аккаунта",
+    securityDescription:"Управляйте паролями и настройками безопасности.",
+    verificationTitle:"Подтверждение",
+    verificationDescription:"Подайте заявку на проверку и отслеживайте её статус.",
+    learnMore:"Подробнее →",
+    manageSecurity:"Управление безопасностью →",
+    getVerified:"Подтвердить →",
+    marketplaceLabel:"ПОДКЛЮЧЕНО К ZUNE MARKETPLACE",
+    marketplaceTitle:"Ваш аккаунт. Ваш маркетплейс.",
+    marketplaceDescription:"Войдите через аккаунт ZUNE без создания дополнительного аккаунта.",
+    enterMarketplace:"Перейти в ZUNE Marketplace →",
+    marketplaceAccess:"ДОСТУП К МАРКЕТПЛЕЙСУ",
+    securityLabel:"ВАША БЕЗОПАСНОСТЬ ВАЖНА",
+    securityHeading:"Ваш аккаунт заслуживает защиты.",
+    securityText:"ZUNE Account помогает управлять вашей личностью и безопасностью в одном месте.",
+    footerDescription:"Одна личность. Весь ZUNE.",
+    privacy:"Конфиденциальность",
+    terms:"Условия"
+  }
+};
+
+const languageSelector = document.getElementById("languageSelector");
+
+function setLanguage(language){
+  const dictionary = translations[language] || translations.en;
+
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+
+  document.querySelectorAll("[data-i18n]").forEach(element=>{
+    const key = element.getAttribute("data-i18n");
+
+    if(dictionary[key]){
+      element.innerHTML = dictionary[key];
+    }
+  });
+
+  localStorage.setItem("zune_language",language);
+}
+
+const savedLanguage = localStorage.getItem("zune_language") || "en";
+
+languageSelector.value = savedLanguage;
+setLanguage(savedLanguage);
+
+languageSelector.addEventListener("change",event=>{
+  setLanguage(event.target.value);
+});
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+</script>
+
+</body>
+</html>
