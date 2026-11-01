@@ -1,4 +1,86 @@
-<!DOCTYPE html><html lang="en">
+<script>
+const SUPABASE_URL = "https://rpkogiieegqgxqbzwxwo.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_2TEqZv-NBM9n5knU46ngqA_wqO3V1uf";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const MARKETPLACE_URL = "https://mrnehemiah.github.io/ZUNE/";
+
+const loginForm = document.getElementById("loginForm");
+const loginButton = document.getElementById("loginButton");
+const message = document.getElementById("message");
+
+function showMessage(text, type) {
+  message.textContent = text;
+  message.className = "message " + type;
+}
+
+// SHOW / HIDE PASSWORD
+document.getElementById("togglePassword").addEventListener("click", () => {
+  const password = document.getElementById("password");
+  const toggle = document.getElementById("togglePassword");
+
+  if (password.type === "password") {
+    password.type = "text";
+    toggle.textContent = "Hide";
+  } else {
+    password.type = "password";
+    toggle.textContent = "Show";
+  }
+});
+
+// LOGIN
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    showMessage("Please enter your email and password.", "error");
+    return;
+  }
+
+  loginButton.disabled = true;
+  loginButton.textContent = "Signing in...";
+
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+    if (error) throw error;
+
+    if (!data.session || !data.user) {
+      throw new Error("Login session could not be created.");
+    }
+
+    showMessage(
+      "Welcome back! Redirecting to ZUNE Marketplace...",
+      "success"
+    );
+
+    setTimeout(() => {
+      window.location.replace(MARKETPLACE_URL);
+    }, 1200);
+
+  } catch (error) {
+    showMessage(
+      error.message || "Unable to sign in. Please try again.",
+      "error"
+    );
+
+    loginButton.disabled = false;
+    loginButton.textContent = "Sign In";
+  }
+});
+</script></body>
+</html><!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
