@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#087b42">
-  <title>My Account | ZUNE Account</title>
+  <title>My Account | ZUNE</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -13,12 +13,12 @@
       --green: #087b42;
       --dark-green: #065f32;
       --light-green: #eaf7ef;
-      --gold: #d9a928;
       --text: #18352a;
       --muted: #718078;
       --border: #e5eee8;
       --background: #f5f9f6;
       --white: #ffffff;
+      --blue: #3897f0;
     }
 
     * {
@@ -74,7 +74,7 @@
       height: 42px;
       background: var(--green);
       color: white;
-      border: 3px solid var(--gold);
+      border: 3px solid #d9a928;
       border-radius: 50%;
       display: grid;
       place-items: center;
@@ -162,13 +162,40 @@
       z-index: 1;
     }
 
-    .profile-info h2 {
-      font-size: 22px;
+    /* NAME AND INSTAGRAM-STYLE BADGE */
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
       margin-bottom: 7px;
+    }
+
+    .name-row h2 {
+      font-size: 21px;
+      font-weight: 800;
+      margin: 0;
       overflow-wrap: anywhere;
     }
 
-    .profile-info p {
+    .verified {
+      display: none;
+      width: 21px;
+      height: 21px;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    .verified svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .profile-info > p {
       font-size: 13px;
       color: #d8f1e1;
       overflow-wrap: anywhere;
@@ -185,38 +212,6 @@
       font-size: 11px;
       font-weight: bold;
       margin-top: 11px;
-    }
-
-    /* OFFICIAL VERIFIED BADGE */
-
-    .verified {
-      display: none;
-      width: fit-content;
-      align-items: center;
-      gap: 8px;
-      margin-top: 12px;
-      padding: 6px 11px 6px 6px;
-      background: rgba(255,255,255,.13);
-      border: 1px solid rgba(255,255,255,.28);
-      border-radius: 30px;
-      color: white;
-      font-size: 12px;
-      font-weight: 800;
-      transition: .2s;
-    }
-
-    .verified:hover {
-      background: rgba(255,255,255,.23);
-      transform: translateY(-1px);
-    }
-
-    .verified svg {
-      width: 31px;
-      height: 31px;
-      flex-shrink: 0;
-      background: #eaf7ef;
-      border-radius: 9px;
-      padding: 3px;
     }
 
     /* ACCOUNT DETAILS */
@@ -451,8 +446,13 @@
         font-size: 28px;
       }
 
-      .profile-info h2 {
+      .name-row h2 {
         font-size: 18px;
+      }
+
+      .verified {
+        width: 19px;
+        height: 19px;
       }
 
       .menu-grid {
@@ -525,7 +525,41 @@
 
         <div class="profile-info">
 
-          <h2 id="fullName">ZUNE User</h2>
+          <div class="name-row">
+
+            <h2 id="fullName">ZUNE User</h2>
+
+            <!-- INSTAGRAM-STYLE VERIFIED BADGE -->
+
+            <span
+              class="verified"
+              id="verifiedBadge"
+              title="Verified Account"
+              aria-label="Verified Account">
+
+              <svg viewBox="0 0 24 24" role="img">
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="11"
+                  fill="#3897F0"
+                />
+
+                <path
+                  d="M7 12.3l3.2 3.1L17.5 8"
+                  fill="none"
+                  stroke="#ffffff"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+              </svg>
+
+            </span>
+
+          </div>
 
           <p id="email">Loading...</p>
 
@@ -533,47 +567,6 @@
             <span>●</span>
             <span>Active Account</span>
           </div>
-
-          <!-- OFFICIAL VERIFIED BADGE -->
-
-          <a
-            href="verification.html"
-            class="verified"
-            id="verifiedBadge"
-            aria-label="Verified account. Open verification details">
-
-            <svg viewBox="0 0 100 100" role="img" aria-label="Verified">
-
-              <path
-                d="M50 5
-                L59 12 L70 10 L76 20
-                L87 25 L85 37 L94 46
-                L89 57 L91 69 L79 75
-                L74 87 L62 86 L50 95
-                L40 86 L28 88 L22 77
-                L11 72 L14 60 L5 50
-                L14 40 L11 28 L23 23
-                L28 12 L40 14 Z"
-                fill="#ffffff"
-                stroke="#15803d"
-                stroke-width="4"
-                stroke-linejoin="round"
-              />
-
-              <path
-                d="M31 51 L44 64 L70 36"
-                fill="none"
-                stroke="#15803d"
-                stroke-width="8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-
-            </svg>
-
-            <span>Verified Account</span>
-
-          </a>
 
         </div>
 
@@ -757,7 +750,7 @@
 
         const user = authData.user;
 
-        // GET USER PROFILE
+        // GET PROFILE FROM SUPABASE
 
         const {
           data: profile,
@@ -780,7 +773,7 @@
           throw profileError;
         }
 
-        // USER INFORMATION
+        // ACCOUNT INFORMATION
 
         const name =
           profile?.full_name ||
@@ -804,7 +797,7 @@
         const isVerified =
           profile?.is_verified === true;
 
-        // PROFILE DISPLAY
+        // PROFILE CARD
 
         document.getElementById("fullName").textContent = name;
 
@@ -813,7 +806,7 @@
         document.getElementById("avatar").textContent =
           name.trim().charAt(0).toUpperCase() || "Z";
 
-        // ACCOUNT DETAILS
+        // ACCOUNT OVERVIEW
 
         document.getElementById("detailName").textContent = name;
 
@@ -835,22 +828,18 @@
             new Date(memberDate).toLocaleDateString();
         }
 
-        // OFFICIAL VERIFIED BADGE
+        // VERIFIED BADGE
 
         const verifiedBadge =
           document.getElementById("verifiedBadge");
 
         if (isVerified) {
-
           verifiedBadge.style.display = "inline-flex";
-
         } else {
-
           verifiedBadge.style.display = "none";
-
         }
 
-        // SHOW DASHBOARD
+        // SHOW ACCOUNT
 
         loading.style.display = "none";
         content.style.display = "block";
