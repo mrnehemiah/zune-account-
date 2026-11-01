@@ -348,3 +348,152 @@ a{
     <a href="login.html"><strong>Sign in</strong></a>
   </div></section>
 </main>
+<script>
+const SUPABASE_URL = "https://rpkogiieegqgxqbzwxwo.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_2TEqZv-NBM9n5knU46ngqA_wqO3V1uf";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const MARKETPLACE_URL = "https://mrnehemiah.github.io/ZUNE/";
+
+const form = document.getElementById("signupForm");
+const button = document.getElementById("signupButton");
+const message = document.getElementById("message");
+
+function showMessage(text, type) {
+  message.textContent = text;
+  message.className = "message " + type;
+}
+
+// Show / Hide password
+document.querySelectorAll(".toggle-password").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const field = document.getElementById(btn.dataset.target);
+
+    if (field.type === "password") {
+      field.type = "text";
+      btn.textContent = "Hide";
+    } else {
+      field.type = "password";
+      btn.textContent = "Show";
+    }
+  });
+});
+
+// SIGN UP
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const fullName = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const countryCode = document.getElementById("countryCode").value;
+  const phoneInput = document.getElementById("phone").value.trim();
+
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  const phoneDigits = phoneInput.replace(/\D/g, "");
+
+  if (!fullName || !email || !phoneDigits || !password) {
+    showMessage("Please complete all required fields.", "error");
+    return;
+  }
+
+  if (phoneDigits.length < 6 || phoneDigits.length > 15) {
+    showMessage("Please enter a valid phone number.", "error");
+    return;
+  }
+
+  if (password.length < 8) {
+    showMessage("Password must contain at least 8 characters.", "error");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showMessage("Passwords do not match.", "error");
+    return;
+  }
+
+  if (!document.getElementById("acceptPolicy").checked) {
+    showMessage("Please accept the Terms and Privacy Policy.", "error");
+    return;
+  }
+
+  const fullPhone = countryCode + phoneDigits;
+
+  button.disabled = true;
+  button.textContent = "Creating account...";
+
+  try {
+    // CREATE SUPABASE ACCOUNT
+    const { data, error } = await supabaseClient.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          full_name: fullName,
+          phone_number: fullPhone
+        }
+      }
+    });
+
+    if (error) throw error;
+
+    if (!data.user) {
+      throw new Error("Account creation failed.");
+    }
+
+    // No email confirmation / OTP should be required.
+    if (!data.session) {
+      throw new Error(
+        "Account created, but email confirmation is enabled. Disable Confirm email in Supabase Auth settings."
+      );
+    }
+
+    // SAVE USER PROFILE
+    const { error: profileError } = await supabaseClient
+      .from("profiles")
+      .upsert({
+        id: data.user.id,
+        full_name: fullName,
+        email: email,
+        phone_number: fullPhone
+      }, {
+        onConflict: "id"
+      });
+
+    if (profileError) {
+      throw new Error(
+        "Account created, but profile saving failed: " +
+        profileError.message
+      );
+    }
+
+    showMessage(
+      "Account created successfully! Redirecting to ZUNE Marketplace...",
+      "success"
+    );
+
+    // REDIRECT TO ZUNE MARKETPLACE
+    setTimeout(() => {
+      window.location.replace(MARKETPLACE_URL);
+    }, 1500);
+
+  } catch (error) {
+    showMessage(
+      error.message || "Something went wrong. Please try again.",
+      "error"
+    );
+
+    button.disabled = false;
+    button.textContent = "Create ZUNE Account";
+  }
+});
+</script>
+
+</body>
+</html>
