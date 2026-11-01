@@ -1,0 +1,287 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#087b42">
+<title>Sign In | ZUNE Account</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+:root{
+  --green:#087b42;
+  --dark:#064d2b;
+  --light:#eaf7ef;
+  --gold:#e9b949;
+  --text:#17251d;
+  --muted:#718078;
+  --border:#e4ece6;
+  --white:#fff;
+  --shadow:0 15px 45px rgba(15,70,38,.09);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:#f5faf6;
+  color:var(--text);
+}
+
+a{
+  color:var(--green);
+  text-decoration:none;
+}
+
+.header{
+  height:75px;
+  padding:0 7%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:white;
+  border-bottom:1px solid var(--border);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:23px;
+  font-weight:800;
+  color:var(--green);
+}
+
+.logo{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:var(--green);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-size:24px;
+  font-weight:900;
+}
+
+.header-link{
+  font-size:14px;
+  font-weight:600;
+}
+
+.main{
+  min-height:calc(100vh - 75px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:35px 16px;
+}
+
+.login-container{
+  width:100%;
+  max-width:460px;
+  background:white;
+  padding:38px;
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
+}
+
+.heading{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.heading h1{
+  font-size:29px;
+  margin-bottom:10px;
+}
+
+.heading p{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.form-group{
+  margin-bottom:20px;
+}
+
+.form-group label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:9px;
+}
+
+.form-group input{
+  width:100%;
+  height:51px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:0 14px;
+  outline:none;
+  font-size:14px;
+  background:white;
+  color:var(--text);
+}
+
+.form-group input:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(8,123,66,.09);
+}
+
+.password-wrap{
+  position:relative;
+}
+
+.password-wrap input{
+  padding-right:70px;
+}
+
+.toggle-password{
+  position:absolute;
+  right:13px;
+  top:50%;
+  transform:translateY(-50%);
+  border:0;
+  background:none;
+  color:var(--green);
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.forgot{
+  text-align:right;
+  margin-top:-8px;
+  margin-bottom:22px;
+  font-size:13px;
+  font-weight:600;
+}
+
+.submit-btn{
+  width:100%;
+  height:52px;
+  border:0;
+  border-radius:12px;
+  background:var(--green);
+  color:white;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.submit-btn:hover{
+  background:var(--dark);
+}
+
+.submit-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.message{
+  display:none;
+  margin-top:16px;
+  padding:12px;
+  border-radius:10px;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.message.error{
+  display:block;
+  background:#fff0f0;
+  color:#b42318;
+}
+
+.message.success{
+  display:block;
+  background:var(--light);
+  color:var(--dark);
+}
+
+.bottom-text{
+  text-align:center;
+  margin-top:25px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+@media(max-width:480px){
+  .header{
+    height:65px;
+    padding:0 18px;
+  }
+
+  .login-container{
+    padding:27px 20px;
+  }
+
+  .heading h1{
+    font-size:25px;
+  }
+}
+</style></head><body><header class="header">
+  <div class="brand">
+    <div class="logo">Z</div>
+    ZUNE Account
+  </div>  <a class="header-link" href="signup.html">
+    Create Account
+  </a>
+</header><main class="main"><section class="login-container">  <div class="heading">
+    <h1>Welcome Back</h1>
+    <p>Sign in to your ZUNE Account and continue your journey.</p>
+  </div>  <form id="loginForm"><div class="form-group">
+  <label for="email">Email Address</label>
+  <input
+    type="email"
+    id="email"
+    placeholder="Enter your email"
+    autocomplete="email"
+    required
+  >
+</div>
+
+<div class="form-group">
+  <label for="password">Password</label>
+
+  <div class="password-wrap">
+    <input
+      type="password"
+      id="password"
+      placeholder="Enter your password"
+      autocomplete="current-password"
+      required
+    >
+
+    <button
+      type="button"
+      class="toggle-password"
+      id="togglePassword"
+    >
+      Show
+    </button>
+  </div>
+</div>
+
+<div class="forgot">
+  <a href="forgot-password.html">Forgot Password?</a>
+</div>
+
+<button
+  type="submit"
+  class="submit-btn"
+  id="loginButton"
+>
+  Sign In
+</button>
+
+<div id="message" class="message"></div>
+
+  </form>  <div class="bottom-text">
+    Don't have an account?
+    <a href="signup.html"><strong>Create Account</strong></a>
+  </div></section></main>
