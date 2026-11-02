@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#087b42">
+<title>Settings | ZUNE Account</title>
+
+<style>
+:root {
+  --green:#087b42;
+  --dark:#065f32;
+  --light:#eaf7ef;
+  --bg:#f5f9f6;
+  --border:#e5eee8;
+  --muted:#718078;
+  --text:#18352a;
+}
+
+* {
+  box-sizing:border-box;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+}
+
+header {
+  height:68px;
+  background:white;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:0 6%;
+}
+
+header a {
+  color:var(--green);
+  text-decoration:none;
+  font-size:25px;
+}
+
+header h2 {
+  font-size:19px;
+}
+
+.container {
+  max-width:850px;
+  margin:30px auto;
+  padding:0 17px 40px;
+}
+
+.hero {
+  background:linear-gradient(120deg,#087b42,#064e2c);
+  padding:27px;
+  border-radius:19px;
+  color:white;
+  margin-bottom:22px;
+}
+
+.hero h1 {
+  margin:0 0 9px;
+  font-size:25px;
+}
+
+.hero p {
+  margin:0;
+  font-size:13px;
+  line-height:1.7;
+  color:#d5eddd;
+}
+
+.group-title {
+  font-size:15px;
+  font-weight:800;
+  color:var(--dark);
+  margin:25px 0 12px;
+}
+
+.settings-group {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+.setting {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:17px;
+  border-bottom:1px solid var(--border);
+  text-decoration:none;
+  color:inherit;
+  transition:.2s;
+}
+
+.setting:last-child {
+  border-bottom:none;
+}
+
+.setting:hover {
+  background:#f8fcf9;
+}
+
+.setting-icon {
+  width:44px;
+  height:44px;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  background:var(--light);
+  border-radius:12px;
+  font-size:20px;
+}
+
+.setting-info {
+  flex:1;
+}
+
+.setting-info h3 {
+  margin:0 0 5px;
+  font-size:14px;
+}
+
+.setting-info p {
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+.arrow {
+  color:#9aa9a0;
+  font-size:22px;
+}
+
+.note {
+  margin-top:22px;
+  padding:16px;
+  background:#eaf7ef;
+  border:1px solid #ccebd6;
+  border-radius:13px;
+  color:var(--dark);
+  font-size:12px;
+  line-height:1.7;
+}
+
+footer {
+  text-align:center;
+  padding:25px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+@media(max-width:500px) {
+  header {
+    padding:0 17px;
+  }
+
+  .container {
+    margin-top:20px;
+  }
+
+  .hero {
+    padding:22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="account.html" aria-label="Back">‹</a>
+  <h2>Settings</h2>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <h1>Account Settings</h1>
+    <p>
+      Simamia taarifa, usalama na mapendeleo ya akaunti yako
+      kupitia sehemu moja.
+    </p>
+  </section>
+
+  <h3 class="group-title">ACCOUNT MANAGEMENT</h3>
+
+  <section class="settings-group">
+
+    <a href="personal-info.html" class="setting">
+      <div class="setting-icon">👤</div>
+      <div class="setting-info">
+        <h3>Personal Information</h3>
+        <p>Badilisha jina na namba ya simu.</p>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+
+    <a href="security.html" class="setting">
+      <div class="setting-icon">🛡️</div>
+      <div class="setting-info">
+        <h3>Security</h3>
+        <p>Password na usalama wa akaunti.</p>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+
+    <a href="verification.html" class="setting">
+      <div class="setting-icon">✓</div>
+      <div class="setting-info">
+        <h3>Account Verification</h3>
+        <p>Angalia hali ya uthibitishaji.</p>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+
+  </section>
+
+  <h3 class="group-title">PRIVACY & CONTROL</h3>
+
+  <section class="settings-group">
+
+    <a href="privacy.html" class="setting">
+      <div class="setting-icon">🔒</div>
+      <div class="setting-info">
+        <h3>Privacy Centre</h3>
+        <p>Elewa namna taarifa zako zinavyotumika.</p>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+
+  </section>
+
+  <h3 class="group-title">ZUNE SERVICES</h3>
+
+  <section class="settings-group">
+
+    <a href="https://mrnehemiah.github.io/ZUNE/" class="setting">
+      <div class="setting-icon">🛍️</div>
+      <div class="setting-info">
+        <h3>ZUNE Marketplace</h3>
+        <p>Rudi kwenye marketplace.</p>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+
+  </section>
+
+  <div class="note">
+    <strong>Usalama:</strong>
+    Usimshirikishe mtu mwingine password yako au taarifa
+    za kuingia kwenye akaunti yako.
+  </div>
+
+</main>
+
+<footer>
+  © <span id="year"></span> ZUNE Account
+</footer>
+
+<script>
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+</script>
+
+</body>
+</html>
