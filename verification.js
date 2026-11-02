@@ -228,3 +228,12 @@ form.addEventListener("submit", async function(event) {
 });
 
 initializeVerification();
+console.log("ZUNE VERIFICATION JS LOADED");
+
+window.addEventListener("error", function(event) {
+  alert("JavaScript Error: " + event.message);
+});
+
+window.addEventListener("unhandledrejection", function(event) {
+  alert("Promise Error: " + event.reason);
+});
