@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZUNE Account - Security</title>
+
+<style>
+:root {
+  --green: #15803d;
+  --dark: #14532d;
+  --light: #f0fdf4;
+  --border: #e5e7eb;
+  --text: #17211b;
+  --muted: #64748b;
+  --red: #dc2626;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f8faf9;
+  color: var(--text);
+}
+
+header {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 17px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back {
+  text-decoration: none;
+  color: var(--green);
+  font-size: 24px;
+}
+
+header h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.container {
+  width: 100%;
+  max-width: 650px;
+  margin: 30px auto;
+  padding: 0 16px;
+}
+
+.intro {
+  background: linear-gradient(135deg, #14532d, #15803d);
+  color: white;
+  padding: 25px;
+  border-radius: 18px;
+  margin-bottom: 22px;
+}
+
+.intro h1 {
+  margin: 0 0 9px;
+  font-size: 23px;
+}
+
+.intro p {
+  margin: 0;
+  line-height: 1.6;
+  opacity: .9;
+  font-size: 14px;
+}
+
+.section {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 21px;
+  margin-bottom: 17px;
+}
+
+.section h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 19px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 15px 0 7px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px #15803d18;
+}
+
+button {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 18px;
+  background: var(--green);
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.secondary {
+  background: white;
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+
+.danger {
+  background: white;
+  color: var(--red);
+  border: 1px solid #fecaca;
+}
+
+.message {
+  display: none;
+  padding: 13px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 17px;
+}
+
+.message.success {
+  display: block;
+  background: #dcfce7;
+  color: #166534;
+}
+
+.message.error {
+  display: block;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.message.info {
+  display: block;
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.security-item {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+
+.security-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--light);
+  color: var(--green);
+  display: grid;
+  place-items: center;
+  font-size: 21px;
+  flex-shrink: 0;
+}
+
+.security-item p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  padding: 20px;
+}
+
+@media (max-width: 480px) {
+  .container {
+    margin-top: 20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="account.html" class="back">‹</a>
+  <h2>Usalama wa Akaunti</h2>
+</header>
+
+<main class="container">
+
+  <section class="intro">
+    <h1>Security Centre</h1>
+    <p>
+      Linda akaunti yako ya ZUNE kwa kutumia password imara
+      na kudhibiti namna unavyoingia kwenye akaunti.
+    </p>
+  </section>
+
+  <div id="pageMessage" class="message"></div>
+
+  <section class="section">
+    <div class="security-item">
+      <div class="security-icon">🔐</div>
+      <div>
+        <h3>Badilisha Password</h3>
+        <p>
+          Weka password mpya kwa akaunti yako ya ZUNE.
+          Hakikisha unatumia password ambayo ni ngumu kukisiwa.
+        </p>
+      </div>
+    </div>
+
+    <form id="passwordForm">
+      <label for="newPassword">Password mpya</label>
+      <input
+        type="password"
+        id="newPassword"
+        minlength="8"
+        autocomplete="new-password"
+        placeholder="Ingiza password mpya"
+        required
+      >
+
+      <label for="confirmPassword">Rudia password mpya</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        minlength="8"
+        autocomplete="new-password"
+        placeholder="Thibitisha password mpya"
+        required
+      >
+
+      <button type="submit" id="changePasswordButton">
+        Sasisha Password
+      </button>
+    </form>
+  </section>
+
+  <section class="section">
+    <div class="security-item">
+      <div class="security-icon">📧</div>
+      <div>
+        <h3>Urejeshaji wa Akaunti</h3>
+        <p>
+          Unaweza kuomba link ya kurejesha password kupitia
+          email iliyounganishwa na akaunti yako.
+        </p>
+      </div>
+    </div>
+
+    <button type="button" class="secondary" id="resetPasswordButton">
+      Tuma Link ya Kurejesha Password
+    </button>
+  </section>
+
+  <section class="section">
+    <div class="security-item">
+      <div class="security-icon">🚪</div>
+      <div>
+        <h3>Ondoka kwenye Akaunti</h3>
+        <p>
+          Ondoka kwenye akaunti hii kwenye kifaa unachotumia sasa.
+        </p>
+      </div>
+    </div>
+
+    <button type="button" class="danger" id="signOutButton">
+      Sign Out
+    </button>
+  </section>
+
+</main>
+
+<footer>
+  ZUNE Account Security · Secure your digital identity
+</footer>
+
+<script type="module" src="security.js"></script>
+
+</body>
+</html>
