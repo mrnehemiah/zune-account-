@@ -1,36 +1,98 @@
+"use strict";
 
 const SUPABASE_URL = "https://rpkogiieegqgxqbzwxwo.supabase.co";
 const SUPABASE_KEY = "sb_publishable_2TEqZv-NBM9n5knU46ngqA_wqO3V1uf";
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-const form = document.getElementById("verificationForm");
 const message = document.getElementById("pageMessage");
+const form = document.getElementById("verificationForm");
 const submitButton = document.getElementById("submitButton");
-const fullNameInput = document.getElementById("fullName");
+const retryButton = document.getElementById("retryButton");
 
+const personalSection = document.getElementById("personalSection");
+const sellerSection = document.getElementById("sellerSection");
+
+let supabaseClient = null;
 let currentUser = null;
+let currentSession = null;
 let isSubmitting = false;
+let pendingApplication = false;
 
-function showMessage(text, type = "error") {
+function showMessage(text, type = "info") {
   message.textContent = text;
   message.className = "message " + type;
   message.style.display = "block";
+
   message.scrollIntoView({
     behavior: "smooth",
     block: "center"
   });
 }
 
-function setLoading(loading) {
+function hideMessage() {
+  message.textContent = "";
+  message.className = "message";
+  message.style.display = "none";
+}
+
+function setButtonState(loading) {
   isSubmitting = loading;
-  submitButton.disabled = loading;
+  submitButton.disabled = loading || !currentUser || pendingApplication;
+
   submitButton.textContent = loading
     ? "Inatuma ombi..."
-    : "Submit Verification Application";
+    : pendingApplication
+      ? "Ombi tayari limepokelewa"
+      : "Submit Verification Application";
+}
+
+function getVerificationType() {
+  return document.querySelector(
+    'input[name="verificationType"]:checked'
+  )?.value || "user";
+}
+
+function setFieldRequirements(type) {
+  const personalFields = [
+    document.getElementById("personalFullName"),
+    document.getElementById("personalDocumentType")
+  ];
+
+  const sellerFields = [
+    document.getElementById("sellerFullName"),
+    document.getElementById("storeName"),
+    document.getElementById("businessCategory"),
+    document.getElementById("sellerCountry"),
+    document.getElementById("sellerRegion"),
+    document.getElementById("sellerDistrict"),
+    document.getElementById("storeAddress"),
+    document.getElementById("sellerDocumentType")
+  ];
+
+  personalFields.forEach(field => {
+    field.required = type === "user";
+  });
+
+  sellerFields.forEach(field => {
+    field.required = type === "seller";
+  });
+}
+
+function switchVerificationForm() {
+  const type = getVerificationType();
+
+  personalSection.classList.toggle("active", type === "user");
+  sellerSection.classList.toggle("active", type === "seller");
+
+  setFieldRequirements(type);
+  hideMessage();
+
+  if (pendingApplication) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Ombi tayari limepokelewa";
+  } else {
+    submitButton.disabled = !currentUser || isSubmitting;
+    submitButton.textContent = "Submit Verification Application";
+  }
 }
 
 function showError(error, context) {
@@ -43,197 +105,406 @@ function showError(error, context) {
     error?.hint || ""
   ].filter(Boolean).join(" | ");
 
-  showMessage("Imeshindikana: " + details, "error");
+  showMessage("Imeshindikana kutuma ombi: " + details, "error");
 }
 
-async function getCurrentSession() {
-  const { data, error } = await supabase.auth.getSession();
+async function getValidSession() {
+  const { data, error } = await supabaseClient.auth.getSession();
 
-  if (error) throw error;
-
-  if (!data.session) {
-    throw new Error("Session haipo. Tafadhali ingia tena kwenye ZUNE Account.");
+  if (error) {
+    throw error;
   }
+
+  if (!data.session || !data.session.user) {
+    throw new Error(
+      "Hujawaingia kwenye ZUNE Account. Tafadhali ingia kwanza."
+    );
+  }
+
+  currentSession = data.session;
+  currentUser = data.session.user;
 
   return data.session;
 }
 
-async function checkExistingApplication() {
-  const { data, error } = await supabase
+async function loadProfileName() {
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .select("full_name")
+    .eq("id", currentUser.id)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("Profile lookup warning:", error);
+    return "";
+  }
+
+  return data?.full_name || "";
+}
+
+async function checkExistingApplication(type) {
+  const { data, error } = await supabaseClient
     .from("verification_requests")
-    .select("id, status, created_at, admin_note")
+    .select("id, status, created_at")
     .eq("user_id", currentUser.id)
+    .eq("role", type)
     .eq("status", "pending")
     .order("created_at", { ascending: false })
     .limit(1);
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
-  if (data && data.length > 0) {
-    form.style.display = "none";
+  return data && data.length > 0 ? data[0] : null;
+}
 
+async function refreshPendingStatus() {
+  const type = getVerificationType();
+  const existing = await checkExistingApplication(type);
+
+  pendingApplication = Boolean(existing);
+
+  if (existing) {
     showMessage(
-      "Ombi lako tayari limepokelewa na linasubiri kukaguliwa na Admin wa ZUNE.",
+      "Ombi lako la " +
+      (type === "seller" ? "Seller Verification" : "Personal Verification") +
+      " tayari limepokelewa. Linasubiri kukaguliwa na Admin wa ZUNE.",
       "success"
     );
-
-    return true;
+  } else {
+    hideMessage();
   }
 
-  return false;
+  setButtonState(false);
 }
 
-async function initializeVerification() {
-  try {
-    if (!window.supabase) {
-      throw new Error("Supabase library haijapakiwa.");
-    }
+function getPersonalApplication() {
+  const fullName = document
+    .getElementById("personalFullName")
+    .value.trim();
 
-    if (!form || !message || !submitButton || !fullNameInput) {
-      throw new Error("Baadhi ya vipengele vya verification.html havijapatikana.");
-    }
+  const documentType = document
+    .getElementById("personalDocumentType")
+    .value;
 
-    const session = await getCurrentSession();
+  const documentNumber = document
+    .getElementById("personalDocumentNumber")
+    .value.trim();
 
-    currentUser = session.user;
+  const reason = document
+    .getElementById("personalReason")
+    .value.trim();
 
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("full_name")
-      .eq("id", currentUser.id)
-      .maybeSingle();
-
-    if (profileError) {
-      console.warn("Profile lookup:", profileError);
-    }
-
-    fullNameInput.value =
-      profile?.full_name ||
-      currentUser.user_metadata?.full_name ||
-      currentUser.user_metadata?.name ||
-      "";
-
-    await checkExistingApplication();
-
-  } catch (error) {
-    console.error("VERIFICATION INITIALIZATION ERROR:", error);
-
-    if (
-      error.message?.includes("Session haipo") ||
-      error.message?.includes("JWT")
-    ) {
-      showMessage(
-        "Tafadhali ingia kwenye ZUNE Account kwanza.",
-        "error"
-      );
-
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 2000);
-
-      return;
-    }
-
-    showError(error, "Initialization error");
+  if (!fullName || !documentType) {
+    throw new Error(
+      "Jaza jina kamili na chagua aina ya kitambulisho."
+    );
   }
+
+  if (fullName.length < 3) {
+    throw new Error("Jina kamili lazima liwe na herufi angalau 3.");
+  }
+
+  return {
+    full_name: fullName,
+    document_type: documentType,
+    document_number: documentNumber || null,
+    reason: reason || "Personal Verification Application"
+  };
 }
 
-form.addEventListener("submit", async function(event) {
+function getSellerApplication() {
+  const fullName = document
+    .getElementById("sellerFullName")
+    .value.trim();
+
+  const storeName = document
+    .getElementById("storeName")
+    .value.trim();
+
+  const category = document
+    .getElementById("businessCategory")
+    .value;
+
+  const country = document
+    .getElementById("sellerCountry")
+    .value;
+
+  const region = document
+    .getElementById("sellerRegion")
+    .value.trim();
+
+  const district = document
+    .getElementById("sellerDistrict")
+    .value.trim();
+
+  const address = document
+    .getElementById("storeAddress")
+    .value.trim();
+
+  const documentType = document
+    .getElementById("sellerDocumentType")
+    .value;
+
+  const documentNumber = document
+    .getElementById("sellerDocumentNumber")
+    .value.trim();
+
+  const reason = document
+    .getElementById("sellerReason")
+    .value.trim();
+
+  if (
+    !fullName ||
+    !storeName ||
+    !category ||
+    !country ||
+    !region ||
+    !district ||
+    !address ||
+    !documentType
+  ) {
+    throw new Error(
+      "Tafadhali jaza taarifa zote zinazohitajika za biashara."
+    );
+  }
+
+  if (fullName.length < 3 || storeName.length < 2) {
+    throw new Error(
+      "Jina la mmiliki au jina la duka si sahihi."
+    );
+  }
+
+  const businessDetails = [
+    "SELLER VERIFICATION APPLICATION",
+    "",
+    "STORE NAME: " + storeName,
+    "BUSINESS CATEGORY: " + category,
+    "COUNTRY: " + country,
+    "REGION: " + region,
+    "DISTRICT/CITY: " + district,
+    "STORE ADDRESS: " + address,
+    "DOCUMENT TYPE: " + documentType,
+    "DOCUMENT NUMBER: " + (documentNumber || "Not provided"),
+    "",
+    "SELLER DESCRIPTION:",
+    reason || "No additional description provided."
+  ].join("\n");
+
+  return {
+    full_name: fullName,
+    document_type: documentType,
+    document_number: documentNumber || null,
+    reason: businessDetails
+  };
+}
+
+async function submitApplication(event) {
   event.preventDefault();
 
   if (isSubmitting) return;
 
   try {
     if (!currentUser) {
-      throw new Error("Tafadhali ingia kwenye akaunti yako kwanza.");
+      throw new Error(
+        "Hujawaingia kwenye akaunti. Ingia tena kisha ujaribu."
+      );
     }
 
-    const fullName = fullNameInput.value.trim();
+    setButtonState(true);
+    hideMessage();
 
-    const documentType =
-      document.getElementById("documentType").value;
+    const session = await getValidSession();
 
-    const documentNumber =
-      document.getElementById("documentNumber").value.trim();
-
-    const reason =
-      document.getElementById("reason").value.trim();
-
-    const verificationType =
-      document.querySelector(
-        'input[name="verificationType"]:checked'
-      )?.value;
-
-    if (!fullName || !documentType || !verificationType) {
-      throw new Error("Tafadhali jaza sehemu zote zinazohitajika.");
+    if (session.user.id !== currentUser.id) {
+      throw new Error(
+        "Session imebadilika. Tafadhali ingia tena."
+      );
     }
 
-    if (fullName.length < 3) {
-      throw new Error("Jina kamili lazima liwe na angalau herufi 3.");
-    }
+    const type = getVerificationType();
 
-    if (!["user", "seller"].includes(verificationType)) {
+    if (!["user", "seller"].includes(type)) {
       throw new Error("Aina ya verification si sahihi.");
     }
 
-    setLoading(true);
+    const existing = await checkExistingApplication(type);
 
-    const session = await getCurrentSession();
+    if (existing) {
+      pendingApplication = true;
 
-    if (session.user.id !== currentUser.id) {
-      throw new Error("Akaunti imebadilika. Tafadhali ingia tena.");
+      showMessage(
+        "Tayari una ombi la aina hii linalosubiri kukaguliwa na Admin.",
+        "success"
+      );
+
+      setButtonState(false);
+      return;
     }
 
-    const alreadySubmitted = await checkExistingApplication();
-
-    if (alreadySubmitted) return;
+    const details = type === "seller"
+      ? getSellerApplication()
+      : getPersonalApplication();
 
     const application = {
       user_id: currentUser.id,
-      full_name: fullName,
-      document_type: documentType,
-      document_number: documentNumber || null,
-      reason: reason || null,
-      role: verificationType,
+      full_name: details.full_name,
+      document_type: details.document_type,
+      document_number: details.document_number,
+      reason: details.reason,
+      role: type,
       status: "pending",
       updated_at: new Date().toISOString()
     };
 
-    const { data: insertedData, error: insertError } = await supabase
+    showMessage(
+      "Taarifa zimekamilika. Tunatuma ombi lako kwa Supabase...",
+      "info"
+    );
+
+    const { data, error } = await supabaseClient
       .from("verification_requests")
-      .insert(application)
+      .insert([application])
       .select("id, status, created_at")
       .single();
 
-    if (insertError) {
-      throw insertError;
+    if (error) {
+      throw error;
     }
 
-    console.log("VERIFICATION APPLICATION SAVED:", insertedData);
+    if (!data || !data.id) {
+      throw new Error(
+        "Supabase haikurudisha uthibitisho wa kuhifadhi ombi."
+      );
+    }
+
+    console.log("ZUNE VERIFICATION SAVED:", data);
+
+    pendingApplication = true;
+
+    form.reset();
+
+    document.querySelector(
+      'input[name="verificationType"][value="user"]'
+    ).checked = true;
+
+    switchVerificationForm();
 
     showMessage(
-      "Hongera! Ombi lako la ZUNE Verification limetumwa na kuhifadhiwa kikamilifu. Admin atalipitia. Hali ya ombi lako ni PENDING.",
+      "Hongera! Ombi lako la " +
+      (type === "seller" ? "Seller Verification" : "Personal Verification") +
+      " limehifadhiwa kikamilifu. Namba ya ombi: " +
+      data.id +
+      ". Hali: PENDING. Admin wa ZUNE atalipitia.",
       "success"
     );
 
-    form.reset();
-    form.style.display = "none";
+    setButtonState(false);
 
   } catch (error) {
     showError(error, "VERIFICATION SUBMISSION ERROR");
-
-  } finally {
-    setLoading(false);
+    setButtonState(false);
   }
-});
+}
+
+async function initializeVerification() {
+  try {
+    if (!window.supabase) {
+      throw new Error(
+        "Supabase library haijapakiwa. Angalia internet na jaribu tena."
+      );
+    }
+
+    if (!form || !message || !submitButton) {
+      throw new Error(
+        "Baadhi ya vipengele vya verification.html havijapatikana."
+      );
+    }
+
+    supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    document.querySelectorAll(
+      'input[name="verificationType"]'
+    ).forEach(radio => {
+      radio.addEventListener("change", async () => {
+        switchVerificationForm();
+
+        if (currentUser) {
+          try {
+            await refreshPendingStatus();
+          } catch (error) {
+            showError(error, "PENDING APPLICATION CHECK");
+          }
+        }
+      });
+    });
+
+    form.addEventListener("submit", submitApplication);
+
+    retryButton.addEventListener("click", () => {
+      window.location.reload();
+    });
+
+    setFieldRequirements("user");
+
+    showMessage(
+      "Tunaangalia akaunti yako ya ZUNE...",
+      "info"
+    );
+
+    submitButton.disabled = true;
+
+    await getValidSession();
+
+    const profileName = await loadProfileName();
+
+    if (profileName) {
+      document.getElementById("personalFullName").value = profileName;
+      document.getElementById("sellerFullName").value = profileName;
+    } else {
+      const metadataName =
+        currentUser.user_metadata?.full_name ||
+        currentUser.user_metadata?.name ||
+        "";
+
+      document.getElementById("personalFullName").value = metadataName;
+      document.getElementById("sellerFullName").value = metadataName;
+    }
+
+    await refreshPendingStatus();
+
+    retryButton.classList.add("hidden");
+
+  } catch (error) {
+    console.error("VERIFICATION INITIALIZATION ERROR:", error);
+
+    submitButton.disabled = true;
+
+    showError(error, "INITIALIZATION ERROR");
+
+    retryButton.classList.remove("hidden");
+
+    if (
+      error.message?.includes("Hujawaingia") ||
+      error.message?.includes("JWT")
+    ) {
+      showMessage(
+        "Hujawaingia kwenye ZUNE Account. Tafadhali ingia kwanza kupitia ukurasa wa Login.",
+        "error"
+      );
+
+      retryButton.textContent = "Fungua Login";
+      retryButton.classList.remove("hidden");
+
+      retryButton.onclick = () => {
+        window.location.href = "login.html";
+      };
+    }
+  }
+}
 
 initializeVerification();
-console.log("ZUNE VERIFICATION JS LOADED");
-
-window.addEventListener("error", function(event) {
-  alert("JavaScript Error: " + event.message);
-});
-
-window.addEventListener("unhandledrejection", function(event) {
-  alert("Promise Error: " + event.reason);
-});
