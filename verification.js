@@ -1,7 +1,18 @@
 "use strict";
 
+// =====================================================
+// ZUNE ACCOUNT — VERIFICATION SYSTEM
+// Personal Verification + Approved Seller Verification
+// =====================================================
+
 const SUPABASE_URL = "https://rpkogiieegqgxqbzwxwo.supabase.co";
-const SUPABASE_KEY = "sb_publishable_2TEqZv-NBM9n5knU46ngqA_wqO3V1uf";
+
+const SUPABASE_KEY =
+  "sb_publishable_2TEqZv-NBM9n5knU46ngqA_wqO3V1uf";
+
+// =====================================================
+// ELEMENTS
+// =====================================================
 
 const message = document.getElementById("pageMessage");
 const form = document.getElementById("verificationForm");
@@ -11,21 +22,45 @@ const retryButton = document.getElementById("retryButton");
 const personalSection = document.getElementById("personalSection");
 const sellerSection = document.getElementById("sellerSection");
 
+const typeUser = document.getElementById("typeUser");
+const typeSeller = document.getElementById("typeSeller");
+const sellerOption = document.getElementById("sellerOption");
+const sellerOptionDescription =
+  document.getElementById("sellerOptionDescription");
+
+const formHeading = document.getElementById("formHeading");
+const formDescription = document.getElementById("formDescription");
+
+const verificationHistory =
+  document.getElementById("verificationHistory");
+
+const storeLoading = document.getElementById("storeLoading");
+const storeDetails = document.getElementById("storeDetails");
+
+// =====================================================
+// STATE
+// =====================================================
+
 let supabaseClient = null;
 let currentUser = null;
 let currentSession = null;
+
+let approvedStore = null;
+let latestRequests = {
+  user: null,
+  seller: null
+};
+
 let isSubmitting = false;
-let pendingApplication = false;
+
+// =====================================================
+// MESSAGE
+// =====================================================
 
 function showMessage(text, type = "info") {
   message.textContent = text;
   message.className = "message " + type;
   message.style.display = "block";
-
-  message.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
 }
 
 function hideMessage() {
@@ -34,86 +69,29 @@ function hideMessage() {
   message.style.display = "none";
 }
 
-function setButtonState(loading) {
-  isSubmitting = loading;
-  submitButton.disabled = loading || !currentUser || pendingApplication;
-
-  submitButton.textContent = loading
-    ? "Inatuma ombi..."
-    : pendingApplication
-      ? "Ombi tayari limepokelewa"
-      : "Submit Verification Application";
-}
-
-function getVerificationType() {
-  return document.querySelector(
-    'input[name="verificationType"]:checked'
-  )?.value || "user";
-}
-
-function setFieldRequirements(type) {
-  const personalFields = [
-    document.getElementById("personalFullName"),
-    document.getElementById("personalDocumentType")
-  ];
-
-  const sellerFields = [
-    document.getElementById("sellerFullName"),
-    document.getElementById("storeName"),
-    document.getElementById("businessCategory"),
-    document.getElementById("sellerCountry"),
-    document.getElementById("sellerRegion"),
-    document.getElementById("sellerDistrict"),
-    document.getElementById("storeAddress"),
-    document.getElementById("sellerDocumentType")
-  ];
-
-  personalFields.forEach(field => {
-    field.required = type === "user";
-  });
-
-  sellerFields.forEach(field => {
-    field.required = type === "seller";
-  });
-}
-
-function switchVerificationForm() {
-  const type = getVerificationType();
-
-  personalSection.classList.toggle("active", type === "user");
-  sellerSection.classList.toggle("active", type === "seller");
-
-  setFieldRequirements(type);
-  hideMessage();
-
-  if (pendingApplication) {
-    submitButton.disabled = true;
-    submitButton.textContent = "Ombi tayari limepokelewa";
-  } else {
-    submitButton.disabled = !currentUser || isSubmitting;
-    submitButton.textContent = "Submit Verification Application";
-  }
-}
-
 function showError(error, context) {
   console.error(context, error);
 
   const details = [
     error?.message || "Hitilafu isiyojulikana",
-    error?.code ? "Code: " + error.code : "",
-    error?.details || "",
-    error?.hint || ""
+    error?.code ? "Code: " + error.code : ""
   ].filter(Boolean).join(" | ");
 
-  showMessage("Imeshindikana kutuma ombi: " + details, "error");
+  showMessage(
+    "Imeshindikana kukamilisha hatua hii: " + details,
+    "error"
+  );
 }
 
-async function getValidSession() {
-  const { data, error } = await supabaseClient.auth.getSession();
+// =====================================================
+// SESSION
+// =====================================================
 
-  if (error) {
-    throw error;
-  }
+async function getValidSession() {
+  const { data, error } =
+    await supabaseClient.auth.getSession();
+
+  if (error) throw error;
 
   if (!data.session || !data.session.user) {
     throw new Error(
@@ -127,57 +105,471 @@ async function getValidSession() {
   return data.session;
 }
 
-async function loadProfileName() {
+// =====================================================
+// PROFILE
+// =====================================================
+
+async function loadProfile() {
   const { data, error } = await supabaseClient
     .from("profiles")
-    .select("full_name")
+    .select("full_name, phone_number, email")
     .eq("id", currentUser.id)
     .maybeSingle();
 
-  if (error) {
-    console.warn("Profile lookup warning:", error);
-    return "";
-  }
+  if (error) throw error;
 
-  return data?.full_name || "";
+  const metadataName =
+    currentUser.user_metadata?.full_name ||
+    currentUser.user_metadata?.name ||
+    "";
+
+  const fullName =
+    data?.full_name ||
+    metadataName ||
+    "";
+
+  document.getElementById("personalFullName").value =
+    fullName;
+
+  return data;
 }
 
-async function checkExistingApplication(type) {
+// =====================================================
+// SELLER APPLICATION
+// =====================================================
+
+async function loadApprovedStore() {
+  approvedStore = null;
+
+  storeLoading.textContent =
+    "Tunapakia taarifa za duka...";
+
+  storeLoading.classList.remove("hidden");
+  storeDetails.classList.add("hidden");
+
+  const { data, error } = await supabaseClient
+    .from("seller_applications")
+    .select(`
+      id,
+      store_name,
+      owner_name,
+      phone,
+      country,
+      city,
+      category,
+      district,
+      region,
+      address,
+      email,
+      status,
+      created_at
+    `)
+    .eq("user_id", currentUser.id)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  const applications = data || [];
+
+  // Tafuta ombi lolote lililoidhinishwa.
+  // Hatuangalii role pekee kwa sababu duka lazima
+  // liwe na status = approved kwenye database.
+
+  approvedStore = applications.find(application =>
+    String(application.status || "").toLowerCase() ===
+    "approved"
+  ) || null;
+
+  if (!approvedStore) {
+    sellerOption.classList.add("hidden");
+    sellerOption.classList.add("disabled");
+
+    typeSeller.disabled = true;
+    typeSeller.checked = false;
+    typeUser.checked = true;
+
+    sellerOptionDescription.textContent =
+      "Seller Verification inahitaji duka lililoidhinishwa.";
+
+    storeLoading.textContent =
+      "Hakuna duka lililoidhinishwa kwenye akaunti yako. " +
+      "Seller Verification haipatikani kwa sasa.";
+
+    storeLoading.classList.remove("hidden");
+    storeDetails.classList.add("hidden");
+
+    return false;
+  }
+
+  // Duka limeidhinishwa.
+  sellerOption.classList.remove("hidden");
+  sellerOption.classList.remove("disabled");
+
+  typeSeller.disabled = false;
+
+  sellerOptionDescription.textContent =
+    "Thibitisha akaunti yako kama mmiliki wa duka.";
+
+  displayStoreDetails(approvedStore);
+
+  return true;
+}
+
+// =====================================================
+// DISPLAY STORE DETAILS
+// =====================================================
+
+function setText(id, value) {
+  const element = document.getElementById(id);
+
+  if (element) {
+    element.textContent =
+      value === null ||
+      value === undefined ||
+      String(value).trim() === ""
+        ? "Haijawekwa"
+        : String(value);
+  }
+}
+
+function displayStoreDetails(store) {
+  setText("storeNameValue", store.store_name);
+  setText("storeOwnerValue", store.owner_name);
+  setText("storeCategoryValue", store.category);
+
+  setText("storeCountryValue", store.country);
+  setText("storeRegionValue", store.region);
+
+  setText(
+    "storeDistrictValue",
+    store.district || store.city
+  );
+
+  setText("storePhoneValue", store.phone);
+  setText("storeEmailValue", store.email);
+
+  setText(
+    "storeAddressValue",
+    store.address || store.city
+  );
+
+  setText("storeStatusValue", "Approved");
+
+  storeLoading.classList.add("hidden");
+  storeDetails.classList.remove("hidden");
+}
+
+// =====================================================
+// VERIFICATION REQUESTS
+// =====================================================
+
+async function loadVerificationRequests() {
   const { data, error } = await supabaseClient
     .from("verification_requests")
-    .select("id, status, created_at")
+    .select(`
+      id,
+      role,
+      status,
+      document_type,
+      created_at,
+      updated_at,
+      admin_note
+    `)
     .eq("user_id", currentUser.id)
-    .eq("role", type)
-    .eq("status", "pending")
-    .order("created_at", { ascending: false })
-    .limit(1);
+    .order("created_at", { ascending: false });
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
-  return data && data.length > 0 ? data[0] : null;
+  latestRequests = {
+    user: null,
+    seller: null
+  };
+
+  const requests = data || [];
+
+  // Data imeshapangwa kuanzia mpya hadi ya zamani.
+  // Tunachukua ombi la karibuni kwa kila aina.
+
+  requests.forEach(request => {
+    const role = request.role;
+
+    if (
+      (role === "user" || role === "seller") &&
+      !latestRequests[role]
+    ) {
+      latestRequests[role] = request;
+    }
+  });
+
+  displayVerificationHistory(requests);
 }
 
-async function refreshPendingStatus() {
+// =====================================================
+// HISTORY
+// =====================================================
+
+function getStatusLabel(status) {
+  const normalized = String(status || "").toLowerCase();
+
+  const labels = {
+    pending: "Pending",
+    approved: "Approved",
+    rejected: "Rejected",
+    review: "Under Review",
+    more_info: "More Information Required"
+  };
+
+  return labels[normalized] || status || "Unknown";
+}
+
+function getStatusClass(status) {
+  const normalized = String(status || "").toLowerCase();
+
+  if (normalized === "pending") {
+    return "status-pending";
+  }
+
+  if (normalized === "approved") {
+    return "status-approved";
+  }
+
+  if (normalized === "rejected") {
+    return "status-rejected";
+  }
+
+  return "status-other";
+}
+
+function formatDate(value) {
+  if (!value) return "Tarehe haijapatikana";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Tarehe haijapatikana";
+  }
+
+  return date.toLocaleString("sw-TZ", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
+function displayVerificationHistory(requests) {
+  verificationHistory.innerHTML = "";
+
+  if (!requests.length) {
+    verificationHistory.innerHTML =
+      '<div class="empty-state">' +
+      "Bado hujatuma ombi lolote la verification." +
+      "</div>";
+
+    return;
+  }
+
+  requests.forEach(request => {
+    const item = document.createElement("div");
+    item.className = "status-item";
+
+    const details = document.createElement("div");
+
+    const heading = document.createElement("strong");
+
+    heading.textContent =
+      request.role === "seller"
+        ? "Seller Verification"
+        : "Personal Verification";
+
+    const date = document.createElement("small");
+
+    date.textContent =
+      "Tarehe: " + formatDate(request.created_at);
+
+    details.appendChild(heading);
+    details.appendChild(date);
+
+    if (request.admin_note) {
+      const note = document.createElement("div");
+
+      note.className = "admin-note";
+      note.textContent =
+        "Ujumbe kutoka Admin: " + request.admin_note;
+
+      details.appendChild(note);
+    }
+
+    const badge = document.createElement("span");
+
+    badge.className =
+      "status-badge " + getStatusClass(request.status);
+
+    badge.textContent =
+      getStatusLabel(request.status);
+
+    item.appendChild(details);
+    item.appendChild(badge);
+
+    verificationHistory.appendChild(item);
+  });
+}
+
+// =====================================================
+// SELECTED TYPE
+// =====================================================
+
+function getVerificationType() {
+  return typeSeller.checked ? "seller" : "user";
+}
+
+// =====================================================
+// REQUIRED FIELDS
+// =====================================================
+
+function setFieldRequirements(type) {
+  const personalName =
+    document.getElementById("personalFullName");
+
+  const personalDocument =
+    document.getElementById("personalDocumentType");
+
+  const sellerDocument =
+    document.getElementById("sellerDocumentType");
+
+  personalName.required = type === "user";
+  personalDocument.required = type === "user";
+
+  sellerDocument.required = type === "seller";
+}
+
+// =====================================================
+// BUTTON STATE
+// =====================================================
+
+function setButtonState() {
   const type = getVerificationType();
-  const existing = await checkExistingApplication(type);
+  const existing = latestRequests[type];
 
-  pendingApplication = Boolean(existing);
+  const status = String(
+    existing?.status || ""
+  ).toLowerCase();
 
-  if (existing) {
+  submitButton.disabled =
+    isSubmitting ||
+    !currentUser ||
+    (type === "seller" && !approvedStore) ||
+    status === "pending" ||
+    status === "approved";
+
+  if (isSubmitting) {
+    submitButton.textContent = "Inatuma ombi...";
+  } else if (status === "pending") {
+    submitButton.textContent = "Ombi linasubiri ukaguzi";
+  } else if (status === "approved") {
+    submitButton.textContent = "Akaunti imethibitishwa";
+  } else if (type === "seller" && !approvedStore) {
+    submitButton.textContent = "Duka halijaidhinishwa";
+  } else {
+    submitButton.textContent = "Tuma Ombi la Verification";
+  }
+}
+
+// =====================================================
+// UPDATE FORM
+// =====================================================
+
+function updateSelectedForm() {
+  const type = getVerificationType();
+
+  if (type === "seller" && !approvedStore) {
+    typeSeller.checked = false;
+    typeUser.checked = true;
+  }
+
+  const selectedType = getVerificationType();
+
+  personalSection.classList.toggle(
+    "active",
+    selectedType === "user"
+  );
+
+  sellerSection.classList.toggle(
+    "active",
+    selectedType === "seller"
+  );
+
+  if (selectedType === "seller") {
+    formHeading.textContent = "Seller Verification";
+
+    formDescription.textContent =
+      "Thibitisha utambulisho wako kama mmiliki wa duka " +
+      "lililoidhinishwa na ZUNE.";
+  } else {
+    formHeading.textContent = "Personal Verification";
+
+    formDescription.textContent =
+      "Jaza taarifa zako sahihi kwa ajili ya ukaguzi.";
+  }
+
+  setFieldRequirements(selectedType);
+  updateExistingRequestMessage();
+  setButtonState();
+}
+
+// =====================================================
+// EXISTING REQUEST MESSAGE
+// =====================================================
+
+function updateExistingRequestMessage() {
+  const type = getVerificationType();
+  const existing = latestRequests[type];
+
+  if (!existing) {
+    hideMessage();
+    return;
+  }
+
+  const status = String(
+    existing.status || ""
+  ).toLowerCase();
+
+  if (status === "pending") {
     showMessage(
       "Ombi lako la " +
-      (type === "seller" ? "Seller Verification" : "Personal Verification") +
-      " tayari limepokelewa. Linasubiri kukaguliwa na Admin wa ZUNE.",
-      "success"
+      (type === "seller"
+        ? "Seller Verification"
+        : "Personal Verification") +
+      " limepokelewa na linasubiri kukaguliwa na Admin.",
+      "info"
     );
-  } else {
-    hideMessage();
+
+    return;
   }
 
-  setButtonState(false);
+  if (status === "approved") {
+    showMessage(
+      "Hongera! Ombi lako limeidhinishwa na Admin wa ZUNE.",
+      "success"
+    );
+
+    return;
+  }
+
+  if (status === "rejected") {
+    showMessage(
+      "Ombi lako la awali lilikataliwa. " +
+      "Unaweza kutuma ombi jipya baada ya kurekebisha taarifa.",
+      "error"
+    );
+
+    return;
+  }
+
+  hideMessage();
 }
+
+// =====================================================
+// PERSONAL APPLICATION DATA
+// =====================================================
 
 function getPersonalApplication() {
   const fullName = document
@@ -203,7 +595,9 @@ function getPersonalApplication() {
   }
 
   if (fullName.length < 3) {
-    throw new Error("Jina kamili lazima liwe na herufi angalau 3.");
+    throw new Error(
+      "Jina kamili lazima liwe na herufi angalau 3."
+    );
   }
 
   return {
@@ -214,34 +608,16 @@ function getPersonalApplication() {
   };
 }
 
+// =====================================================
+// SELLER APPLICATION DATA
+// =====================================================
+
 function getSellerApplication() {
-  const fullName = document
-    .getElementById("sellerFullName")
-    .value.trim();
-
-  const storeName = document
-    .getElementById("storeName")
-    .value.trim();
-
-  const category = document
-    .getElementById("businessCategory")
-    .value;
-
-  const country = document
-    .getElementById("sellerCountry")
-    .value;
-
-  const region = document
-    .getElementById("sellerRegion")
-    .value.trim();
-
-  const district = document
-    .getElementById("sellerDistrict")
-    .value.trim();
-
-  const address = document
-    .getElementById("storeAddress")
-    .value.trim();
+  if (!approvedStore) {
+    throw new Error(
+      "Huna duka lililoidhinishwa kwa Seller Verification."
+    );
+  }
 
   const documentType = document
     .getElementById("sellerDocumentType")
@@ -251,69 +627,84 @@ function getSellerApplication() {
     .getElementById("sellerDocumentNumber")
     .value.trim();
 
-  const reason = document
+  const additionalReason = document
     .getElementById("sellerReason")
     .value.trim();
 
-  if (
-    !fullName ||
-    !storeName ||
-    !category ||
-    !country ||
-    !region ||
-    !district ||
-    !address ||
-    !documentType
-  ) {
+  if (!documentType) {
     throw new Error(
-      "Tafadhali jaza taarifa zote zinazohitajika za biashara."
+      "Chagua aina ya kitambulisho."
     );
   }
 
-  if (fullName.length < 3 || storeName.length < 2) {
-    throw new Error(
-      "Jina la mmiliki au jina la duka si sahihi."
-    );
-  }
+  // Taarifa za duka zinatoka Supabase.
+  // Hazichukuliwi kutoka kwenye input za mtumiaji.
 
-  const businessDetails = [
+  const sellerDetails = [
     "SELLER VERIFICATION APPLICATION",
     "",
-    "STORE NAME: " + storeName,
-    "BUSINESS CATEGORY: " + category,
-    "COUNTRY: " + country,
-    "REGION: " + region,
-    "DISTRICT/CITY: " + district,
-    "STORE ADDRESS: " + address,
-    "DOCUMENT TYPE: " + documentType,
-    "DOCUMENT NUMBER: " + (documentNumber || "Not provided"),
+    "SELLER APPLICATION ID: " + approvedStore.id,
+    "STORE NAME: " + approvedStore.store_name,
+    "OWNER NAME: " + approvedStore.owner_name,
+    "BUSINESS CATEGORY: " + (approvedStore.category || ""),
+    "COUNTRY: " + (approvedStore.country || ""),
+    "REGION: " + (approvedStore.region || ""),
+    "DISTRICT: " + (approvedStore.district || ""),
+    "CITY: " + (approvedStore.city || ""),
+    "PHONE: " + (approvedStore.phone || ""),
+    "EMAIL: " + (approvedStore.email || ""),
+    "ADDRESS: " + (approvedStore.address || ""),
+    "STORE APPLICATION STATUS: approved",
     "",
-    "SELLER DESCRIPTION:",
-    reason || "No additional description provided."
+    "ADDITIONAL INFORMATION:",
+    additionalReason || "No additional information provided."
   ].join("\n");
 
   return {
-    full_name: fullName,
+    full_name: approvedStore.owner_name,
     document_type: documentType,
     document_number: documentNumber || null,
-    reason: businessDetails
+    reason: sellerDetails
   };
 }
+
+// =====================================================
+// CHECK REQUEST BEFORE SUBMISSION
+// =====================================================
+
+async function checkExistingApplication(type) {
+  const { data, error } = await supabaseClient
+    .from("verification_requests")
+    .select("id, role, status, created_at")
+    .eq("user_id", currentUser.id)
+    .eq("role", type)
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  if (error) throw error;
+
+  return data && data.length ? data[0] : null;
+}
+
+// =====================================================
+// SUBMIT APPLICATION
+// =====================================================
 
 async function submitApplication(event) {
   event.preventDefault();
 
   if (isSubmitting) return;
 
+  isSubmitting = true;
+  setButtonState();
+  hideMessage();
+
   try {
     if (!currentUser) {
       throw new Error(
-        "Hujawaingia kwenye akaunti. Ingia tena kisha ujaribu."
+        "Hujawaingia kwenye akaunti yako."
       );
     }
-
-    setButtonState(true);
-    hideMessage();
 
     const session = await getValidSession();
 
@@ -326,26 +717,59 @@ async function submitApplication(event) {
     const type = getVerificationType();
 
     if (!["user", "seller"].includes(type)) {
-      throw new Error("Aina ya verification si sahihi.");
+      throw new Error(
+        "Aina ya verification si sahihi."
+      );
     }
 
-    const existing = await checkExistingApplication(type);
+    // Hakiki tena duka moja kwa moja kutoka Supabase.
+    // Hii inazuia kutegemea taarifa za zamani za ukurasa.
+
+    if (type === "seller") {
+      await loadApprovedStore();
+
+      if (!approvedStore) {
+        throw new Error(
+          "Seller Verification inahitaji duka lililoidhinishwa."
+        );
+      }
+    }
+
+    // Hakiki kama tayari kuna ombi pending au approved.
+
+    const existing =
+      await checkExistingApplication(type);
 
     if (existing) {
-      pendingApplication = true;
+      const status = String(
+        existing.status || ""
+      ).toLowerCase();
 
-      showMessage(
-        "Tayari una ombi la aina hii linalosubiri kukaguliwa na Admin.",
-        "success"
-      );
+      latestRequests[type] = existing;
 
-      setButtonState(false);
-      return;
+      if (status === "pending") {
+        showMessage(
+          "Tayari una ombi linalosubiri kukaguliwa na Admin.",
+          "info"
+        );
+
+        return;
+      }
+
+      if (status === "approved") {
+        showMessage(
+          "Aina hii ya verification tayari imeidhinishwa.",
+          "success"
+        );
+
+        return;
+      }
     }
 
-    const details = type === "seller"
-      ? getSellerApplication()
-      : getPersonalApplication();
+    const details =
+      type === "seller"
+        ? getSellerApplication()
+        : getPersonalApplication();
 
     const application = {
       user_id: currentUser.id,
@@ -353,25 +777,26 @@ async function submitApplication(event) {
       document_type: details.document_type,
       document_number: details.document_number,
       reason: details.reason,
-      role: type,
-      status: "pending",
-      updated_at: new Date().toISOString()
+      role: type
     };
 
     showMessage(
-      "Taarifa zimekamilika. Tunatuma ombi lako kwa Supabase...",
+      "Tunatuma ombi lako kwa Supabase...",
       "info"
     );
 
     const { data, error } = await supabaseClient
       .from("verification_requests")
       .insert([application])
-      .select("id, status, created_at")
+      .select(`
+        id,
+        role,
+        status,
+        created_at
+      `)
       .single();
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     if (!data || !data.id) {
       throw new Error(
@@ -379,44 +804,83 @@ async function submitApplication(event) {
       );
     }
 
-    console.log("ZUNE VERIFICATION SAVED:", data);
+    console.log(
+      "ZUNE VERIFICATION APPLICATION SAVED:",
+      data.id
+    );
 
-    pendingApplication = true;
+    // Safisha fields baada ya kuhifadhi.
+    document.getElementById(
+      type === "seller"
+        ? "sellerDocumentType"
+        : "personalDocumentType"
+    ).value = "";
 
-    form.reset();
+    document.getElementById(
+      type === "seller"
+        ? "sellerDocumentNumber"
+        : "personalDocumentNumber"
+    ).value = "";
 
-    document.querySelector(
-      'input[name="verificationType"][value="user"]'
-    ).checked = true;
+    document.getElementById(
+      type === "seller"
+        ? "sellerReason"
+        : "personalReason"
+    ).value = "";
 
-    switchVerificationForm();
+    // Pakia upya historia na status.
+    await loadVerificationRequests();
+
+    updateSelectedForm();
 
     showMessage(
-      "Hongera! Ombi lako la " +
-      (type === "seller" ? "Seller Verification" : "Personal Verification") +
-      " limehifadhiwa kikamilifu. Namba ya ombi: " +
-      data.id +
+      "Ombi lako limehifadhiwa kikamilifu. " +
+      "Namba ya ombi: " + data.id +
       ". Hali: PENDING. Admin wa ZUNE atalipitia.",
       "success"
     );
 
-    setButtonState(false);
-
   } catch (error) {
     showError(error, "VERIFICATION SUBMISSION ERROR");
-    setButtonState(false);
+
+  } finally {
+    isSubmitting = false;
+    setButtonState();
   }
 }
+
+// =====================================================
+// AUTH STATE
+// =====================================================
+
+function listenToAuthChanges() {
+  supabaseClient.auth.onAuthStateChange(
+    async (event, session) => {
+      if (event === "SIGNED_OUT" || !session) {
+        window.location.href = "login.html";
+      }
+    }
+  );
+}
+
+// =====================================================
+// INITIALIZATION
+// =====================================================
 
 async function initializeVerification() {
   try {
     if (!window.supabase) {
       throw new Error(
-        "Supabase library haijapakiwa. Angalia internet na jaribu tena."
+        "Supabase library haijapakiwa. Angalia internet."
       );
     }
 
-    if (!form || !message || !submitButton) {
+    if (
+      !form ||
+      !message ||
+      !submitButton ||
+      !verificationHistory
+    ) {
       throw new Error(
         "Baadhi ya vipengele vya verification.html havijapatikana."
       );
@@ -427,30 +891,6 @@ async function initializeVerification() {
       SUPABASE_KEY
     );
 
-    document.querySelectorAll(
-      'input[name="verificationType"]'
-    ).forEach(radio => {
-      radio.addEventListener("change", async () => {
-        switchVerificationForm();
-
-        if (currentUser) {
-          try {
-            await refreshPendingStatus();
-          } catch (error) {
-            showError(error, "PENDING APPLICATION CHECK");
-          }
-        }
-      });
-    });
-
-    form.addEventListener("submit", submitApplication);
-
-    retryButton.addEventListener("click", () => {
-      window.location.reload();
-    });
-
-    setFieldRequirements("user");
-
     showMessage(
       "Tunaangalia akaunti yako ya ZUNE...",
       "info"
@@ -458,33 +898,67 @@ async function initializeVerification() {
 
     submitButton.disabled = true;
 
+    // Login/session
     await getValidSession();
 
-    const profileName = await loadProfileName();
+    // Profile
+    await loadProfile();
 
-    if (profileName) {
-      document.getElementById("personalFullName").value = profileName;
-      document.getElementById("sellerFullName").value = profileName;
-    } else {
-      const metadataName =
-        currentUser.user_metadata?.full_name ||
-        currentUser.user_metadata?.name ||
-        "";
+    // Seller application
+    await loadApprovedStore();
 
-      document.getElementById("personalFullName").value = metadataName;
-      document.getElementById("sellerFullName").value = metadataName;
-    }
+    // Verification history
+    await loadVerificationRequests();
 
-    await refreshPendingStatus();
+    // Radio events
+    typeUser.addEventListener(
+      "change",
+      updateSelectedForm
+    );
 
-    retryButton.classList.add("hidden");
+    typeSeller.addEventListener(
+      "change",
+      updateSelectedForm
+    );
+
+    // Form submission
+    form.addEventListener(
+      "submit",
+      submitApplication
+    );
+
+    // Retry
+    retryButton.addEventListener(
+      "click",
+      () => window.location.reload()
+    );
+retryButton.classList.add("hidden");
+
+    // Default selected form
+    typeUser.checked = true;
+
+    updateSelectedForm();
+
+    hideMessage();
+
+    listenToAuthChanges();
+
+    console.log(
+      "ZUNE VERIFICATION INITIALIZED SUCCESSFULLY"
+    );
 
   } catch (error) {
-    console.error("VERIFICATION INITIALIZATION ERROR:", error);
+    console.error(
+      "VERIFICATION INITIALIZATION ERROR:",
+      error
+    );
 
     submitButton.disabled = true;
 
-    showError(error, "INITIALIZATION ERROR");
+    showError(
+      error,
+      "INITIALIZATION ERROR"
+    );
 
     retryButton.classList.remove("hidden");
 
@@ -493,12 +967,12 @@ async function initializeVerification() {
       error.message?.includes("JWT")
     ) {
       showMessage(
-        "Hujawaingia kwenye ZUNE Account. Tafadhali ingia kwanza kupitia ukurasa wa Login.",
+        "Hujawaingia kwenye ZUNE Account. " +
+        "Tafadhali ingia kwanza.",
         "error"
       );
 
       retryButton.textContent = "Fungua Login";
-      retryButton.classList.remove("hidden");
 
       retryButton.onclick = () => {
         window.location.href = "login.html";
@@ -506,5 +980,9 @@ async function initializeVerification() {
     }
   }
 }
+
+// =====================================================
+// START
+// =====================================================
 
 initializeVerification();
