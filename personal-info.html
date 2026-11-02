@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#103d27">
+  <title>Personal Information | ZUNE Account</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #f4f7f5;
+      color: #17251c;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background: #103d27;
+      color: white;
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .brand span {
+      color: #e4bd52;
+    }
+
+    .back {
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    main {
+      width: min(100% - 30px, 760px);
+      margin: 30px auto;
+    }
+
+    .heading {
+      margin-bottom: 22px;
+    }
+
+    .heading h1 {
+      font-size: 25px;
+      margin-bottom: 7px;
+    }
+
+    .heading p {
+      color: #68766d;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e1e8e3;
+      border-radius: 17px;
+      padding: 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.035);
+    }
+
+    .card h2 {
+      font-size: 17px;
+      margin-bottom: 18px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: #dcfce7;
+      color: #15803d;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      font-weight: bold;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile h3 {
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+
+    .profile p {
+      font-size: 12px;
+      color: #68766d;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      min-height: 46px;
+      padding: 12px;
+      border: 1px solid #dce5de;
+      border-radius: 10px;
+      outline: none;
+      font-size: 14px;
+      background: white;
+    }
+
+    input:focus {
+      border-color: #15803d;
+      box-shadow: 0 0 0 3px rgba(21,128,61,.08);
+    }
+
+    input:disabled {
+      background: #f1f5f2;
+      color: #68766d;
+    }
+
+    .help {
+      color: #77847b;
+      font-size: 11px;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .email-note {
+      background: #fff8e6;
+      border: 1px solid #f3dfaa;
+      color: #76530a;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 17px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 13px 18px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .save {
+      background: #15803d;
+      color: white;
+      flex: 1;
+    }
+
+    .cancel {
+      background: #edf2ee;
+      color: #26382c;
+    }
+
+    .message {
+      display: none;
+      padding: 13px;
+      margin-bottom: 17px;
+      border-radius: 9px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .message.info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .zune-id {
+      background: #f1f8f3;
+      border: 1px dashed #a7cbb1;
+      padding: 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      color: #15803d;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #849087;
+      font-size: 11px;
+    }
+
+    @media(max-width:520px) {
+      .card {
+        padding: 18px;
+      }
+
+      .heading h1 {
+        font-size: 22px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .buttons button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">ZUNE <span>ACCOUNT</span></div>
+  <a class="back" href="account.html">← Rudi kwenye Account</a>
+</header>
+
+<main>
+
+  <div class="heading">
+    <h1>Personal Information</h1>
+    <p>
+      Simamia taarifa zako binafsi na utambulisho wako
+      ndani ya mfumo wa ZUNE.
+    </p>
+  </div>
+
+  <section class="card">
+    <div class="profile">
+      <div class="avatar" id="avatar">Z</div>
+      <div>
+        <h3 id="displayName">Inapakia profile...</h3>
+        <p>Wasifu wako wa ZUNE</p>
+      </div>
+    </div>
+
+    <div class="zune-id">
+      ZUNE ID: <span id="zuneId">Inapakia...</span>
+    </div>
+  </section>
+
+  <div id="pageMessage" class="message" role="status"></div>
+
+  <form id="personalInfoForm">
+
+    <section class="card">
+      <h2>Taarifa binafsi</h2>
+
+      <div class="field">
+        <label for="fullName">Jina kamili</label>
+        <input
+          id="fullName"
+          type="text"
+          maxlength="100"
+          autocomplete="name"
+          placeholder="Ingiza jina lako kamili"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="phoneNumber">Namba ya simu</label>
+        <input
+          id="phoneNumber"
+          type="tel"
+          maxlength="20"
+          autocomplete="tel"
+          placeholder="+255..."
+        >
+        <p class="help">
+          Tumia namba ambayo unaweza kuipokea na kuthibitisha.
+        </p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Email Address</h2>
+
+      <div class="field">
+        <label>Email inayotumika sasa</label>
+        <input
+          id="currentEmail"
+          type="email"
+          disabled
+        >
+      </div>
+
+      <div class="field">
+        <label for="newEmail">Email mpya</label>
+        <input
+          id="newEmail"
+          type="email"
+          autocomplete="email"
+          placeholder="Ingiza email mpya"
+        >
+      </div>
+
+      <div class="email-note">
+        Kubadilisha email kutahitaji uthibitisho kupitia
+        Supabase Auth. Email mpya haitachukuliwa kuwa
+        imethibitishwa mpaka hatua ya uthibitisho ikamilike.
+      </div>
+
+      <button
+        type="button"
+        class="save"
+        id="changeEmailButton"
+      >
+        Change Email
+      </button>
+    </section>
+
+    <section class="card">
+      <h2>Hifadhi mabadiliko</h2>
+      <p class="help">
+        Mabadiliko ya jina na namba ya simu yatahifadhiwa
+        kwenye profile yako ya ZUNE.
+      </p>
+
+      <div class="buttons">
+        <button type="submit" class="save" id="saveButton">
+          Save Changes
+        </button>
+
+        <button
+          type="button"
+          class="cancel"
+          id="cancelButton"
+        >
+          Cancel
+        </button>
+      </div>
+    </section>
+
+  </form>
+
+</main>
+
+<footer>
+  © 2026 ZUNE Account. All rights reserved.
+</footer>
+
+<script type="module" src="personal-info.js"></script>
+
+</body>
+</html>
