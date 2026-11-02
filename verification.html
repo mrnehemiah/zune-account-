@@ -1,549 +1,752 @@
 <!DOCTYPE html>
 <html lang="sw">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#15803d">
-<title>ZUNE Account Verification</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#087a3d">
+  <title>ZUNE Account | Verification</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
-:root {
-  --green:#15803d;
-  --dark:#14532d;
-  --light:#f0fdf4;
-  --text:#17251b;
-  --muted:#64748b;
-  --border:#e2e8f0;
-  --red:#b91c1c;
-}
+  <style>
+    :root {
+      --green: #087a3d;
+      --green-dark: #075b30;
+      --green-light: #eaf7ef;
+      --yellow: #f5c542;
+      --text: #17251c;
+      --muted: #718078;
+      --border: #e2eae5;
+      --background: #f5f8f6;
+      --white: #ffffff;
+      --red: #c62828;
+      --orange: #a65b00;
+      --shadow: 0 12px 35px rgba(12, 65, 35, .07);
+    }
 
-* {
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  font-family:Arial,sans-serif;
-  background:#f8fafc;
-  color:var(--text);
-  min-height:100vh;
-}
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-header {
-  background:#fff;
-  padding:17px 6%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid var(--border);
-}
+    button, input, select, textarea {
+      font: inherit;
+    }
 
-.logo {
-  font-size:24px;
-  font-weight:900;
-  color:var(--green);
-  letter-spacing:1px;
-}
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-.back {
-  text-decoration:none;
-  color:var(--green);
-  font-weight:700;
-  font-size:14px;
-}
+    .topbar-inner {
+      max-width: 1050px;
+      margin: auto;
+      min-height: 66px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
 
-.container {
-  width:min(760px,92%);
-  margin:35px auto;
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--green);
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
 
-.intro {
-  margin-bottom:22px;
-}
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: var(--green);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
 
-.intro h1 {
-  font-size:27px;
-  margin-bottom:9px;
-}
+    .back-link {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+    }
 
-.intro p {
-  color:var(--muted);
-  line-height:1.6;
-  font-size:14px;
-}
+    .container {
+      max-width: 850px;
+      margin: 30px auto;
+      padding: 0 16px 45px;
+    }
 
-.card {
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:25px;
-  box-shadow:0 8px 30px rgba(15,23,42,.04);
-}
+    .hero {
+      background: linear-gradient(130deg, #075b30, #10934e);
+      color: white;
+      border-radius: 22px;
+      padding: 28px 25px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
 
-.security {
-  background:var(--light);
-  border:1px solid #bbf7d0;
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:22px;
-  line-height:1.6;
-  font-size:13px;
-  color:var(--dark);
-}
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border: 25px solid rgba(255,255,255,.08);
+      border-radius: 50%;
+      right: -45px;
+      top: -65px;
+    }
 
-.message {
-  display:none;
-  padding:14px;
-  border-radius:10px;
-  margin-bottom:18px;
-  font-size:13px;
-  line-height:1.6;
-  overflow-wrap:anywhere;
-}
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 27px;
+      position: relative;
+      z-index: 1;
+    }
 
-.message.success {
-  display:block;
-  background:#dcfce7;
-  color:#166534;
-}
+    .hero p {
+      margin: 0;
+      max-width: 570px;
+      line-height: 1.6;
+      color: #e4f5e9;
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
 
-.message.error {
-  display:block;
-  background:#fee2e2;
-  color:#991b1b;
-}
+    .security-note {
+      margin-top: 16px;
+      background: #fff9e8;
+      border: 1px solid #f3e4b7;
+      color: #72530a;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
 
-.message.info {
-  display:block;
-  background:#eff6ff;
-  color:#1e40af;
-}
+    .message {
+      display: none;
+      margin: 18px 0;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
 
-.section-title {
-  font-size:16px;
-  font-weight:800;
-  margin:23px 0 15px;
-}
+    .message.info {
+      display: block;
+      background: #edf5ff;
+      border: 1px solid #c9ddf7;
+      color: #174b83;
+    }
 
-.type-options {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-bottom:20px;
-}
+    .message.success {
+      display: block;
+      background: #eaf7ef;
+      border: 1px solid #b9e2c7;
+      color: #176338;
+    }
 
-.type-option {
-  border:1px solid var(--border);
-  padding:17px;
-  border-radius:12px;
-  cursor:pointer;
-  display:flex;
-  gap:11px;
-  align-items:flex-start;
-  transition:.2s;
-}
+    .message.error {
+      display: block;
+      background: #fff0f0;
+      border: 1px solid #f2caca;
+      color: #a32323;
+    }
 
-.type-option:has(input:checked) {
-  border:2px solid var(--green);
-  background:var(--light);
-}
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 23px;
+      margin-top: 18px;
+      box-shadow: var(--shadow);
+    }
 
-.type-option input {
-  width:auto;
-  margin:3px 0 0;
-  accent-color:var(--green);
-}
+    .card h2 {
+      margin: 0 0 7px;
+      font-size: 19px;
+    }
 
-.type-option strong {
-  display:block;
-  margin-bottom:5px;
-}
+    .subtext {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
 
-.type-option small {
-  color:var(--muted);
-  line-height:1.5;
-}
+    .type-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
 
-label.field-label {
-  display:block;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:8px;
-}
+    .type-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 15px;
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: .2s;
+      min-width: 0;
+    }
 
-input,select,textarea {
-  width:100%;
-  padding:14px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  outline:none;
-  font-size:14px;
-  background:#fff;
-  margin-bottom:17px;
-  color:var(--text);
-}
+    .type-option:has(input:checked) {
+      border-color: var(--green);
+      background: var(--green-light);
+    }
 
-input:focus,select:focus,textarea:focus {
-  border-color:var(--green);
-  box-shadow:0 0 0 3px rgba(21,128,61,.09);
-}
+    .type-option input {
+      margin-top: 3px;
+      accent-color: var(--green);
+    }
 
-textarea {
-  min-height:100px;
-  resize:vertical;
-}
+    .type-option strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
 
-.form-section {
-  display:none;
-}
+    .type-option small {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
 
-.form-section.active {
-  display:block;
-}
+    .type-option.disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      background: #f7f8f7;
+    }
 
-.form-hint {
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.6;
-  margin:-7px 0 16px;
-}
+    .form-section {
+      display: none;
+    }
 
-.notice {
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.6;
-  margin:7px 0 18px;
-}
+    .form-section.active {
+      display: block;
+    }
 
-button {
-  width:100%;
-  border:0;
-  padding:15px;
-  background:var(--green);
-  color:#fff;
-  border-radius:11px;
-  font-size:15px;
-  font-weight:800;
-  cursor:pointer;
-  transition:.2s;
-}
+    .field {
+      margin-bottom: 17px;
+    }
 
-button:hover {
-  background:var(--dark);
-}
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
 
-button:disabled {
-  opacity:.6;
-  cursor:not-allowed;
-}
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 47px;
+      border: 1px solid #dbe5de;
+      background: #fbfdfb;
+      color: var(--text);
+      padding: 12px 13px;
+      border-radius: 10px;
+      outline: none;
+      transition: .2s;
+    }
 
-.secondary-button {
-  background:#e2e8f0;
-  color:#1e293b;
-  margin-top:10px;
-}
+    .field textarea {
+      min-height: 105px;
+      resize: vertical;
+      line-height: 1.5;
+    }
 
-.secondary-button:hover {
-  background:#cbd5e1;
-}
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(8,122,61,.09);
+    }
 
-footer {
-  text-align:center;
-  padding:25px;
-  color:var(--muted);
-  font-size:12px;
-}
+    .field input[readonly] {
+      background: #f0f5f1;
+      color: #53645a;
+    }
 
-.hidden {
-  display:none !important;
-}
+    .field-hint {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
 
-@media(max-width:560px) {
-  .card {
-    padding:18px;
-  }
+    .section-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin: 5px 0 15px;
+      color: var(--green-dark);
+    }
 
-  .type-options {
-    grid-template-columns:1fr;
-  }
+    .store-panel {
+      background: #f3faf5;
+      border: 1px solid #cce8d5;
+      border-radius: 14px;
+      padding: 17px;
+      margin-bottom: 20px;
+    }
 
-  .intro h1 {
-    font-size:23px;
-  }
+    .store-panel h3 {
+      margin: 0 0 14px;
+      font-size: 15px;
+      color: var(--green-dark);
+    }
 
-  header {
-    padding:15px 5%;
-  }
-}
-</style>
+    .store-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+    }
+
+    .store-item small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+
+    .store-item strong {
+      display: block;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .status-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .status-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .status-item strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .status-item small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .status-badge {
+      flex-shrink: 0;
+      border-radius: 30px;
+      padding: 6px 10px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .status-pending {
+      background: #fff4d9;
+      color: #8a5b00;
+    }
+
+    .status-approved {
+      background: #e2f6e9;
+      color: #087a3d;
+    }
+
+    .status-rejected {
+      background: #ffebeb;
+      color: #b42323;
+    }
+
+    .status-other {
+      background: #edf0ee;
+      color: #526057;
+    }
+
+    .admin-note {
+      margin-top: 9px;
+      padding: 10px;
+      border-radius: 9px;
+      background: #fff8e9;
+      color: #76530c;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .submit-button,
+    .retry-button {
+      width: 100%;
+      min-height: 49px;
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .submit-button {
+      background: var(--green);
+      color: white;
+      margin-top: 7px;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      background: var(--green-dark);
+    }
+
+    .submit-button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .retry-button {
+      display: none;
+      margin-top: 10px;
+      background: #eaf7ef;
+      color: var(--green);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .form-footnote {
+      margin: 14px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .empty-state {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 12px 0;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin-top: 18px;
+      }
+
+      .hero {
+        padding: 23px 19px;
+      }
+
+      .hero h1 {
+        font-size: 23px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .type-options,
+      .store-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .status-item {
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="account.html">
+        <span class="brand-mark">Z</span>
+        <span>ZUNE</span>
+      </a>
+      <a class="back-link" href="account.html">← My Account</a>
+    </div>
+  </header>
 
-<header>
-  <div class="logo">ZUNE</div>
-  <a href="account.html" class="back">← Account Centre</a>
-</header>
+  <main class="container">
+    <section class="hero">
+      <h1>Account Verification</h1>
+      <p>
+        Thibitisha akaunti yako ya ZUNE ili kusaidia kujenga uaminifu
+        na usalama ndani ya mfumo wa ZUNE.
+      </p>
+    </section>
 
-<main class="container">
-
-  <section class="intro">
-    <h1>Account Verification</h1>
-    <p>
-      Omba uthibitishaji wa akaunti yako au biashara yako
-      ili kuwasilisha maombi ya ZUNE Verified.
-    </p>
-  </section>
-
-  <section class="card">
-
-    <div class="security">
-      🔒 <strong>Usalama wa taarifa zako</strong><br>
-      Taarifa zako zitatumika kwa ajili ya ukaguzi wa
-      uthibitishaji na hazitaonyeshwa kwenye profile yako ya umma.
+    <div class="security-note">
+      <strong>🔒 Usalama wa taarifa zako</strong><br>
+      Taarifa zako zitatumika kwa ukaguzi wa ZUNE Verification.
+      Usitume nenosiri, PIN au taarifa zako za siri.
     </div>
 
-    <div id="pageMessage" class="message" role="status"></div>
+    <div id="pageMessage" class="message" role="alert"></div>
 
-    <form id="verificationForm">
-
-      <div class="section-title">
-        1. Chagua aina ya uthibitishaji
-      </div>
+    <section class="card">
+      <h2>Chagua aina ya verification</h2>
+      <p class="subtext">
+        Personal Verification inapatikana kwa watumiaji wote.
+        Seller Verification inapatikana kwa wenye maduka yaliyoidhinishwa.
+      </p>
 
       <div class="type-options">
-
-        <label class="type-option">
+        <label class="type-option" for="typeUser">
           <input
             type="radio"
+            id="typeUser"
             name="verificationType"
             value="user"
             checked
           >
           <span>
             <strong>Personal Verification</strong>
-            <small>Uthibitishaji wa akaunti binafsi</small>
+            <small>Kwa akaunti yako binafsi ya ZUNE.</small>
           </span>
         </label>
 
-        <label class="type-option">
+        <label class="type-option disabled hidden" id="sellerOption" for="typeSeller">
           <input
             type="radio"
+            id="typeSeller"
             name="verificationType"
             value="seller"
+            disabled
           >
           <span>
             <strong>Seller Verification</strong>
-            <small>Uthibitishaji wa muuzaji na biashara</small>
+            <small id="sellerOptionDescription">
+              Inapatikana kwa maduka yaliyoidhinishwa.
+            </small>
           </span>
         </label>
-
       </div>
+    </section>
 
-      <!-- PERSONAL VERIFICATION -->
-
-      <section id="personalSection" class="form-section active">
-
-        <div class="section-title">
-          2. Taarifa binafsi
-        </div>
-
-        <label class="field-label" for="personalFullName">
-          Jina kamili
-        </label>
-        <input
-          type="text"
-          id="personalFullName"
-          placeholder="Ingiza jina lako kamili"
-          autocomplete="name"
-        >
-
-        <div class="section-title">
-          3. Taarifa za kitambulisho
-        </div>
-
-        <label class="field-label" for="personalDocumentType">
-          Aina ya kitambulisho
-        </label>
-
-        <select id="personalDocumentType">
-          <option value="">Chagua aina ya kitambulisho</option>
-          <option value="National ID">National ID</option>
-          <option value="Passport">Passport</option>
-          <option value="Driving Licence">Driving Licence</option>
-          <option value="Voter ID">Voter ID</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <label class="field-label" for="personalDocumentNumber">
-          Namba ya kitambulisho (si lazima)
-        </label>
-        <input
-          type="text"
-          id="personalDocumentNumber"
-          placeholder="Namba ya kitambulisho"
-        >
-
-        <label class="field-label" for="personalReason">
-          Sababu ya kuomba uthibitishaji
-        </label>
-        <textarea
-          id="personalReason"
-          placeholder="Eleza kwa ufupi sababu ya maombi yako..."
-        ></textarea>
-
-      </section>
-
-      <!-- SELLER VERIFICATION -->
-
-      <section id="sellerSection" class="form-section">
-
-        <div class="section-title">
-          2. Taarifa za muuzaji
-        </div>
-
-        <label class="field-label" for="sellerFullName">
-          Jina kamili la mmiliki
-        </label>
-        <input
-          type="text"
-          id="sellerFullName"
-          placeholder="Jina la mmiliki au mwakilishi"
-        >
-
-        <label class="field-label" for="storeName">
-          Jina la duka
-        </label>
-        <input
-          type="text"
-          id="storeName"
-          placeholder="Ingiza jina la biashara au duka"
-        >
-
-        <label class="field-label" for="businessCategory">
-          Aina ya biashara
-        </label>
-        <select id="businessCategory">
-          <option value="">Chagua aina ya biashara</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Fashion and Clothing">Fashion and Clothing</option>
-          <option value="Food and Groceries">Food and Groceries</option>
-          <option value="Beauty and Cosmetics">Beauty and Cosmetics</option>
-          <option value="Home and Furniture">Home and Furniture</option>
-          <option value="Automotive">Automotive</option>
-          <option value="Health and Personal Care">Health and Personal Care</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <label class="field-label" for="sellerCountry">
-          Nchi
-        </label>
-        <select id="sellerCountry">
-          <option value="">Chagua nchi</option>
-          <option value="Tanzania">Tanzania</option>
-          <option value="Kenya">Kenya</option>
-          <option value="Uganda">Uganda</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <label class="field-label" for="sellerRegion">
-          Mkoa au eneo
-        </label>
-        <input
-          type="text"
-          id="sellerRegion"
-          placeholder="Mfano: Dar es Salaam"
-        >
-
-        <label class="field-label" for="sellerDistrict">
-          Wilaya au mji
-        </label>
-        <input
-          type="text"
-          id="sellerDistrict"
-          placeholder="Ingiza wilaya au mji"
-        >
-
-        <label class="field-label" for="storeAddress">
-          Anwani ya duka
-        </label>
-        <textarea
-          id="storeAddress"
-          placeholder="Eleza eneo lilipo duka lako..."
-        ></textarea>
-
-        <div class="section-title">
-          3. Taarifa za uthibitishaji
-        </div>
-
-        <label class="field-label" for="sellerDocumentType">
-          Aina ya nyaraka za biashara
-        </label>
-        <select id="sellerDocumentType">
-          <option value="">Chagua aina ya nyaraka</option>
-          <option value="Business Registration">Business Registration</option>
-          <option value="Business Licence">Business Licence</option>
-          <option value="Tax Identification">Tax Identification</option>
-          <option value="Personal Identification">Personal Identification</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <label class="field-label" for="sellerDocumentNumber">
-          Namba ya nyaraka (si lazima)
-        </label>
-        <input
-          type="text"
-          id="sellerDocumentNumber"
-          placeholder="Namba ya nyaraka"
-        >
-
-        <label class="field-label" for="sellerReason">
-          Maelezo ya biashara
-        </label>
-        <textarea
-          id="sellerReason"
-          placeholder="Eleza biashara yako na sababu ya kuomba Seller Verification..."
-        ></textarea>
-
-        <p class="form-hint">
-          Hakikisha taarifa za duka na eneo ni sahihi.
-          Usitume nyaraka au taarifa ambazo huna ruhusa ya kuzitumia.
-        </p>
-
-      </section>
-
-      <p class="notice">
-        Maombi yote yatatumwa kwa Admin kwa ajili ya ukaguzi.
-        Hali ya maombi itakuwa PENDING mpaka yakaguliwe.
-        Kwa sasa mfumo huu haupakii picha za nyaraka.
+    <section class="card">
+      <h2 id="formHeading">Personal Verification</h2>
+      <p class="subtext" id="formDescription">
+        Jaza taarifa zako sahihi kwa ajili ya ukaguzi.
       </p>
 
-      <button type="submit" id="submitButton" disabled>
-        Inapakia...
-      </button>
+      <form id="verificationForm" novalidate>
+        <!-- PERSONAL VERIFICATION -->
+        <div id="personalSection" class="form-section active">
+          <div class="field">
+            <label for="personalFullName">Jina kamili *</label>
+            <input
+              type="text"
+              id="personalFullName"
+              maxlength="120"
+              autocomplete="name"
+              required
+              placeholder="Andika jina lako kamili"
+            >
+          </div>
 
-      <button
-        type="button"
-        id="retryButton"
-        class="secondary-button hidden"
-      >
-        Jaribu tena
-      </button>
+          <div class="field">
+            <label for="personalDocumentType">Aina ya kitambulisho *</label>
+            <select id="personalDocumentType" required>
+              <option value="">Chagua aina ya kitambulisho</option>
+              <option value="National ID">National ID</option>
+              <option value="Passport">Passport</option>
+              <option value="Driving Licence">Driving Licence</option>
+              <option value="Voter ID">Voter ID</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
 
-    </form>
+          <div class="field">
+            <label for="personalDocumentNumber">Namba ya kitambulisho</label>
+            <input
+              type="text"
+              id="personalDocumentNumber"
+              maxlength="100"
+              placeholder="Namba ya kitambulisho"
+            >
+            <small class="field-hint">
+              Usitumie taarifa za uongo. Namba hii itaonekana kwa Admin
+              anayekagua ombi lako.
+            </small>
+          </div>
 
-  </section>
+          <div class="field">
+            <label for="personalReason">Maelezo ya ziada</label>
+            <textarea
+              id="personalReason"
+              maxlength="1000"
+              placeholder="Andika maelezo ya ziada ikiwa yapo..."
+            ></textarea>
+          </div>
+        </div>
 
-</main>
+        <!-- SELLER VERIFICATION -->
+        <div id="sellerSection" class="form-section">
+          <div class="store-panel">
+            <h3>🏪 Taarifa za duka lako</h3>
 
-<footer>
-  © 2026 ZUNE Account. All rights reserved.
-</footer>
+            <div id="storeLoading" class="empty-state">
+              Tunapakia taarifa za duka...
+            </div>
 
-<script src="verification.js"></script>
+            <div id="storeDetails" class="store-grid hidden">
+              <div class="store-item">
+                <small>Jina la duka</small>
+                <strong id="storeNameValue">—</strong>
+              </div>
 
+              <div class="store-item">
+                <small>Jina la mmiliki</small>
+                <strong id="storeOwnerValue">—</strong>
+              </div>
+
+              <div class="store-item">
+                <small>Business category</small>
+                <strong id="storeCategoryValue">—</strong>
+              </div>
+
+              <div class="store-item">
+                <small>Nchi</small>
+                <strong id="storeCountryValue">—</strong>
+              </div>
+
+              <div class="store-item">
+                <small>Mkoa / Region</small>
+                <strong id="storeRegionValue">—</strong>
+              </div>
+
+              <div class="store-item">
+                <small>District / City</small>
+                <strong id="storeDistrictValue">—</strong>
+              </div>
+
+              <div class="store-item">
+                <small>Simu ya biashara</small>
+                <strong id="storePhoneValue">—</strong>
+              </div>
+
+              <div class="store-item">
+                <small>Email</small>
+                <strong id="storeEmailValue">—</strong>
+              </div>
+
+              <div class="store-item">
+                <small>Anwani</small>
+                <strong id="storeAddressValue">—</strong>
+              </div>
+
+              <div class="store-item">
+                <small>Store application status</small>
+                <strong id="storeStatusValue">Approved</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">Taarifa za ziada za uthibitisho</div>
+
+          <div class="field">
+            <label for="sellerDocumentType">Aina ya kitambulisho *</label>
+            <select id="sellerDocumentType">
+              <option value="">Chagua aina ya kitambulisho</option>
+              <option value="National ID">National ID</option>
+              <option value="Passport">Passport</option>
+              <option value="Driving Licence">Driving Licence</option>
+              <option value="Voter ID">Voter ID</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="sellerDocumentNumber">Namba ya kitambulisho</label>
+            <input
+              type="text"
+              id="sellerDocumentNumber"
+              maxlength="100"
+              placeholder="Namba ya kitambulisho"
+            >
+          </div>
+
+          <div class="field">
+            <label for="sellerReason">Maelezo ya ziada</label>
+            <textarea
+              id="sellerReason"
+              maxlength="1000"
+              placeholder="Maelezo mengine kuhusu uthibitisho wa biashara..."
+            ></textarea>
+          </div>
+
+          <p class="field-hint">
+            Taarifa za duka zimechukuliwa kutoka kwenye maombi yako ya awali.
+            Huhitaji kuzijaza tena.
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          id="submitButton"
+          class="submit-button"
+          disabled
+        >
+          Inapakia...
+        </button>
+
+        <button
+          type="button"
+          id="retryButton"
+          class="retry-button"
+        >
+          Jaribu tena
+        </button>
+
+        <p class="form-footnote">
+          Kutuma ombi hakumaanishi kuwa tayari umethibitishwa.
+          Admin wa ZUNE ndiye anayefanya uamuzi wa mwisho.
+        </p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Verification History</h2>
+      <p class="subtext">
+        Hapa unaweza kuona hali ya maombi yako ya verification.
+      </p>
+
+      <div id="verificationHistory" class="status-list">
+        <div class="empty-state">Tunapakia historia...</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="verification.js"></script>
 </body>
 </html>
