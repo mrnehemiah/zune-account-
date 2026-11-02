@@ -1,15 +1,21 @@
-<!DOCTYPE html><html lang="en">
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#087b42">
 <meta name="description" content="Sign in to your ZUNE Account. One identity, all ZUNE services.">
-<title>Sign In | ZUNE Account</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
-:root{
+
+<title>Sign In | ZUNE Account</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
   --green:#087b42;
   --dark:#064d2b;
   --light:#eaf7ef;
-  --gold:#e9b949;
   --text:#17251d;
   --muted:#718078;
   --border:#e4ece6;
@@ -17,26 +23,26 @@
   --shadow:0 20px 55px rgba(15,70,38,.10);
 }
 
-*{
+* {
   margin:0;
   padding:0;
   box-sizing:border-box;
   font-family:Arial,Helvetica,sans-serif;
 }
 
-body{
+body {
   min-height:100vh;
   background:#f5faf6;
   color:var(--text);
 }
 
-a{
+a {
   color:var(--green);
   text-decoration:none;
 }
 
-.header{
-  height:75px;
+.header {
+  min-height:75px;
   padding:0 7%;
   display:flex;
   align-items:center;
@@ -45,7 +51,7 @@ a{
   border-bottom:1px solid var(--border);
 }
 
-.brand{
+.brand {
   display:flex;
   align-items:center;
   gap:11px;
@@ -54,7 +60,7 @@ a{
   color:var(--green);
 }
 
-.logo{
+.logo {
   width:42px;
   height:42px;
   border-radius:50%;
@@ -66,20 +72,20 @@ a{
   font-weight:900;
 }
 
-.header-link{
+.header-link {
   font-size:14px;
   font-weight:700;
 }
 
-.main{
-  min-height:calc(100vh - 75px);
+.main {
+  min-height:calc(100vh - 130px);
   display:flex;
   align-items:center;
   justify-content:center;
   padding:35px 16px;
 }
 
-.login-container{
+.login-container {
   width:100%;
   max-width:470px;
   background:white;
@@ -89,7 +95,7 @@ a{
   border:1px solid var(--border);
 }
 
-.top-icon{
+.top-icon {
   width:65px;
   height:65px;
   margin:0 auto 20px;
@@ -101,34 +107,34 @@ a{
   font-size:29px;
 }
 
-.heading{
+.heading {
   text-align:center;
   margin-bottom:30px;
 }
 
-.heading h1{
+.heading h1 {
   font-size:29px;
   margin-bottom:10px;
 }
 
-.heading p{
+.heading p {
   font-size:14px;
   color:var(--muted);
   line-height:1.7;
 }
 
-.form-group{
+.form-group {
   margin-bottom:21px;
 }
 
-.form-group label{
+.form-group label {
   display:block;
   font-size:13px;
   font-weight:700;
   margin-bottom:9px;
 }
 
-.form-group input{
+.form-group input {
   width:100%;
   height:52px;
   border:1px solid var(--border);
@@ -138,23 +144,22 @@ a{
   font-size:14px;
   background:white;
   color:var(--text);
-  transition:.2s;
 }
 
-.form-group input:focus{
+.form-group input:focus {
   border-color:var(--green);
   box-shadow:0 0 0 3px rgba(8,123,66,.09);
 }
 
-.password-wrap{
+.password-wrap {
   position:relative;
 }
 
-.password-wrap input{
+.password-wrap input {
   padding-right:75px;
 }
 
-.toggle-password{
+.toggle-password {
   position:absolute;
   right:14px;
   top:50%;
@@ -167,7 +172,7 @@ a{
   cursor:pointer;
 }
 
-.forgot{
+.forgot {
   text-align:right;
   margin-top:-7px;
   margin-bottom:23px;
@@ -175,7 +180,7 @@ a{
   font-weight:700;
 }
 
-.submit-btn{
+.submit-btn {
   width:100%;
   height:53px;
   border:0;
@@ -188,18 +193,16 @@ a{
   transition:.2s;
 }
 
-.submit-btn:hover{
+.submit-btn:hover {
   background:var(--dark);
-  transform:translateY(-1px);
 }
 
-.submit-btn:disabled{
+.submit-btn:disabled {
   opacity:.6;
   cursor:not-allowed;
-  transform:none;
 }
 
-.message{
+.message {
   display:none;
   margin-top:17px;
   padding:13px;
@@ -209,19 +212,19 @@ a{
   overflow-wrap:anywhere;
 }
 
-.message.error{
+.message.error {
   display:block;
   background:#fff0f0;
   color:#b42318;
 }
 
-.message.success{
+.message.success {
   display:block;
   background:var(--light);
   color:var(--dark);
 }
 
-.divider{
+.divider {
   display:flex;
   align-items:center;
   gap:13px;
@@ -231,131 +234,167 @@ a{
 }
 
 .divider:before,
-.divider:after{
+.divider:after {
   content:"";
   height:1px;
   flex:1;
   background:var(--border);
 }
 
-.bottom-text{
+.bottom-text {
   text-align:center;
   font-size:13px;
   color:var(--muted);
   line-height:1.8;
 }
 
-.bottom-text a{
+.bottom-text a {
   font-weight:800;
 }
 
-.footer{
+.footer {
   text-align:center;
   padding:20px;
   font-size:12px;
   color:var(--muted);
 }
 
-.footer a{
+.footer a {
   margin:0 7px;
 }
 
-@media(max-width:480px){
-  .header{
-    height:65px;
+@media(max-width:480px) {
+  .header {
+    min-height:65px;
     padding:0 18px;
   }
 
-  .brand{
+  .brand {
     font-size:20px;
   }
 
-  .logo{
+  .logo {
     width:37px;
     height:37px;
   }
 
-  .login-container{
+  .login-container {
     padding:28px 20px;
     border-radius:19px;
   }
 
-  .heading h1{
+  .heading h1 {
     font-size:26px;
   }
 }
-</style></head><body><header class="header">
+</style>
+</head>
+
+<body>
+
+<header class="header">
   <a href="index.html" class="brand">
     <div class="logo">Z</div>
     ZUNE Account
-  </a>  <a class="header-link" href="signup.html">
+  </a>
+
+  <a class="header-link" href="signup.html">
     Create Account
   </a>
-</header><main class="main"><section class="login-container">  <div class="top-icon">↗</div>  <div class="heading">
+</header>
+
+<main class="main">
+
+<section class="login-container">
+
+  <div class="top-icon">↗</div>
+
+  <div class="heading">
     <h1>Welcome Back</h1>
     <p>
       Sign in to your ZUNE Account and access your
       ZUNE services with one identity.
     </p>
-  </div>  <form id="loginForm"><div class="form-group">
-  <label for="email">Email Address</label>
-  <input
-    type="email"
-    id="email"
-    placeholder="Enter your email address"
-    autocomplete="email"
-    required
-  >
-</div>
+  </div>
 
-<div class="form-group">
-  <label for="password">Password</label>
+  <form id="loginForm">
 
-  <div class="password-wrap">
-    <input
-      type="password"
-      id="password"
-      placeholder="Enter your password"
-      autocomplete="current-password"
-      required
-    >
+    <div class="form-group">
+      <label for="email">Email Address</label>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Enter your email address"
+        autocomplete="email"
+        required
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+
+      <div class="password-wrap">
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+        >
+
+        <button
+          type="button"
+          class="toggle-password"
+          id="togglePassword"
+        >
+          Show
+        </button>
+      </div>
+    </div>
+
+    <div class="forgot">
+      <a href="forgot-password.html">Forgot Password?</a>
+    </div>
 
     <button
-      type="button"
-      class="toggle-password"
-      id="togglePassword"
+      type="submit"
+      class="submit-btn"
+      id="loginButton"
     >
-      Show
+      Sign In to ZUNE
     </button>
-  </div>
-</div>
 
-<div class="forgot">
-  <a href="forgot-password.html">Forgot Password?</a>
-</div>
+    <div id="message" class="message" role="status"></div>
 
-<button
-  type="submit"
-  class="submit-btn"
-  id="loginButton"
->
-  Sign In to ZUNE
-</button>
+  </form>
 
-<div id="message" class="message" role="status"></div>
+  <div class="divider">YOUR ZUNE IDENTITY</div>
 
-  </form>  <div class="divider">YOUR ZUNE IDENTITY</div>  <div class="bottom-text">
+  <div class="bottom-text">
     Don't have a ZUNE Account?<br>
     <a href="signup.html">Create your account</a>
-  </div></section></main><footer class="footer">
+  </div>
+
+</section>
+
+</main>
+
+<footer class="footer">
+
   <div>
     <a href="privacy.html">Privacy Policy</a>
     <a href="terms.html">Terms of Service</a>
   </div>
+
   <p style="margin-top:12px;">
     © <span id="year"></span> ZUNE Account. All rights reserved.
   </p>
-</footer><script>
+
+</footer>
+
+<script>
+
 /* SUPABASE CONFIGURATION */
 
 const SUPABASE_URL =
@@ -371,10 +410,10 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY,
   {
-    auth:{
-      persistSession:true,
-      autoRefreshToken:true,
-      detectSessionInUrl:true
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
     }
   }
 );
@@ -389,26 +428,33 @@ const togglePassword = document.getElementById("togglePassword");
 
 /* MESSAGE */
 
-function showMessage(text,type){
+function showMessage(text, type) {
   message.textContent = text;
   message.className = "message " + type;
 }
 
-/* SHOW / HIDE PASSWORD */
+/* PASSWORD VISIBILITY */
 
-togglePassword.addEventListener("click",()=>{
-  if(passwordInput.type === "password"){
+togglePassword.addEventListener("click", () => {
+
+  if (passwordInput.type === "password") {
+
     passwordInput.type = "text";
     togglePassword.textContent = "Hide";
-  }else{
+
+  } else {
+
     passwordInput.type = "password";
     togglePassword.textContent = "Show";
+
   }
+
 });
 
-/* LOGIN WITH SUPABASE */
+/* LOGIN */
 
-loginForm.addEventListener("submit",async(event)=>{
+loginForm.addEventListener("submit", async (event) => {
+
   event.preventDefault();
 
   const email = document
@@ -418,30 +464,95 @@ loginForm.addEventListener("submit",async(event)=>{
 
   const password = passwordInput.value;
 
-  if(!email || !password){
+  if (!email || !password) {
+
     showMessage(
       "Please enter your email and password.",
       "error"
     );
+
     return;
   }
 
   loginButton.disabled = true;
   loginButton.textContent = "Signing in...";
 
-  try{
+  try {
 
-    const {data,error} =
+    /* AUTHENTICATION */
+
+    const { data, error } =
       await supabaseClient.auth.signInWithPassword({
-        email:email,
-        password:password
+        email,
+        password
       });
 
-    if(error) throw error;
+    if (error) throw error;
 
-    if(!data.user || !data.session){
-      throw new Error("Login session could not be created.");
+    if (!data.user || !data.session) {
+
+      throw new Error(
+        "Login session could not be created."
+      );
+
     }
+
+    /* CHECK PROFILE STATUS */
+
+    const { data: profile, error: profileError } =
+      await supabaseClient
+        .from("profiles")
+        .select("id, account_status")
+        .eq("id", data.user.id)
+        .single();
+
+    if (profileError || !profile) {
+
+      await supabaseClient.auth.signOut();
+
+      throw new Error(
+        "Unable to verify your account status. Please contact support."
+      );
+
+    }
+
+    /* BLOCK SUSPENDED USERS */
+
+    if (profile.account_status === "suspended") {
+
+      await supabaseClient.auth.signOut();
+
+      throw new Error(
+        "Your ZUNE account is suspended. Please contact support."
+      );
+
+    }
+
+    /* BLOCK REMOVED USERS */
+
+    if (profile.account_status === "removed") {
+
+      await supabaseClient.auth.signOut();
+
+      throw new Error(
+        "Your ZUNE account has been removed. Please contact support."
+      );
+
+    }
+
+    /* BLOCK UNKNOWN STATUS */
+
+    if (profile.account_status !== "active") {
+
+      await supabaseClient.auth.signOut();
+
+      throw new Error(
+        "Your account status could not be verified. Please contact support."
+      );
+
+    }
+
+    /* SUCCESS */
 
     showMessage(
       "Login successful! Redirecting to ZUNE Marketplace...",
@@ -450,11 +561,13 @@ loginForm.addEventListener("submit",async(event)=>{
 
     loginButton.textContent = "Welcome to ZUNE";
 
-    setTimeout(()=>{
-      window.location.replace(MARKETPLACE_URL);
-    },1200);
+    setTimeout(() => {
 
-  }catch(error){
+      window.location.replace(MARKETPLACE_URL);
+
+    }, 1200);
+
+  } catch (error) {
 
     showMessage(
       error.message || "Unable to sign in. Please try again.",
@@ -463,7 +576,9 @@ loginForm.addEventListener("submit",async(event)=>{
 
     loginButton.disabled = false;
     loginButton.textContent = "Sign In to ZUNE";
+
   }
+
 });
 
 /* FOOTER YEAR */
@@ -471,5 +586,7 @@ loginForm.addEventListener("submit",async(event)=>{
 document.getElementById("year").textContent =
   new Date().getFullYear();
 
-</script></body>
+</script>
+
+</body>
 </html>
