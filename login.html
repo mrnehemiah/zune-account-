@@ -85,7 +85,7 @@ a {
   padding:35px 16px;
 }
 
-.login-container {
+.container {
   width:100%;
   max-width:470px;
   background:white;
@@ -180,9 +180,10 @@ a {
   font-weight:700;
 }
 
-.submit-btn {
+.submit-btn,
+.choice-btn {
   width:100%;
-  height:53px;
+  min-height:53px;
   border:0;
   border-radius:12px;
   background:var(--green);
@@ -191,9 +192,15 @@ a {
   font-weight:800;
   cursor:pointer;
   transition:.2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:14px;
 }
 
-.submit-btn:hover {
+.submit-btn:hover,
+.choice-btn:hover {
   background:var(--dark);
 }
 
@@ -263,6 +270,57 @@ a {
   margin:0 7px;
 }
 
+.choice-panel {
+  display:none;
+}
+
+.choice-card {
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:19px;
+  margin-bottom:15px;
+  background:#fff;
+}
+
+.choice-card h3 {
+  font-size:17px;
+  margin-bottom:8px;
+}
+
+.choice-card p {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.7;
+  margin-bottom:16px;
+}
+
+.choice-btn.secondary {
+  background:white;
+  color:var(--green);
+  border:1px solid var(--green);
+}
+
+.choice-btn.secondary:hover {
+  background:var(--light);
+}
+
+.choice-icon {
+  font-size:25px;
+  margin-bottom:12px;
+}
+
+.logout-btn {
+  display:block;
+  border:0;
+  background:none;
+  color:#b42318;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  margin:20px auto 0;
+  padding:8px;
+}
+
 @media(max-width:480px) {
   .header {
     min-height:65px;
@@ -278,7 +336,7 @@ a {
     height:37px;
   }
 
-  .login-container {
+  .container {
     padding:28px 20px;
     border-radius:19px;
   }
@@ -305,75 +363,135 @@ a {
 
 <main class="main">
 
-<section class="login-container">
+<section class="container">
 
-  <div class="top-icon">↗</div>
+  <div class="top-icon" id="topIcon">↗</div>
 
-  <div class="heading">
-    <h1>Welcome Back</h1>
-    <p>
-      Sign in to your ZUNE Account and access your
-      ZUNE services with one identity.
-    </p>
-  </div>
+  <!-- LOGIN FORM -->
 
-  <form id="loginForm">
+  <div id="loginSection">
 
-    <div class="form-group">
-      <label for="email">Email Address</label>
-
-      <input
-        type="email"
-        id="email"
-        placeholder="Enter your email address"
-        autocomplete="email"
-        required
-      >
+    <div class="heading">
+      <h1>Welcome Back</h1>
+      <p>
+        Sign in to your ZUNE Account and access your
+        ZUNE services with one identity.
+      </p>
     </div>
 
-    <div class="form-group">
-      <label for="password">Password</label>
+    <form id="loginForm">
 
-      <div class="password-wrap">
+      <div class="form-group">
+        <label for="email">Email Address</label>
         <input
-          type="password"
-          id="password"
-          placeholder="Enter your password"
-          autocomplete="current-password"
+          type="email"
+          id="email"
+          placeholder="Enter your email address"
+          autocomplete="email"
           required
         >
-
-        <button
-          type="button"
-          class="toggle-password"
-          id="togglePassword"
-        >
-          Show
-        </button>
       </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+
+        <div class="password-wrap">
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          >
+
+          <button
+            type="button"
+            class="toggle-password"
+            id="togglePassword"
+          >
+            Show
+          </button>
+        </div>
+      </div>
+
+      <div class="forgot">
+        <a href="forgot-password.html">Forgot Password?</a>
+      </div>
+
+      <button
+        type="submit"
+        class="submit-btn"
+        id="loginButton"
+      >
+        Sign In to ZUNE
+      </button>
+
+      <div id="message" class="message" role="status"></div>
+
+    </form>
+
+    <div class="divider">YOUR ZUNE IDENTITY</div>
+
+    <div class="bottom-text">
+      Don't have a ZUNE Account?<br>
+      <a href="signup.html">Create your account</a>
     </div>
 
-    <div class="forgot">
-      <a href="forgot-password.html">Forgot Password?</a>
+  </div>
+
+  <!-- AFTER LOGIN: USER CHOOSES WHERE TO GO -->
+
+  <div class="choice-panel" id="choicePanel">
+
+    <div class="heading">
+      <h1>Welcome to ZUNE!</h1>
+      <p id="welcomeText">
+        Your account is ready. Choose where you want to go.
+      </p>
     </div>
 
-    <button
-      type="submit"
-      class="submit-btn"
-      id="loginButton"
-    >
-      Sign In to ZUNE
+    <div class="choice-card">
+
+      <div class="choice-icon">👤</div>
+
+      <h3>Account Centre</h3>
+
+      <p>
+        Manage your personal information, security,
+        privacy and verification settings.
+      </p>
+
+      <a href="account.html" class="choice-btn secondary">
+        OPEN ACCOUNT CENTRE →
+      </a>
+
+    </div>
+
+    <div class="choice-card">
+
+      <div class="choice-icon">🛍️</div>
+
+      <h3>ZUNE Marketplace</h3>
+
+      <p>
+        Explore products, discover sellers,
+        buy and sell on ZUNE Marketplace.
+      </p>
+
+      <button
+        type="button"
+        class="choice-btn"
+        id="marketplaceButton"
+      >
+        ENTER ZUNE MARKETPLACE →
+      </button>
+
+    </div>
+
+    <button type="button" class="logout-btn" id="logoutButton">
+      Sign out of ZUNE Account
     </button>
 
-    <div id="message" class="message" role="status"></div>
-
-  </form>
-
-  <div class="divider">YOUR ZUNE IDENTITY</div>
-
-  <div class="bottom-text">
-    Don't have a ZUNE Account?<br>
-    <a href="signup.html">Create your account</a>
   </div>
 
 </section>
@@ -394,7 +512,6 @@ a {
 </footer>
 
 <script>
-
 /* SUPABASE CONFIGURATION */
 
 const SUPABASE_URL =
@@ -426,6 +543,16 @@ const message = document.getElementById("message");
 const passwordInput = document.getElementById("password");
 const togglePassword = document.getElementById("togglePassword");
 
+const loginSection = document.getElementById("loginSection");
+const choicePanel = document.getElementById("choicePanel");
+const welcomeText = document.getElementById("welcomeText");
+
+const marketplaceButton =
+  document.getElementById("marketplaceButton");
+
+const logoutButton =
+  document.getElementById("logoutButton");
+
 /* MESSAGE */
 
 function showMessage(text, type) {
@@ -433,20 +560,104 @@ function showMessage(text, type) {
   message.className = "message " + type;
 }
 
+/* PROFILE STATUS */
+
+async function verifyAccountStatus(userId) {
+
+  const { data: profile, error } = await supabaseClient
+    .from("profiles")
+    .select("id, full_name, account_status")
+    .eq("id", userId)
+    .single();
+
+  if (error || !profile) {
+    throw new Error(
+      "Unable to verify your account status. Please contact support."
+    );
+  }
+
+  if (profile.account_status === "suspended") {
+    throw new Error(
+      "Your ZUNE account is suspended. Please contact support."
+    );
+  }
+
+  if (profile.account_status === "removed") {
+    throw new Error(
+      "Your ZUNE account has been removed. Please contact support."
+    );
+  }
+
+  if (profile.account_status !== "active") {
+    throw new Error(
+      "Your account status could not be verified. Please contact support."
+    );
+  }
+
+  return profile;
+}
+
+/* SHOW DESTINATION CHOICES */
+
+function showDestinationChoices(profile, user) {
+
+  loginSection.style.display = "none";
+  choicePanel.style.display = "block";
+
+  const name =
+    profile?.full_name ||
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    "";
+
+  welcomeText.textContent = name
+    ? "Welcome, " + name + ". Your ZUNE Account is ready. Choose where you want to go."
+    : "Your ZUNE Account is ready. Choose where you want to go.";
+
+  document.getElementById("topIcon").textContent = "✓";
+}
+
+/* CHECK EXISTING SESSION */
+
+async function checkExistingSession() {
+
+  try {
+
+    const { data, error } =
+      await supabaseClient.auth.getSession();
+
+    if (error) throw error;
+
+    if (!data.session) return;
+
+    const profile = await verifyAccountStatus(
+      data.session.user.id
+    );
+
+    showDestinationChoices(profile, data.session.user);
+
+  } catch (error) {
+
+    console.error("SESSION CHECK:", error);
+
+    showMessage(
+      error.message || "Unable to verify your session.",
+      "error"
+    );
+
+  }
+}
+
 /* PASSWORD VISIBILITY */
 
 togglePassword.addEventListener("click", () => {
 
   if (passwordInput.type === "password") {
-
     passwordInput.type = "text";
     togglePassword.textContent = "Hide";
-
   } else {
-
     passwordInput.type = "password";
     togglePassword.textContent = "Show";
-
   }
 
 });
@@ -465,12 +676,10 @@ loginForm.addEventListener("submit", async (event) => {
   const password = passwordInput.value;
 
   if (!email || !password) {
-
     showMessage(
       "Please enter your email and password.",
       "error"
     );
-
     return;
   }
 
@@ -478,8 +687,6 @@ loginForm.addEventListener("submit", async (event) => {
   loginButton.textContent = "Signing in...";
 
   try {
-
-    /* AUTHENTICATION */
 
     const { data, error } =
       await supabaseClient.auth.signInWithPassword({
@@ -490,84 +697,20 @@ loginForm.addEventListener("submit", async (event) => {
     if (error) throw error;
 
     if (!data.user || !data.session) {
-
       throw new Error(
         "Login session could not be created."
       );
-
     }
 
-    /* CHECK PROFILE STATUS */
-
-    const { data: profile, error: profileError } =
-      await supabaseClient
-        .from("profiles")
-        .select("id, account_status")
-        .eq("id", data.user.id)
-        .single();
-
-    if (profileError || !profile) {
-
-      await supabaseClient.auth.signOut();
-
-      throw new Error(
-        "Unable to verify your account status. Please contact support."
-      );
-
-    }
-
-    /* BLOCK SUSPENDED USERS */
-
-    if (profile.account_status === "suspended") {
-
-      await supabaseClient.auth.signOut();
-
-      throw new Error(
-        "Your ZUNE account is suspended. Please contact support."
-      );
-
-    }
-
-    /* BLOCK REMOVED USERS */
-
-    if (profile.account_status === "removed") {
-
-      await supabaseClient.auth.signOut();
-
-      throw new Error(
-        "Your ZUNE account has been removed. Please contact support."
-      );
-
-    }
-
-    /* BLOCK UNKNOWN STATUS */
-
-    if (profile.account_status !== "active") {
-
-      await supabaseClient.auth.signOut();
-
-      throw new Error(
-        "Your account status could not be verified. Please contact support."
-      );
-
-    }
-
-    /* SUCCESS */
-
-    showMessage(
-      "Login successful! Redirecting to ZUNE Marketplace...",
-      "success"
+    const profile = await verifyAccountStatus(
+      data.user.id
     );
 
-    loginButton.textContent = "Welcome to ZUNE";
-
-    setTimeout(() => {
-
-      window.location.replace(MARKETPLACE_URL);
-
-    }, 1200);
+    showDestinationChoices(profile, data.user);
 
   } catch (error) {
+
+    console.error("LOGIN ERROR:", error);
 
     showMessage(
       error.message || "Unable to sign in. Please try again.",
@@ -581,11 +724,50 @@ loginForm.addEventListener("submit", async (event) => {
 
 });
 
+/* MARKETPLACE BUTTON */
+
+marketplaceButton.addEventListener("click", () => {
+
+  window.location.href = MARKETPLACE_URL;
+
+});
+
+/* SIGN OUT */
+
+logoutButton.addEventListener("click", async () => {
+
+  logoutButton.disabled = true;
+  logoutButton.textContent = "Signing out...";
+
+  try {
+
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) throw error;
+
+    window.location.reload();
+
+  } catch (error) {
+
+    console.error("SIGN OUT ERROR:", error);
+
+    logoutButton.disabled = false;
+    logoutButton.textContent = "Sign out of ZUNE Account";
+
+    alert(error.message || "Unable to sign out.");
+
+  }
+
+});
+
 /* FOOTER YEAR */
 
 document.getElementById("year").textContent =
   new Date().getFullYear();
 
+/* INITIALIZE */
+
+checkExistingSession();
 </script>
 
 </body>
