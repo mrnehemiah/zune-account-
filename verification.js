@@ -13,62 +13,49 @@ const submitButton = document.getElementById("submitButton");
 const fullNameInput = document.getElementById("fullName");
 
 let currentUser = null;
+let isSubmitting = false;
 
-function showMessage(text, type) {
+function showMessage(text, type = "error") {
   message.textContent = text;
   message.className = "message " + type;
   message.style.display = "block";
+  message.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
 }
 
 function setLoading(loading) {
+  isSubmitting = loading;
   submitButton.disabled = loading;
   submitButton.textContent = loading
-    ? "Submitting application..."
+    ? "Inatuma ombi..."
     : "Submit Verification Application";
 }
 
-async function initializeVerification() {
-  try {
-    const {
-      data: { session },
-      error
-    } = await supabase.auth.getSession();
+function showError(error, context) {
+  console.error(context, error);
 
-    if (error) throw error;
+  const details = [
+    error?.message || "Hitilafu isiyojulikana",
+    error?.code ? "Code: " + error.code : "",
+    error?.details || "",
+    error?.hint || ""
+  ].filter(Boolean).join(" | ");
 
-    if (!session) {
-      window.location.href = "login.html";
-      return;
-    }
+  showMessage("Imeshindikana: " + details, "error");
+}
 
-    currentUser = session.user;
+async function getCurrentSession() {
+  const { data, error } = await supabase.auth.getSession();
 
-    const { data: profile, error: profileError } =
-      await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", currentUser.id)
-        .maybeSingle();
+  if (error) throw error;
 
-    if (profileError) {
-      console.warn("Profile lookup:", profileError.message);
-    }
-
-    fullNameInput.value =
-      profile?.full_name ||
-      currentUser.user_metadata?.full_name ||
-      currentUser.user_metadata?.name ||
-      "";
-
-    await checkExistingApplication();
-
-  } catch (error) {
-    showMessage(
-      "Imeshindikana kufungua ukurasa. Tafadhali jaribu tena.",
-      "error"
-    );
-    console.error(error);
+  if (!data.session) {
+    throw new Error("Session haipo. Tafadhali ingia tena kwenye ZUNE Account.");
   }
+
+  return data.session;
 }
 
 async function checkExistingApplication() {
@@ -80,99 +67,126 @@ async function checkExistingApplication() {
     .order("created_at", { ascending: false })
     .limit(1);
 
-  if (error) {
-    console.error("Application check:", error.message);
-    return;
-  }
+  if (error) throw error;
 
   if (data && data.length > 0) {
     form.style.display = "none";
 
     showMessage(
-      "Tayari una ombi la uthibitishaji linalosubiri kukaguliwa. Tafadhali subiri majibu ya Admin.",
+      "Ombi lako tayari limepokelewa na linasubiri kukaguliwa na Admin wa ZUNE.",
       "success"
     );
+
+    return true;
+  }
+
+  return false;
+}
+
+async function initializeVerification() {
+  try {
+    if (!window.supabase) {
+      throw new Error("Supabase library haijapakiwa.");
+    }
+
+    if (!form || !message || !submitButton || !fullNameInput) {
+      throw new Error("Baadhi ya vipengele vya verification.html havijapatikana.");
+    }
+
+    const session = await getCurrentSession();
+
+    currentUser = session.user;
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", currentUser.id)
+      .maybeSingle();
+
+    if (profileError) {
+      console.warn("Profile lookup:", profileError);
+    }
+
+    fullNameInput.value =
+      profile?.full_name ||
+      currentUser.user_metadata?.full_name ||
+      currentUser.user_metadata?.name ||
+      "";
+
+    await checkExistingApplication();
+
+  } catch (error) {
+    console.error("VERIFICATION INITIALIZATION ERROR:", error);
+
+    if (
+      error.message?.includes("Session haipo") ||
+      error.message?.includes("JWT")
+    ) {
+      showMessage(
+        "Tafadhali ingia kwenye ZUNE Account kwanza.",
+        "error"
+      );
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 2000);
+
+      return;
+    }
+
+    showError(error, "Initialization error");
   }
 }
 
 form.addEventListener("submit", async function(event) {
   event.preventDefault();
 
-  if (!currentUser) {
-    showMessage(
-      "Tafadhali ingia kwenye akaunti yako kwanza.",
-      "error"
-    );
-    return;
-  }
-
-  const fullName = fullNameInput.value.trim();
-  const documentType =
-    document.getElementById("documentType").value;
-
-  const documentNumber =
-    document.getElementById("documentNumber").value.trim();
-
-  const reason =
-    document.getElementById("reason").value.trim();
-
-  const verificationType =
-    document.querySelector(
-      'input[name="verificationType"]:checked'
-    )?.value;
-
-  if (!fullName || !documentType || !verificationType) {
-    showMessage(
-      "Tafadhali jaza sehemu zote zinazohitajika.",
-      "error"
-    );
-    return;
-  }
-
-  if (fullName.length < 3) {
-    showMessage(
-      "Tafadhali ingiza jina lako kamili.",
-      "error"
-    );
-    return;
-  }
-
-  setLoading(true);
+  if (isSubmitting) return;
 
   try {
-    // Hakikisha bado kuna session halali.
-    const {
-      data: { session },
-      error: sessionError
-    } = await supabase.auth.getSession();
-
-    if (sessionError) throw sessionError;
-
-    if (!session || session.user.id !== currentUser.id) {
-      throw new Error("Session yako imeisha. Ingia tena.");
+    if (!currentUser) {
+      throw new Error("Tafadhali ingia kwenye akaunti yako kwanza.");
     }
 
-    // Zuia maombi mengi yanayosubiri kwa akaunti moja.
-    const { data: existing, error: existingError } =
-      await supabase
-        .from("verification_requests")
-        .select("id")
-        .eq("user_id", currentUser.id)
-        .eq("status", "pending")
-        .limit(1);
+    const fullName = fullNameInput.value.trim();
 
-    if (existingError) throw existingError;
+    const documentType =
+      document.getElementById("documentType").value;
 
-    if (existing && existing.length > 0) {
-      form.style.display = "none";
+    const documentNumber =
+      document.getElementById("documentNumber").value.trim();
 
-      showMessage(
-        "Una ombi ambalo bado linasubiri kukaguliwa.",
-        "success"
-      );
+    const reason =
+      document.getElementById("reason").value.trim();
 
-      return;
+    const verificationType =
+      document.querySelector(
+        'input[name="verificationType"]:checked'
+      )?.value;
+
+    if (!fullName || !documentType || !verificationType) {
+      throw new Error("Tafadhali jaza sehemu zote zinazohitajika.");
     }
+
+    if (fullName.length < 3) {
+      throw new Error("Jina kamili lazima liwe na angalau herufi 3.");
+    }
+
+    if (!["user", "seller"].includes(verificationType)) {
+      throw new Error("Aina ya verification si sahihi.");
+    }
+
+    setLoading(true);
+
+    const session = await getCurrentSession();
+
+    if (session.user.id !== currentUser.id) {
+      throw new Error("Akaunti imebadilika. Tafadhali ingia tena.");
+    }
+
+    const alreadySubmitted = await checkExistingApplication();
+
+    if (alreadySubmitted) return;
 
     const application = {
       user_id: currentUser.id,
@@ -185,14 +199,20 @@ form.addEventListener("submit", async function(event) {
       updated_at: new Date().toISOString()
     };
 
-    const { error: insertError } = await supabase
+    const { data: insertedData, error: insertError } = await supabase
       .from("verification_requests")
-      .insert(application);
+      .insert(application)
+      .select("id, status, created_at")
+      .single();
 
-    if (insertError) throw insertError;
+    if (insertError) {
+      throw insertError;
+    }
+
+    console.log("VERIFICATION APPLICATION SAVED:", insertedData);
 
     showMessage(
-      "Ombi lako limetumwa kikamilifu! Admin wa ZUNE atalipitia na utapata matokeo kupitia akaunti yako.",
+      "Hongera! Ombi lako la ZUNE Verification limetumwa na kuhifadhiwa kikamilifu. Admin atalipitia. Hali ya ombi lako ni PENDING.",
       "success"
     );
 
@@ -200,13 +220,7 @@ form.addEventListener("submit", async function(event) {
     form.style.display = "none";
 
   } catch (error) {
-    console.error("Verification submission:", error);
-
-    showMessage(
-      error.message ||
-      "Imeshindikana kutuma ombi. Tafadhali jaribu tena.",
-      "error"
-    );
+    showError(error, "VERIFICATION SUBMISSION ERROR");
 
   } finally {
     setLoading(false);
